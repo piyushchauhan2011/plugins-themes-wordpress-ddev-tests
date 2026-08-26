@@ -2,6 +2,9 @@
 /**
  * Hotel Booking theme bootstrap.
  *
+ * Presentation only: setup, assets, and pattern category.
+ * Rooms CPT and shortcodes live in the Hotel Booking Core plugin.
+ *
  * @package Hotel_Booking
  */
 
@@ -11,8 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'HOTEL_BOOKING_VERSION', '1.0.0' );
 
-require_once get_template_directory() . '/inc/helpers.php';
-require_once get_template_directory() . '/inc/post-types.php';
 require_once get_template_directory() . '/inc/patterns.php';
 
 /**
@@ -47,20 +48,19 @@ function hotel_booking_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'hotel_booking_enqueue_assets' );
 
 /**
- * Room details shortcode for the single-room template.
- *
- * @param array $atts Shortcode attributes.
- * @return string
+ * Admin notice when the companion plugin is missing.
  */
-function hotel_booking_room_meta_shortcode( $atts = array() ) {
-	$atts = shortcode_atts(
-		array(
-			'id' => get_the_ID(),
-		),
-		$atts,
-		'hotel_room_meta'
-	);
+function hotel_booking_admin_notice_missing_plugin() {
+	if ( ! current_user_can( 'activate_plugins' ) ) {
+		return;
+	}
 
-	return hotel_booking_render_room_meta( (int) $atts['id'] );
+	if ( function_exists( 'hotel_booking_register_room_post_type' ) ) {
+		return;
+	}
+
+	echo '<div class="notice notice-warning"><p>';
+	echo esc_html__( 'Hotel Booking needs the Hotel Booking Core plugin for room listings and the booking inquiry shortcode.', 'hotel-booking' );
+	echo '</p></div>';
 }
-add_shortcode( 'hotel_room_meta', 'hotel_booking_room_meta_shortcode' );
+add_action( 'admin_notices', 'hotel_booking_admin_notice_missing_plugin' );

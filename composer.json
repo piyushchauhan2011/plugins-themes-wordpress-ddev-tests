@@ -1,7 +1,6 @@
 {
-	"name": "hotel-booking/theme",
-	"description": "Hotel Booking WordPress block theme for learning theme development and WP_UnitTestCase.",
-	"type": "wordpress-theme",
+	"name": "hotel-booking/project",
+	"description": "Hotel Booking WordPress learning project: block theme, core plugin, and WP_UnitTestCase tests.",
 	"license": "GPL-2.0-or-later",
 	"require": {
 		"php": ">=8.2"

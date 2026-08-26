@@ -1,4 +1,4 @@
-name: Theme PHPUnit
+name: PHPUnit
 
 on:
   pull_request:
@@ -11,9 +11,6 @@ jobs:
   phpunit:
     name: WP_UnitTestCase
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: wp-content/themes/hotel-booking
     services:
       database:
         image: mysql:8.0

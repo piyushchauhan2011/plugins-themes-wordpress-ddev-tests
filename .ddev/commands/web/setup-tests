@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-THEME_DIR="/var/www/html/wp-content/themes/hotel-booking"
+PROJECT_DIR="/var/www/html"
 export WP_TESTS_DIR="${WP_TESTS_DIR:-/var/www/html/.wp-tests/wordpress-tests-lib}"
 export WP_CORE_DIR="${WP_CORE_DIR:-/var/www/html/.wp-tests/wordpress}"
 export TMPDIR="/var/www/html/.wp-tests/tmp"
@@ -21,17 +21,17 @@ if [[ -d "${WP_TESTS_DIR}" && ! -f "${WP_TESTS_DIR}/includes/functions.php" ]]; 
 	rm -rf "${WP_TESTS_DIR}"
 fi
 
-cd "${THEME_DIR}"
+cd "${PROJECT_DIR}"
 
 if [[ ! -f composer.json ]]; then
-	echo "Missing ${THEME_DIR}/composer.json"
+	echo "Missing ${PROJECT_DIR}/composer.json"
 	exit 1
 fi
 
 composer install
 
 if [[ ! -x bin/install-wp-tests.sh ]]; then
-	echo "Run this after theme tests are scaffolded (bin/install-wp-tests.sh)."
+	echo "Missing bin/install-wp-tests.sh"
 	exit 1
 fi
 

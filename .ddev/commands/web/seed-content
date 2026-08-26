@@ -10,6 +10,9 @@ FORCE="${1:-}"
 THEME_DIR="/var/www/html/wp-content/themes/hotel-booking"
 IMG_DIR="${THEME_DIR}/assets/images"
 
+wp plugin activate hotel-booking-core >/dev/null
+wp theme activate hotel-booking >/dev/null
+
 if wp option get hotel_booking_seeded >/dev/null 2>&1 && [[ "${FORCE}" != "--force" ]]; then
 	echo "Hotel demo content already exists. Re-run with: ddev seed-content --force"
 	exit 0

@@ -12,23 +12,22 @@
 /wp-content/uploads
 /wp-content/themes/index.php
 /wp-content/themes/twenty*/
-/wp-content/plugins/
+/wp-content/plugins/*
+!/wp-content/plugins/hotel-booking-core/
+!/wp-content/plugins/hotel-booking-core/**
 /wp-content/mu-plugins/
 
 # DDEV-generated WordPress config
 /wp-config.php
 /wp-config-ddev.php
 
-# Theme test dependencies and WordPress test suite (persisted outside /tmp)
-/wp-content/themes/hotel-booking/vendor/
-/wp-content/themes/hotel-booking/.phpunit.result.cache
+# Composer and WordPress test suite (persisted outside /tmp)
+/vendor/
 /.wp-tests/
 
 # Fetched on demand by ddev import-theme-unit-test
 /content/themeunittestdata.wordpress.xml
 
-# Composer / OS
-/vendor/
 .DS_Store
 *.log
 .phpunit.result.cache

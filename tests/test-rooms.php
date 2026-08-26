@@ -77,4 +77,8 @@ class Test_Hotel_Booking_Rooms extends WP_UnitTestCase {
 		$post_id = self::factory()->post->create();
 		$this->assertSame( '', hotel_booking_render_room_meta( $post_id ) );
 	}
+
+	public function test_room_meta_shortcode_is_registered() {
+		$this->assertTrue( shortcode_exists( 'hotel_room_meta' ) );
+	}
 }

@@ -6,7 +6,7 @@
  */
 
 /**
- * Tests for inc/helpers.php — these do not need a database row.
+ * Tests for plugin helpers in hotel-booking-core.
  */
 class Test_Hotel_Booking_Helpers extends WP_UnitTestCase {
 

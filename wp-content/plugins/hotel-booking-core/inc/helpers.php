@@ -1,8 +1,8 @@
 <?php
 /**
- * Theme helper functions (the main PHPUnit teaching surface).
+ * Room helpers used by the shortcode and by WP_UnitTestCase.
  *
- * @package Hotel_Booking
+ * @package Hotel_Booking_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +20,7 @@ function hotel_booking_format_price( $amount ) {
 
 	return sprintf(
 		/* translators: %s: formatted dollar amount */
-		__( '$%s / night', 'hotel-booking' ),
+		__( '$%s / night', 'hotel-booking-core' ),
 		number_format_i18n( $amount, 0 )
 	);
 }
@@ -57,20 +57,20 @@ function hotel_booking_render_room_meta( $post_id ) {
 	?>
 	<dl class="hb-room-meta">
 		<div>
-			<dt><?php esc_html_e( 'From', 'hotel-booking' ); ?></dt>
+			<dt><?php esc_html_e( 'From', 'hotel-booking-core' ); ?></dt>
 			<dd><?php echo esc_html( hotel_booking_format_price( $meta['price'] ) ); ?></dd>
 		</div>
 		<div>
-			<dt><?php esc_html_e( 'Guests', 'hotel-booking' ); ?></dt>
+			<dt><?php esc_html_e( 'Guests', 'hotel-booking-core' ); ?></dt>
 			<dd><?php echo esc_html( (string) $meta['guests'] ); ?></dd>
 		</div>
 		<div>
-			<dt><?php esc_html_e( 'Beds', 'hotel-booking' ); ?></dt>
+			<dt><?php esc_html_e( 'Beds', 'hotel-booking-core' ); ?></dt>
 			<dd><?php echo esc_html( (string) $meta['beds'] ); ?></dd>
 		</div>
 		<div>
-			<dt><?php esc_html_e( 'Size', 'hotel-booking' ); ?></dt>
-			<dd><?php echo esc_html( sprintf( __( '%s m²', 'hotel-booking' ), (string) $meta['size'] ) ); ?></dd>
+			<dt><?php esc_html_e( 'Size', 'hotel-booking-core' ); ?></dt>
+			<dd><?php echo esc_html( sprintf( __( '%s m²', 'hotel-booking-core' ), (string) $meta['size'] ) ); ?></dd>
 		</div>
 	</dl>
 	<?php
