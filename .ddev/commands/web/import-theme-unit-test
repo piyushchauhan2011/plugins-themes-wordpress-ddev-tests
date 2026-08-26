@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+## Description: Import WordPress Theme Unit Test data and activate Theme Check
+## Usage: import-theme-unit-test
+## Example: ddev import-theme-unit-test
+
+set -euo pipefail
+
+CONTENT_DIR="/var/www/html/content"
+XML_URL="https://raw.githubusercontent.com/WPTT/theme-unit-test/master/themeunittestdata.wordpress.xml"
+XML_PATH="${CONTENT_DIR}/themeunittestdata.wordpress.xml"
+
+mkdir -p "${CONTENT_DIR}"
+
+echo "Installing WordPress Importer and Theme Check…"
+wp plugin install wordpress-importer theme-check --activate --quiet
+
+if [[ ! -f "${XML_PATH}" ]]; then
+	echo "Downloading Theme Unit Test XML…"
+	curl -fsSL "${XML_URL}" -o "${XML_PATH}"
+fi
+
+echo "Importing Theme Unit Test data (this can take a minute)…"
+wp import "${XML_PATH}" --authors=create
+
+echo
+echo "Theme Unit Test data imported."
+echo "Open Appearance → Theme Check, then review templates against mixed posts, comments, and media."
+echo "Hotel demo content is unchanged except that extra posts/pages now exist for review testing."

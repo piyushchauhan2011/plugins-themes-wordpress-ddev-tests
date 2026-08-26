@@ -1,0 +1,87 @@
+/*
+Theme Name: Hotel Booking
+Theme URI: https://hotel-booking.ddev.site
+Author: Hotel Booking Learners
+Description: A block theme for learning WordPress theme development, with a boutique hotel landing page, room listings, and WP_UnitTestCase coverage.
+Requires at least: 6.7
+Tested up to: 7.1
+Requires PHP: 8.2
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: hotel-booking
+Tags: full-site-editing, block-patterns, custom-menu, featured-images, translation-ready
+*/
+
+.hb-booking-form {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 0.75rem;
+	margin-top: 2rem;
+	padding: 1.25rem;
+	background: rgba(255, 251, 245, 0.94);
+	color: var(--wp--preset--color--espresso, #2c2118);
+	border-radius: 4px;
+}
+
+.hb-booking-form label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	font-size: 0.8rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.hb-booking-form input,
+.hb-booking-form select {
+	font: inherit;
+	padding: 0.6rem 0.7rem;
+	border: 1px solid #d7c7b3;
+	border-radius: 2px;
+	background: #fff;
+}
+
+.hb-booking-form button {
+	align-self: end;
+	padding: 0.75rem 1rem;
+	border: 0;
+	border-radius: 2px;
+	background: var(--wp--preset--color--terracotta, #a65d3f);
+	color: #fffbf5;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.hb-room-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.25rem;
+	margin: 1.5rem 0;
+	padding: 1rem 0;
+	border-top: 1px solid #e4d6c5;
+	border-bottom: 1px solid #e4d6c5;
+	font-size: 0.95rem;
+}
+
+.hb-room-meta dt {
+	font-size: 0.75rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	opacity: 0.7;
+}
+
+.hb-room-meta dd {
+	margin: 0.15rem 0 0;
+	font-family: var(--wp--preset--font-family--heading, Georgia, serif);
+	font-size: 1.15rem;
+}
+
+.hb-hero {
+	background:
+		linear-gradient(180deg, rgba(44, 33, 24, 0.35), rgba(44, 33, 24, 0.55)),
+		linear-gradient(120deg, #3d2b22 0%, #6b4a38 45%, #a65d3f 100%);
+	color: #fffbf5;
+}

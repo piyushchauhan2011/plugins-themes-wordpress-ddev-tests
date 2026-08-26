@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/">
+<channel>
+	<title>Hotel Booking demo</title>
+	<description>Minimal WXR for import practice. Prefer ddev seed-content for a full demo.</description>
+	<language>en-US</language>
+	<wp:wxr_version>1.2</wp:wxr_version>
+	<wp:base_blog_url>https://hotel-booking.ddev.site</wp:base_blog_url>
+	<wp:base_site_url>https://hotel-booking.ddev.site</wp:base_site_url>
+
+	<wp:author>
+		<wp:author_id>1</wp:author_id>
+		<wp:author_login><![CDATA[admin]]></wp:author_login>
+		<wp:author_email><![CDATA[admin@hotel-booking.ddev.site]]></wp:author_email>
+		<wp:author_display_name><![CDATA[admin]]></wp:author_display_name>
+	</wp:author>
+
+	<item>
+		<title>About (imported)</title>
+		<link>https://hotel-booking.ddev.site/about-imported/</link>
+		<wp:post_id>9001</wp:post_id>
+		<wp:post_name><![CDATA[about-imported]]></wp:post_name>
+		<wp:post_type><![CDATA[page]]></wp:post_type>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<content:encoded><![CDATA[<!-- wp:paragraph --><p>Imported via content/hotel-booking-demo.xml so you can practice Tools → Import.</p><!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_wp_page_template]]></wp:meta_key>
+			<wp:meta_value><![CDATA[default]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+</channel>
+</rss>

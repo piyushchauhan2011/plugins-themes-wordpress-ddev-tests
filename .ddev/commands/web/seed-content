@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+## Description: Seed hotel demo pages, rooms, menus, and reading settings
+## Usage: seed-content [--force]
+## Example: ddev seed-content
+## Example: ddev seed-content --force
+
+set -euo pipefail
+
+FORCE="${1:-}"
+THEME_DIR="/var/www/html/wp-content/themes/hotel-booking"
+IMG_DIR="${THEME_DIR}/assets/images"
+
+if wp option get hotel_booking_seeded >/dev/null 2>&1 && [[ "${FORCE}" != "--force" ]]; then
+	echo "Hotel demo content already exists. Re-run with: ddev seed-content --force"
+	exit 0
+fi
+
+if [[ "${FORCE}" == "--force" ]]; then
+	echo "Removing previously seeded rooms and demo pages…"
+	ROOM_IDS="$(wp post list --post_type=hb_room --format=ids)"
+	if [[ -n "${ROOM_IDS}" ]]; then
+		# shellcheck disable=SC2086
+		wp post delete ${ROOM_IDS} --force >/dev/null
+	fi
+fi
+
+wp rewrite structure '/%postname%/' >/dev/null
+wp option update blogdescription "A quiet night, well kept"
+
+create_page() {
+	local title="$1"
+	local slug="$2"
+	local content="$3"
+	local existing
+	existing="$(wp post list --post_type=page --name="${slug}" --field=ID --format=ids)"
+	if [[ -n "${existing}" ]]; then
+		wp post update "${existing}" --post_title="${title}" --post_content="${content}" --post_status=publish >/dev/null
+		echo "${existing}"
+		return
+	fi
+	wp post create --post_type=page --post_title="${title}" --post_name="${slug}" --post_status=publish --post_content="${content}" --porcelain
+}
+
+HOME_ID="$(create_page "Home" "home" "")"
+ABOUT_ID="$(create_page "About" "about" "<!-- wp:paragraph --><p>Hotel Booking is a teaching theme: block templates, a room post type, demo content, and WP_UnitTestCase tests you can run with DDEV.</p><!-- /wp:paragraph -->")"
+AMENITIES_ID="$(create_page "Amenities" "amenities" "<!-- wp:pattern {\"slug\":\"hotel-booking/amenities\"} /-->")"
+CONTACT_ID="$(create_page "Contact" "contact" "<!-- wp:paragraph --><p>The desk is open from seven until late. This page is sample content for theme development — edit it in the Site Editor or Pages screen.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Email: desk@hotel-booking.ddev.site<br>Phone: (555) 010-1947</p><!-- /wp:paragraph -->")"
+BOOKING_ID="$(create_page "Booking" "booking" "<!-- wp:pattern {\"slug\":\"hotel-booking/inquiry-form\"} /-->")"
+
+wp option update show_on_front page
+wp option update page_on_front "${HOME_ID}"
+
+create_room() {
+	local title="$1"
+	local slug="$2"
+	local excerpt="$3"
+	local content="$4"
+	local price="$5"
+	local guests="$6"
+	local beds="$7"
+	local size="$8"
+	local image="$9"
+	local existing id
+
+	existing="$(wp post list --post_type=hb_room --name="${slug}" --field=ID --format=ids)"
+	if [[ -n "${existing}" ]]; then
+		id="${existing}"
+		wp post update "${id}" --post_excerpt="${excerpt}" --post_content="${content}" --post_status=publish >/dev/null
+	else
+		id="$(wp post create --post_type=hb_room --post_title="${title}" --post_name="${slug}" --post_excerpt="${excerpt}" --post_content="${content}" --post_status=publish --porcelain)"
+	fi
+
+	wp post meta update "${id}" hb_price "${price}" >/dev/null
+	wp post meta update "${id}" hb_guests "${guests}" >/dev/null
+	wp post meta update "${id}" hb_beds "${beds}" >/dev/null
+	wp post meta update "${id}" hb_size "${size}" >/dev/null
+	wp media import "${IMG_DIR}/${image}" --post_id="${id}" --featured_image --title="${title}" >/dev/null
+	echo "Room ready: ${title} (#${id})"
+}
+
+create_room "Deluxe King" "deluxe-king" \
+	"A wide room with a king bed, a writing desk, and morning light." \
+	"<!-- wp:paragraph --><p>The deluxe king faces the courtyard. Linen curtains, a proper chair, and a bath you will actually use.</p><!-- /wp:paragraph -->" \
+	280 2 1 32 "deluxe-king.jpg"
+
+create_room "Garden Suite" "garden-suite" \
+	"A suite that opens onto the garden, with space to sit and not rush." \
+	"<!-- wp:paragraph --><p>French doors, a sofa that is not an afterthought, and breakfast a few steps from the herb beds.</p><!-- /wp:paragraph -->" \
+	360 2 1 48 "garden-suite.jpg"
+
+create_room "Family Room" "family-room" \
+	"Two rooms sharing a small sitting area — built for people who travel together." \
+	"<!-- wp:paragraph --><p>A king and two twins, a door that closes, and enough floor for a suitcase that never quite packed itself.</p><!-- /wp:paragraph -->" \
+	420 4 3 56 "family-room.jpg"
+
+create_room "Penthouse" "penthouse" \
+	"The top floor: long views, a dining table, and silence after ten." \
+	"<!-- wp:paragraph --><p>One bedroom, a parlor, and a terrace that catches the last of the evening.</p><!-- /wp:paragraph -->" \
+	540 2 1 70 "penthouse.jpg"
+
+NAV_CONTENT=""
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Home\",\"url\":\"/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Rooms\",\"url\":\"/rooms/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Amenities\",\"url\":\"/amenities/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"About\",\"url\":\"/about/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Contact\",\"url\":\"/contact/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Book\",\"url\":\"/booking/\",\"kind\":\"custom\"} /-->"
+
+NAV_ID="$(wp post list --post_type=wp_navigation --name=primary --field=ID --format=ids)"
+if [[ -n "${NAV_ID}" ]]; then
+	wp post update "${NAV_ID}" --post_content="${NAV_CONTENT}" --post_status=publish >/dev/null
+else
+	NAV_ID="$(wp post create --post_type=wp_navigation --post_title="Primary" --post_name=primary --post_status=publish --post_content="${NAV_CONTENT}" --porcelain)"
+fi
+
+# Point the header navigation block at this menu when the Site Editor has not saved one yet.
+wp option update hotel_booking_navigation_id "${NAV_ID}" >/dev/null || true
+
+# Remove default sample content if it is still around.
+SAMPLE_PAGE="$(wp post list --post_type=page --name=sample-page --field=ID --format=ids)"
+if [[ -n "${SAMPLE_PAGE}" ]]; then
+	wp post delete "${SAMPLE_PAGE}" --force >/dev/null
+fi
+HELLO="$(wp post list --post_type=post --name=hello-world --field=ID --format=ids)"
+if [[ -n "${HELLO}" ]]; then
+	wp post delete "${HELLO}" --force >/dev/null
+fi
+
+wp rewrite flush >/dev/null
+wp option update hotel_booking_seeded 1 >/dev/null
+
+echo
+echo "Seeded hotel demo content."
+echo "Front page: Home (#${HOME_ID})"
+echo "Booking page: /booking/ (#${BOOKING_ID})"
+echo "Rooms archive: /rooms/"
+echo "Primary navigation ID: ${NAV_ID}"

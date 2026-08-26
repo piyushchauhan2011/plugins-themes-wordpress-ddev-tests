@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+## Description: Download the WordPress PHPUnit test suite into .wp-tests (persists across DDEV restarts)
+## Usage: setup-tests
+## Example: ddev setup-tests
+
+set -euo pipefail
+
+THEME_DIR="/var/www/html/wp-content/themes/hotel-booking"
+export WP_TESTS_DIR="${WP_TESTS_DIR:-/var/www/html/.wp-tests/wordpress-tests-lib}"
+export WP_CORE_DIR="${WP_CORE_DIR:-/var/www/html/.wp-tests/wordpress}"
+export TMPDIR="/var/www/html/.wp-tests/tmp"
+
+mkdir -p "${TMPDIR}"
+
+# install-wp-tests.sh skips work if these directories already exist.
+# Remove empty placeholders so the suite can actually be downloaded.
+if [[ -d "${WP_CORE_DIR}" && ! -f "${WP_CORE_DIR}/wp-includes/version.php" ]]; then
+	rm -rf "${WP_CORE_DIR}"
+fi
+if [[ -d "${WP_TESTS_DIR}" && ! -f "${WP_TESTS_DIR}/includes/functions.php" ]]; then
+	rm -rf "${WP_TESTS_DIR}"
+fi
+
+cd "${THEME_DIR}"
+
+if [[ ! -f composer.json ]]; then
+	echo "Missing ${THEME_DIR}/composer.json"
+	exit 1
+fi
+
+composer install
+
+if [[ ! -x bin/install-wp-tests.sh ]]; then
+	echo "Run this after theme tests are scaffolded (bin/install-wp-tests.sh)."
+	exit 1
+fi
+
+# Skip DB creation; DDEV post-start hook creates wordpress_test.
+bash bin/install-wp-tests.sh wordpress_test db db db latest true
+
+echo
+echo "WordPress test suite is in ${WP_TESTS_DIR}"
+echo "Run tests with: ddev phpunit"

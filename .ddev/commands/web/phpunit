@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+## Description: Run WP_UnitTestCase tests for the hotel-booking theme
+## Usage: phpunit [phpunit-args...]
+## Example: ddev phpunit
+## Example: ddev phpunit --filter test_theme_is_block_theme
+
+set -euo pipefail
+
+THEME_DIR="/var/www/html/wp-content/themes/hotel-booking"
+export WP_TESTS_DIR="${WP_TESTS_DIR:-/var/www/html/.wp-tests/wordpress-tests-lib}"
+export WP_CORE_DIR="${WP_CORE_DIR:-/var/www/html/.wp-tests/wordpress}"
+
+if [[ ! -f "${WP_TESTS_DIR}/includes/functions.php" ]]; then
+	echo "WordPress test suite is missing. Run: ddev setup-tests"
+	exit 1
+fi
+
+cd "${THEME_DIR}"
+
+if [[ ! -x vendor/bin/phpunit ]]; then
+	composer install
+fi
+
+./vendor/bin/phpunit "$@"
