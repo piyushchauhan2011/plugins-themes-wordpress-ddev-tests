@@ -51,6 +51,8 @@ Room search: `ddev describe` lists **opensearch**. After seed, `ddev exec curl -
 
 Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (user `rabbitmq` / `rabbitmq`). Desk mail lands in Mailpit (`ddev launch :8026`). After seed, Priya Shah is a pending inquiry with `wait_until` in the past so `ddev wp hotel-booking remind-stale` (workflow tick) has a due timer. Daily digest: `ddev wp hotel-booking digest`. Desk status uses Contact / Close / Reopen, not a free-form status list. WP-Cron is disabled for visitors; a web daemon ticks `wp cron event run --due-now`.
 
+Observability: `ddev describe` lists **prometheus** and **grafana**. Metrics: `ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics`. Grafana `ddev launch :3001` (anonymous or `admin` / `admin`); Prometheus `ddev launch :9091`. PHPUnit never starts those containers. See [OBSERVABILITY.md](OBSERVABILITY.md).
+
 ## What seed gives you
 
 - Home (static front page), About, Amenities, Contact, Booking, Desk, Staff login, Search
@@ -62,6 +64,7 @@ Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (us
 - nginx FastCGI page cache (anonymous HTML; not a WordPress plugin)
 - OpenSearch rooms index (`hotel-booking-rooms`; plugin HTTP client, not a WordPress plugin)
 - RabbitMQ (`hotel-booking` topic exchange) plus WP-Cron daily stale-pending and desk digest
+- Prometheus + Grafana (inquiry counts; not in PHPUnit or the theme/plugin zip)
 - About six rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`); Priya Shah is backdated ~50 hours for the reminder job
 - Primary navigation
 
@@ -117,6 +120,11 @@ ddev wp hotel-booking digest
 ddev rabbitmq launch
 # Mailpit: ddev launch :8026
 
+# Prometheus + Grafana (inquiry counts)
+ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics
+# Grafana: ddev launch :3001
+# Prometheus: ddev launch :9091
+
 # Rebuild plugin and theme blocks/CSS after clone, or leave watchers running while you edit
 ddev build-blocks
 # ddev watch-plugin    # plugin src/ → build/
@@ -146,6 +154,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [DEPLOYMENT.md](DEPLOYMENT.md) — zip/SFTP or git onto a real WordPress install
 - [SCALING.md](SCALING.md) — primary/replica routing and sharding (documentation only; DDEV still has one database)
 - [JOBS.md](JOBS.md) — WP-Cron tick, RabbitMQ worker, desk email / digest / stale reminders, async OpenSearch
+- [OBSERVABILITY.md](OBSERVABILITY.md) — Prometheus scrape of `/metrics`, Grafana dashboard (DDEV only; not in the zip)
 - [WORKFLOW.md](WORKFLOW.md) — inquiry state machine (Symfony Workflow + MariaDB runs; not Temporal)
 - [PHPSTAN.md](PHPSTAN.md) — PHPDoc `@template` helpers (`hotel_booking_array_map` / `array_find`); `ddev phpstan` is the checker
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows

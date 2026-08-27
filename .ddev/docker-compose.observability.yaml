@@ -1,0 +1,61 @@
+services:
+  prometheus:
+    container_name: ddev-${DDEV_SITENAME}-prometheus
+    image: prom/prometheus:v2.55.1
+    expose:
+      - 9090
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTP_EXPOSE=9090:9090
+      - HTTPS_EXPOSE=9091:9090
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus:/prometheus
+      - ".:/mnt/ddev_config"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
+    x-ddev:
+      describe-info: |
+        UI: ddev launch :9091
+
+  grafana:
+    container_name: ddev-${DDEV_SITENAME}-grafana
+    image: grafana/grafana:11.5.2
+    expose:
+      - 3000
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTP_EXPOSE=3000:3000
+      - HTTPS_EXPOSE=3001:3000
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/dashboards/hotel-booking.json
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+      - grafana:/var/lib/grafana
+      - ".:/mnt/ddev_config"
+    depends_on:
+      - prometheus
+    x-ddev:
+      describe-info: |
+        User: admin
+        Pass: admin
+        UI: ddev launch :3001
+
+volumes:
+  prometheus:
+  grafana:

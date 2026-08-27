@@ -132,6 +132,18 @@ wp hotel-booking worker
 
 Do not copy the DDEV RabbitMQ compose file onto the server. Inquiry workflow tables are created by the plugin (`dbDelta`); the Symfony component is not in the zip. See [WORKFLOW.md](WORKFLOW.md).
 
+## Prometheus and Grafana (not in this zip)
+
+Local DDEV runs Prometheus and Grafana as Docker services and scrapes `GET /wp-json/hotel-booking/v1/metrics`. The zip does **not** include that compose file. PHPUnit never starts Prometheus.
+
+On a real host:
+
+1. Run Prometheus (and Grafana if you want the dashboard) on the private network.
+2. Scrape the WordPress metrics URL. The route is unauthenticated in this plugin so a local scraper can hit it — **do not leave that public**. Restrict it to the scrape network, or put a reverse-proxy token in front.
+3. Do not copy the DDEV Prometheus/Grafana compose files onto the server.
+
+See [OBSERVABILITY.md](OBSERVABILITY.md).
+
 ## Database scale (not in this zip)
 
 The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Production OpenSearch and AMQP are host URLs as above, not DDEV services. Gettext **source** catalogs (`.pot` / `.po`) **are** inside those two folders. Compile `.mo` / `.l10n.php` / plugin editor `.json` with `ddev compile-i18n` before a zip if you need Spanish at runtime; see [I18N.md](I18N.md). Free Polylang is installed by local seed, not shipped in the zip. An inquiry `locale` column is not.

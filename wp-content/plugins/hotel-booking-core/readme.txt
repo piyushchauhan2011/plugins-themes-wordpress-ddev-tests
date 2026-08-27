@@ -17,6 +17,7 @@ Hotel Booking Core is the companion plugin for the Hotel Booking block theme. Wo
 * `hb_room` custom post type and room meta
 * Custom table `wp_hb_inquiries` for booking inquiries
 * REST route `GET /wp-json/hotel-booking/v1/rooms`
+* REST route `GET /wp-json/hotel-booking/v1/metrics` (Prometheus text; protect in production)
 * Shortcodes `[hotel_inquiry_form]`, `[hotel_inquiry_list]`, `[hotel_room_meta]`, `[hotel_staff_login]`
 * wp-admin inquiries list and settings (administrators)
 * Front-end staff login and `hotel_manager` role for `/desk/`
