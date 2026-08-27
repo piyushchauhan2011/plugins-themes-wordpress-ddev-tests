@@ -40,3 +40,7 @@ wp search-replace 'https://hotel-booking.ddev.site' 'https://example.com' --skip
 ```
 
 Inquiries live in a **custom table**, not in WXR. Shipping theme/plugin code without a database dump leaves `/desk/` empty even if rooms and pages import correctly. Copy the database (and uploads) separately — see [BACKUP.md](BACKUP.md).
+
+## Database scale (not in this zip)
+
+The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Those pieces are **not** part of deploying the theme and plugin folders.

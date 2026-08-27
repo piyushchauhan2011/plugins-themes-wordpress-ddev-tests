@@ -111,6 +111,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 
 - [BACKUP.md](BACKUP.md) — `ddev snapshot`, SQL dumps, uploads, recovery drill
 - [DEPLOYMENT.md](DEPLOYMENT.md) — zip/SFTP or git onto a real WordPress install
+- [SCALING.md](SCALING.md) — primary/replica routing and sharding (documentation only; DDEV still has one database)
 
 ## Next
 

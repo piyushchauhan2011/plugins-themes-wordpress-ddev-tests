@@ -1,0 +1,17 @@
+<?php
+/**
+ * REFERENCE ONLY — not used by this repository.
+ *
+ * WordPress loads wp-content/db.php if that file exists. The real drop-in
+ * is the db.php shipped by HyperDB or LudicrousDB (plugin or Composer
+ * package). Do not invent a custom wpdb here for production.
+ *
+ * Typical install (elsewhere):
+ *   1. Copy vendor db.php → wp-content/db.php
+ *   2. Copy a db-config.php next to it (see hyperdb-db-config.php.example)
+ *   3. Keep credentials out of git
+ *
+ * @package Hotel_Booking_Docs
+ */
+
+// Placeholder: the vendor drop-in defines global $wpdb (a wpdb subclass).

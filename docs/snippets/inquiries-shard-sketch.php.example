@@ -1,0 +1,55 @@
+<?php
+/**
+ * REFERENCE ONLY — not loaded by Hotel Booking Core.
+ *
+ * Sketch of shard-aware table names if inquiries ever gained a property_id.
+ * Today hotel_booking_inquiries_table_name() returns one prefixed table.
+ *
+ * @package Hotel_Booking_Docs
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Number of inquiry shards (tables or clusters).
+ */
+const HOTEL_BOOKING_INQUIRY_SHARD_COUNT = 4;
+
+/**
+ * Hypothetical table for one property.
+ *
+ * @param int $property_id Tenant / hotel id (does not exist on the current schema).
+ * @return string
+ */
+function hotel_booking_inquiries_table_name_for( $property_id ) {
+	global $wpdb;
+
+	$property_id = absint( $property_id );
+	$shard       = $property_id % HOTEL_BOOKING_INQUIRY_SHARD_COUNT;
+
+	return $wpdb->prefix . 'hb_inquiries_' . $shard;
+}
+
+/**
+ * Insert would pass the shard key into the table helper.
+ *
+ * @param int   $property_id Property id.
+ * @param array $row         Already sanitized row (no property_id column in production plugin yet).
+ * @return int|false Insert id on that shard, or false.
+ */
+function hotel_booking_insert_inquiry_on_shard( $property_id, $row ) {
+	global $wpdb;
+
+	$inserted = $wpdb->insert(
+		hotel_booking_inquiries_table_name_for( $property_id ),
+		$row
+	);
+
+	if ( ! $inserted ) {
+		return false;
+	}
+
+	return (int) $wpdb->insert_id;
+}

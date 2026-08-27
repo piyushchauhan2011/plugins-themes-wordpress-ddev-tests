@@ -1,0 +1,56 @@
+<?php
+/**
+ * REFERENCE ONLY — LudicrousDB db-config.php shape. Not loaded by this site.
+ *
+ * LudicrousDB also uses wp-content/db.php plus a config file. API names
+ * vary slightly by version; treat this as topology documentation, not a
+ * pin to one release.
+ *
+ * @package Hotel_Booking_Docs
+ *
+ * @see https://github.com/stuttter/ludicrousdb
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * @var LudicrousDB $wpdb Defined in LudicrousDB's db.php drop-in.
+ */
+
+$wpdb->add_database(
+	array(
+		'host'     => getenv( 'WP_DB_PRIMARY_HOST' ) ?: 'db-primary.internal',
+		'user'     => DB_USER,
+		'password' => DB_PASSWORD,
+		'name'     => DB_NAME,
+		'write'    => 1,
+		'read'     => 2,
+		'dataset'  => 'global',
+	)
+);
+
+$wpdb->add_database(
+	array(
+		'host'     => getenv( 'WP_DB_REPLICA_1_HOST' ) ?: 'db-replica-1.internal',
+		'user'     => DB_USER,
+		'password' => DB_PASSWORD,
+		'name'     => DB_NAME,
+		'write'    => 0,
+		'read'     => 1,
+		'dataset'  => 'global',
+	)
+);
+
+$wpdb->add_database(
+	array(
+		'host'     => getenv( 'WP_DB_REPLICA_2_HOST' ) ?: 'db-replica-2.internal',
+		'user'     => DB_USER,
+		'password' => DB_PASSWORD,
+		'name'     => DB_NAME,
+		'write'    => 0,
+		'read'     => 1,
+		'dataset'  => 'global',
+	)
+);

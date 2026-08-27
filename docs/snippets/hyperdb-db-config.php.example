@@ -1,0 +1,58 @@
+<?php
+/**
+ * REFERENCE ONLY — HyperDB db-config.php shape. Not loaded by this site.
+ *
+ * Place beside HyperDB's wp-content/db.php on a real cluster. Hostnames and
+ * passwords would come from environment or a secrets manager, not from git.
+ *
+ * @package Hotel_Booking_Docs
+ *
+ * @see https://wordpress.org/plugins/hyperdb/
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * @var hyperdb $wpdb Defined in HyperDB's db.php drop-in.
+ */
+
+$wpdb->add_database(
+	array(
+		'host'     => getenv( 'WP_DB_PRIMARY_HOST' ) ?: 'db-primary.internal',
+		'user'     => DB_USER,
+		'password' => DB_PASSWORD,
+		'name'     => DB_NAME,
+		'write'    => 1,
+		'read'     => 1,
+		'dataset'  => 'global',
+		'timeout'  => 0.2,
+	)
+);
+
+$wpdb->add_database(
+	array(
+		'host'     => getenv( 'WP_DB_REPLICA_1_HOST' ) ?: 'db-replica-1.internal',
+		'user'     => DB_USER,
+		'password' => DB_PASSWORD,
+		'name'     => DB_NAME,
+		'write'    => 0,
+		'read'     => 1,
+		'dataset'  => 'global',
+		'timeout'  => 0.2,
+	)
+);
+
+$wpdb->add_database(
+	array(
+		'host'     => getenv( 'WP_DB_REPLICA_2_HOST' ) ?: 'db-replica-2.internal',
+		'user'     => DB_USER,
+		'password' => DB_PASSWORD,
+		'name'     => DB_NAME,
+		'write'    => 0,
+		'read'     => 1,
+		'dataset'  => 'global',
+		'timeout'  => 0.2,
+	)
+);

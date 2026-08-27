@@ -1,0 +1,43 @@
+# REFERENCE ONLY — not used by DDEV.
+# Example ProxySQL bits: writer hostgroup 10, reader hostgroup 20.
+# WordPress would set DB_HOST to the ProxySQL listen address (e.g. 127.0.0.1:6033)
+# and keep a stock wpdb (no HyperDB). Tune user/password to match mysql_users.
+
+datadir="/var/lib/proxysql"
+
+mysql_servers =
+(
+	{ address="db-primary.internal", port=3306, hostgroup=10, max_connections=200, comment="writer" },
+	{ address="db-replica-1.internal", port=3306, hostgroup=20, max_connections=200, comment="reader" },
+	{ address="db-replica-2.internal", port=3306, hostgroup=20, max_connections=200, comment="reader" }
+)
+
+mysql_users =
+(
+	{ username="wordpress", password="use-a-secret", default_hostgroup=10, transaction_persistent=1, active=1 }
+)
+
+# FOR UPDATE / LOCK IN SHARE MODE must not go to replicas.
+mysql_query_rules =
+(
+	{
+		rule_id=10
+		active=1
+		match_pattern="^SELECT.*FOR UPDATE"
+		destination_hostgroup=10
+		apply=1
+	},
+	{
+		rule_id=20
+		active=1
+		match_digest="^SELECT"
+		destination_hostgroup=20
+		apply=1
+	},
+	{
+		rule_id=30
+		active=1
+		destination_hostgroup=10
+		apply=1
+	}
+)
