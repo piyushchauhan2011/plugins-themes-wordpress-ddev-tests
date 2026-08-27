@@ -12,11 +12,22 @@
 <!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group">
 	<!-- wp:heading {"level":2} -->
-	<h2 class="wp-block-heading">Tell us the dates</h2>
+	<h2 class="wp-block-heading"><?php esc_html_e( 'Tell us the dates', 'hotel-booking' ); ?></h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph -->
-	<p>This form POSTs to WordPress and inserts a row in the <code>wp_hb_inquiries</code> custom table. It does not charge a card.</p>
+	<p>
+	<?php
+	echo wp_kses(
+		sprintf(
+			/* translators: %s: MySQL table name wrapped in a code tag */
+			__( 'This form POSTs to WordPress and inserts a row in the %s custom table. It does not charge a card.', 'hotel-booking' ),
+			'<code>wp_hb_inquiries</code>'
+		),
+		array( 'code' => array() )
+	);
+	?>
+	</p>
 	<!-- /wp:paragraph -->
 
 	<!-- wp:shortcode -->

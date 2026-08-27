@@ -99,4 +99,18 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'hb-color-scheme', $html );
 		$this->assertStringContainsString( 'Use dark appearance', $html );
 	}
+
+	public function test_language_switcher_block_is_registered() {
+		$registry = WP_Block_Type_Registry::get_instance();
+		$this->assertTrue( $registry->is_registered( 'hotel-booking-theme/language-switcher' ) );
+	}
+
+	public function test_language_switcher_renders_locale_links() {
+		$html = do_blocks( '<!-- wp:hotel-booking-theme/language-switcher /-->' );
+
+		$this->assertStringContainsString( 'hb-language', $html );
+		$this->assertStringContainsString( 'lang=en_US', $html );
+		$this->assertStringContainsString( 'lang=es_ES', $html );
+		$this->assertStringContainsString( 'Español', $html );
+	}
 }

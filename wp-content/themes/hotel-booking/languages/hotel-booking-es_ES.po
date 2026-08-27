@@ -1,0 +1,541 @@
+# Copyright (C) 2026 Hotel Booking Learners
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Hotel Booking 1.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/hotel-booking\n"
+"Last-Translator: Hotel Booking Learners\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: 2026-08-27T15:09:40+05:30\n"
+"PO-Revision-Date: 2026-08-27 15:00+0530\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: hotel-booking\n"
+
+#. Theme Name of the theme
+#: style.css
+#: inc/patterns.php:22
+msgid "Hotel Booking"
+msgstr "Hotel Booking"
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://hotel-booking.ddev.site"
+msgstr "https://hotel-booking.ddev.site"
+
+#. Description of the theme
+#: style.css
+msgid "A block theme for learning WordPress theme development, with a boutique hotel landing page and room templates. Requires the Hotel Booking Core plugin for rooms."
+msgstr "Un tema de bloques para aprender desarrollo de temas de WordPress, con una landing de hotel boutique y plantillas de habitación. Requiere el plugin Hotel Booking Core para las habitaciones."
+
+#. Author of the theme
+#: style.css
+msgid "Hotel Booking Learners"
+msgstr "Hotel Booking Learners"
+
+#: blocks/color-scheme-toggle/render.php:12
+msgid "Use dark appearance"
+msgstr "Usar apariencia oscura"
+
+#: blocks/color-scheme-toggle/render.php:13
+msgid "Use light appearance"
+msgstr "Usar apariencia clara"
+
+#: blocks/color-scheme-toggle/render.php:14
+msgid "Dark"
+msgstr "Oscuro"
+
+#: blocks/color-scheme-toggle/render.php:15
+msgid "Light"
+msgstr "Claro"
+
+#: blocks/stay-faq/render.php:19
+msgid "Check-in"
+msgstr "Entrada"
+
+#: blocks/stay-faq/render.php:20
+msgid "Rooms are ready after 3pm. Leave bags at the desk if you arrive earlier."
+msgstr "Las habitaciones están listas a partir de las 15:00. Deje el equipaje en recepción si llega antes."
+
+#: blocks/stay-faq/render.php:23
+msgid "Quiet hours"
+msgstr "Horas de silencio"
+
+#: blocks/stay-faq/render.php:24
+msgid "After 10pm the house stays still. Breakfast is from 7:30."
+msgstr "Después de las 22:00 la casa queda en silencio. El desayuno es desde las 7:30."
+
+#: blocks/stay-faq/render.php:27
+msgid "Pets"
+msgstr "Mascotas"
+
+#: blocks/stay-faq/render.php:28
+msgid "Dogs by arrangement. Write to the desk when you request a stay."
+msgstr "Perros previa consulta. Escríbanos a recepción al solicitar la estancia."
+
+#: functions.php:118
+msgid "Hotel Booking needs the Hotel Booking Core plugin for room listings and the booking inquiry shortcode."
+msgstr "Hotel Booking necesita el plugin Hotel Booking Core para el listado de habitaciones y el shortcode de consulta."
+
+#: patterns/404.php
+msgctxt "Pattern title"
+msgid "404 message"
+msgstr "Mensaje 404"
+
+#: patterns/404.php
+msgctxt "Pattern description"
+msgid "Heading, copy, and search for the 404 template."
+msgstr "Título, texto y búsqueda para la plantilla 404."
+
+#: patterns/404.php:15
+msgid "Page not found"
+msgstr "Página no encontrada"
+
+#: patterns/404.php:18
+msgid "That corridor does not lead anywhere. Try a search, or return to the lobby."
+msgstr "Ese pasillo no lleva a ninguna parte. Pruebe una búsqueda o vuelva al vestíbulo."
+
+#: patterns/404.php:20
+msgid "Search"
+msgstr "Buscar"
+
+#: patterns/amenities.php
+msgctxt "Pattern title"
+msgid "Amenities"
+msgstr "Servicios"
+
+#: patterns/amenities.php
+msgctxt "Pattern description"
+msgid "Three-column amenities section."
+msgstr "Sección de servicios en tres columnas."
+
+#: patterns/amenities.php:15
+msgid "What stays with the room"
+msgstr "Lo que incluye la habitación"
+
+#: patterns/amenities.php:23
+msgid "Garden breakfast"
+msgstr "Desayuno en el jardín"
+
+#: patterns/amenities.php:26
+msgid "Fruit, bread still warm, and coffee poured until you say stop."
+msgstr "Fruta, pan recién hecho y café hasta que diga basta."
+
+#: patterns/amenities.php:34
+msgid "Deep tubs"
+msgstr "Bañeras profundas"
+
+#: patterns/amenities.php:37
+msgid "Cast-iron baths, linen robes, and water that actually stays hot."
+msgstr "Bañeras de hierro fundido, albornoces de lino y agua que de verdad se mantiene caliente."
+
+#: patterns/amenities.php:45
+msgid "A desk that works"
+msgstr "Un escritorio de verdad"
+
+#: patterns/amenities.php:48
+msgid "Quiet rooms, strong wifi, and a chair you can sit in past noon."
+msgstr "Habitaciones tranquilas, wifi potente y una silla en la que se puede estar después del mediodía."
+
+#: patterns/cta-booking.php
+msgctxt "Pattern title"
+msgid "Booking call to action"
+msgstr "Llamada a reservar"
+
+#: patterns/cta-booking.php
+msgctxt "Pattern description"
+msgid "Closing reservation call to action."
+msgstr "Cierre con llamada a la reserva."
+
+#: patterns/cta-booking.php:15
+msgid "Write to the desk"
+msgstr "Escriba a recepción"
+
+#: patterns/cta-booking.php:19
+msgid "This is a learning theme, not a payment system. The booking page collects an inquiry so you can practice forms, pages, and redirects."
+msgstr "Esto es un tema de aprendizaje, no un sistema de pagos. La página de reserva recoge una consulta para practicar formularios, páginas y redirecciones."
+
+#: patterns/cta-booking.php:25
+msgid "Request a stay"
+msgstr "Solicitar una estancia"
+
+#: patterns/featured-rooms.php
+msgctxt "Pattern title"
+msgid "Featured rooms"
+msgstr "Habitaciones destacadas"
+
+#: patterns/featured-rooms.php
+msgctxt "Pattern description"
+msgid "Query loop of hotel rooms for the landing page."
+msgstr "Bucle de habitaciones para la página de inicio."
+
+#: patterns/featured-rooms.php:15
+msgid "Rooms with a view, and a desk"
+msgstr "Habitaciones con vistas, y un escritorio"
+
+#: patterns/featured-rooms.php:19
+msgid "Four rooms, one house. Rates are nightly and include breakfast."
+msgstr "Cuatro habitaciones, una casa. Las tarifas son por noche e incluyen desayuno."
+
+#. translators: %s: CLI command wrapped in a code tag
+#: patterns/featured-rooms.php:40
+#, php-format
+msgid "Rooms will appear here after you run %s."
+msgstr "Las habitaciones aparecerán aquí cuando ejecute %s."
+
+#: patterns/footer-bar.php
+msgctxt "Pattern title"
+msgid "Footer bar"
+msgstr "Barra de pie"
+
+#: patterns/footer-bar.php
+msgctxt "Pattern description"
+msgid "Footer credit and booking link."
+msgstr "Crédito del pie y enlace de reserva."
+
+#: patterns/footer-bar.php:17
+msgid "Hotel Booking — a learning theme for WordPress block development."
+msgstr "Hotel Booking — un tema de aprendizaje para el desarrollo de bloques de WordPress."
+
+#: patterns/footer-bar.php:20
+msgid "Reserve a room"
+msgstr "Reservar una habitación"
+
+#: patterns/hero-booking.php
+msgctxt "Pattern title"
+msgid "Hero booking"
+msgstr "Héroe de reserva"
+
+#: patterns/hero-booking.php
+msgctxt "Pattern description"
+msgid "Full-width hotel hero with a booking inquiry form."
+msgstr "Héroe a ancho completo con formulario de consulta."
+
+#: patterns/hero-booking.php:15
+msgid "Boutique stay"
+msgstr "Estancia boutique"
+
+#: patterns/hero-booking.php:19
+msgid "A quiet night, well kept"
+msgstr "Una noche tranquila, bien cuidada"
+
+#: patterns/hero-booking.php:23
+msgid "Garden suites, slow mornings, and a reservation desk that still answers the phone."
+msgstr "Suites al jardín, mañanas lentas y una recepción que todavía contesta el teléfono."
+
+#: patterns/hero-booking.php:28
+msgid "Check in"
+msgstr "Entrada"
+
+#: patterns/hero-booking.php:31
+msgid "Check out"
+msgstr "Salida"
+
+#: patterns/hero-booking.php:34
+msgid "Guests"
+msgstr "Huéspedes"
+
+#. translators: %d: number of guests
+#: patterns/hero-booking.php:42
+#, php-format
+msgid "%d guest"
+msgid_plural "%d guests"
+msgstr[0] "%d huésped"
+msgstr[1] "%d huéspedes"
+
+#: patterns/hero-booking.php:51
+msgid "Check availability"
+msgstr "Comprobar disponibilidad"
+
+#: patterns/inquiry-form.php
+msgctxt "Pattern title"
+msgid "Inquiry form"
+msgstr "Formulario de consulta"
+
+#: patterns/inquiry-form.php
+msgctxt "Pattern description"
+msgid "Server-rendered booking inquiry form saved to a custom table."
+msgstr "Formulario de consulta renderizado en el servidor y guardado en una tabla personalizada."
+
+#: patterns/inquiry-form.php:15
+msgid "Tell us the dates"
+msgstr "Díganos las fechas"
+
+#. translators: %s: MySQL table name wrapped in a code tag
+#: patterns/inquiry-form.php:23
+#, php-format
+msgid "This form POSTs to WordPress and inserts a row in the %s custom table. It does not charge a card."
+msgstr "Este formulario envía un POST a WordPress e inserta una fila en la tabla personalizada %s. No cobra una tarjeta."
+
+#: patterns/no-archive-results.php
+msgctxt "Pattern title"
+msgid "No archive results"
+msgstr "Sin resultados de archivo"
+
+#: patterns/no-archive-results.php
+msgctxt "Pattern description"
+msgid "Empty state for post archives."
+msgstr "Estado vacío para archivos de entradas."
+
+#: patterns/no-archive-results.php:13
+msgid "Nothing found in this archive."
+msgstr "No hay nada en este archivo."
+
+#: patterns/no-posts.php
+msgctxt "Pattern title"
+msgid "No posts"
+msgstr "Sin entradas"
+
+#: patterns/no-posts.php
+msgctxt "Pattern description"
+msgid "Empty state for the blog index."
+msgstr "Estado vacío para el índice del blog."
+
+#: patterns/no-posts.php:13
+msgid "No posts found."
+msgstr "No se encontraron entradas."
+
+#: patterns/no-search-results.php
+msgctxt "Pattern title"
+msgid "No search results"
+msgstr "Sin resultados de búsqueda"
+
+#: patterns/no-search-results.php
+msgctxt "Pattern description"
+msgid "Empty state for search templates."
+msgstr "Estado vacío para plantillas de búsqueda."
+
+#: patterns/no-search-results.php:13
+msgid "No results matched that search."
+msgstr "Ningún resultado coincidió con esa búsqueda."
+
+#: patterns/request-room.php
+msgctxt "Pattern title"
+msgid "Request this room"
+msgstr "Solicitar esta habitación"
+
+#: patterns/request-room.php
+msgctxt "Pattern description"
+msgid "Booking button for a single room."
+msgstr "Botón de reserva para una habitación."
+
+#: patterns/request-room.php:15
+msgid "Request this room"
+msgstr "Solicitar esta habitación"
+
+#: patterns/rooms-archive.php
+msgctxt "Pattern title"
+msgid "Rooms archive"
+msgstr "Archivo de habitaciones"
+
+#: patterns/rooms-archive.php
+msgctxt "Pattern description"
+msgid "Rooms archive heading, intro, and query loop."
+msgstr "Título, introducción y bucle del archivo de habitaciones."
+
+#: patterns/rooms-archive.php:15
+msgid "Rooms"
+msgstr "Habitaciones"
+
+#: patterns/rooms-archive.php:18
+msgid "Quiet rooms with garden light, proper desks, and linen that still feels like linen."
+msgstr "Habitaciones tranquilas con luz de jardín, escritorios de verdad y lino que sigue pareciendo lino."
+
+#: patterns/rooms-archive.php:27
+msgid "View room"
+msgstr "Ver habitación"
+
+#: patterns/rooms-archive.php:38
+msgid "No rooms are listed yet."
+msgstr "Aún no hay habitaciones listadas."
+
+#: patterns/stay-faq.php
+msgctxt "Pattern title"
+msgid "Stay FAQ"
+msgstr "Preguntas de la estancia"
+
+#: patterns/stay-faq.php
+msgctxt "Pattern description"
+msgid "Theme Interactivity API accordion of house rules."
+msgstr "Acordeón de normas de la casa con la API de Interactividad del tema."
+
+#: patterns/stay-faq.php:15
+msgid "Before you arrive"
+msgstr "Antes de llegar"
+
+#: patterns/stay-faq.php:19
+msgid "House rules as a theme block. The accordion uses the Interactivity API from the theme, not the plugin."
+msgstr "Normas de la casa como bloque del tema. El acordeón usa la API de Interactividad del tema, no del plugin."
+
+#: patterns/testimonials.php
+msgctxt "Pattern title"
+msgid "Testimonials"
+msgstr "Testimonios"
+
+#: patterns/testimonials.php
+msgctxt "Pattern description"
+msgid "Guest quotes for the landing page."
+msgstr "Citas de huéspedes para la página de inicio."
+
+#: patterns/testimonials.php:15
+msgid "From the guest book"
+msgstr "Del libro de visitas"
+
+#: patterns/testimonials.php:25
+msgid "We came for one night and stayed for four. The garden suite is the whole argument."
+msgstr "Vinimos una noche y nos quedamos cuatro. La suite del jardín es todo el argumento."
+
+#: patterns/testimonials.php:38
+msgid "Someone answered the phone. That should not feel rare, and yet."
+msgstr "Alguien contestó el teléfono. No debería parecer extraño, y sin embargo."
+
+#: template-parts/inquiries-list.php:15
+msgid "Activate Hotel Booking Core to list inquiries."
+msgstr "Active Hotel Booking Core para listar las consultas."
+
+#: template-parts/inquiry-form.php:15
+msgid "Activate Hotel Booking Core to collect inquiries."
+msgstr "Active Hotel Booking Core para recoger consultas."
+
+#: blocks/color-scheme-toggle/block.json
+msgctxt "block title"
+msgid "Color scheme toggle"
+msgstr "Interruptor de paleta"
+
+#: blocks/color-scheme-toggle/block.json
+msgctxt "block description"
+msgid "Visitor light/dark appearance toggle (Interactivity API, theme-native, no webpack)."
+msgstr "Interruptor claro/oscuro para visitantes (API de Interactividad, nativo del tema, sin webpack)."
+
+#: blocks/stay-faq/block.json
+msgctxt "block title"
+msgid "Stay FAQ"
+msgstr "Preguntas de la estancia"
+
+#: blocks/stay-faq/block.json
+msgctxt "block description"
+msgid "Accordion of house rules (Interactivity API, theme-native, no webpack)."
+msgstr "Acordeón de normas de la casa (API de Interactividad, nativo del tema, sin webpack)."
+
+#: theme.json
+msgctxt "Color name"
+msgid "Cream"
+msgstr "Crema"
+
+#: theme.json
+msgctxt "Color name"
+msgid "Linen"
+msgstr "Lino"
+
+#: theme.json
+msgctxt "Color name"
+msgid "Espresso"
+msgstr "Espresso"
+
+#: theme.json
+msgctxt "Color name"
+msgid "Terracotta"
+msgstr "Terracota"
+
+#: theme.json
+msgctxt "Color name"
+msgid "Gold"
+msgstr "Oro"
+
+#: theme.json
+msgctxt "Color name"
+msgid "Sage"
+msgstr "Salvia"
+
+#: theme.json
+msgctxt "Color name"
+msgid "White"
+msgstr "Blanco"
+
+#: theme.json
+msgctxt "Font family name"
+msgid "Heading serif"
+msgstr "Serif de títulos"
+
+#: theme.json
+msgctxt "Font family name"
+msgid "Body sans"
+msgstr "Sans del cuerpo"
+
+#: theme.json
+msgctxt "Font size name"
+msgid "Small"
+msgstr "Pequeño"
+
+#: theme.json
+msgctxt "Font size name"
+msgid "Medium"
+msgstr "Mediano"
+
+#: theme.json
+msgctxt "Font size name"
+msgid "Large"
+msgstr "Grande"
+
+#: theme.json
+msgctxt "Font size name"
+msgid "Extra Large"
+msgstr "Extra grande"
+
+#: theme.json
+msgctxt "Font size name"
+msgid "Huge"
+msgstr "Enorme"
+
+#: theme.json
+msgctxt "Space size name"
+msgid "XS"
+msgstr "XS"
+
+#: theme.json
+msgctxt "Space size name"
+msgid "SM"
+msgstr "SM"
+
+#: theme.json
+msgctxt "Space size name"
+msgid "MD"
+msgstr "MD"
+
+#: theme.json
+msgctxt "Space size name"
+msgid "LG"
+msgstr "LG"
+
+#: theme.json
+msgctxt "Space size name"
+msgid "XL"
+msgstr "XL"
+
+#: theme.json
+msgctxt "Template part name"
+msgid "Header"
+msgstr "Cabecera"
+
+#: theme.json
+msgctxt "Template part name"
+msgid "Footer"
+msgstr "Pie"
+
+#: styles/dawn.json
+msgctxt "Style variation name"
+msgid "Dawn"
+msgstr "Amanecer"
+
+#: styles/dusk.json
+msgctxt "Style variation name"
+msgid "Dusk"
+msgstr "Anochecer"
+
+#: blocks/language-switcher/render.php
+msgid "Language"
+msgstr "Idioma"

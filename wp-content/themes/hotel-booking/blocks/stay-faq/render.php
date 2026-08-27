@@ -14,6 +14,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 $items = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $attributes['items'] : array();
 $clean = array();
 
+$default_faq = array(
+	'Check-in|Rooms are ready after 3pm. Leave bags at the desk if you arrive earlier.' => array(
+		'title' => __( 'Check-in', 'hotel-booking' ),
+		'text'  => __( 'Rooms are ready after 3pm. Leave bags at the desk if you arrive earlier.', 'hotel-booking' ),
+	),
+	'Quiet hours|After 10pm the house stays still. Breakfast is from 7:30.'            => array(
+		'title' => __( 'Quiet hours', 'hotel-booking' ),
+		'text'  => __( 'After 10pm the house stays still. Breakfast is from 7:30.', 'hotel-booking' ),
+	),
+	'Pets|Dogs by arrangement. Write to the desk when you request a stay.'             => array(
+		'title' => __( 'Pets', 'hotel-booking' ),
+		'text'  => __( 'Dogs by arrangement. Write to the desk when you request a stay.', 'hotel-booking' ),
+	),
+);
+
 foreach ( $items as $item ) {
 	if ( ! is_array( $item ) ) {
 		continue;
@@ -23,6 +38,13 @@ foreach ( $items as $item ) {
 	if ( '' === $item_title && '' === $item_text ) {
 		continue;
 	}
+
+	$default_key = $item_title . '|' . $item_text;
+	if ( isset( $default_faq[ $default_key ] ) ) {
+		$item_title = $default_faq[ $default_key ]['title'];
+		$item_text  = $default_faq[ $default_key ]['text'];
+	}
+
 	$clean[] = array(
 		'title' => $item_title,
 		'text'  => $item_text,

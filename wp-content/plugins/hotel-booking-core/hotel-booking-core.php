@@ -10,6 +10,7 @@
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: hotel-booking-core
+ * Domain Path: /languages
  *
  * @package Hotel_Booking_Core
  */
@@ -23,6 +24,7 @@ define( 'HOTEL_BOOKING_CORE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'HOTEL_BOOKING_CORE_URL', plugin_dir_url( __FILE__ ) );
 
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/helpers.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/locale.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/database.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/post-types.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiries.php';
@@ -38,6 +40,12 @@ register_activation_hook( __FILE__, 'hotel_booking_install_inquiries_table' );
  * Load plugin translations.
  */
 function hotel_booking_core_load_textdomain() {
-	load_plugin_textdomain( 'hotel-booking-core', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	$languages = dirname( plugin_basename( __FILE__ ) ) . '/languages';
+	load_plugin_textdomain( 'hotel-booking-core', false, $languages );
+
+	$mofile = HOTEL_BOOKING_CORE_PATH . 'languages/hotel-booking-core-' . determine_locale() . '.mo';
+	if ( is_readable( $mofile ) ) {
+		load_textdomain( 'hotel-booking-core', $mofile );
+	}
 }
 add_action( 'plugins_loaded', 'hotel_booking_core_load_textdomain' );

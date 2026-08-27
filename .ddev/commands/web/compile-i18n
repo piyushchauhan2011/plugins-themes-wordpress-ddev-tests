@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+## Description: Compile .po catalogs to .mo, .l10n.php, and plugin editor JSON
+## Usage: compile-i18n
+## Example: ddev compile-i18n
+
+set -euo pipefail
+
+PROJECT_DIR="/var/www/html"
+THEME="${PROJECT_DIR}/wp-content/themes/hotel-booking/languages"
+PLUGIN="${PROJECT_DIR}/wp-content/plugins/hotel-booking-core/languages"
+
+wp i18n make-mo "${THEME}"
+wp i18n make-php "${THEME}"
+wp i18n make-mo "${PLUGIN}"
+wp i18n make-php "${PLUGIN}"
+wp i18n make-json "${PLUGIN}" --no-purge
+
+echo "Compiled gettext from .po (gitignored: .mo, .l10n.php, plugin .json)."

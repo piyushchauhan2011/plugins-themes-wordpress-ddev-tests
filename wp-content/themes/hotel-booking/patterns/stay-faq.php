@@ -12,11 +12,11 @@
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xl"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xl)">
 	<!-- wp:heading {"textAlign":"center"} -->
-	<h2 class="wp-block-heading has-text-align-center">Before you arrive</h2>
+	<h2 class="wp-block-heading has-text-align-center"><?php esc_html_e( 'Before you arrive', 'hotel-booking' ); ?></h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"align":"center"} -->
-	<p class="has-text-align-center">House rules as a theme block. The accordion uses the Interactivity API from the theme, not the plugin.</p>
+	<p class="has-text-align-center"><?php esc_html_e( 'House rules as a theme block. The accordion uses the Interactivity API from the theme, not the plugin.', 'hotel-booking' ); ?></p>
 	<!-- /wp:paragraph -->
 
 	<!-- wp:hotel-booking-theme/stay-faq {"align":"wide"} /-->

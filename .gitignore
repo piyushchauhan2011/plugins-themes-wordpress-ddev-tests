@@ -18,7 +18,15 @@
 # These must come after !** or Git will track generated plugin files.
 /wp-content/plugins/hotel-booking-core/node_modules/
 /wp-content/plugins/hotel-booking-core/build/
+/wp-content/plugins/hotel-booking-core/languages/*.mo
+/wp-content/plugins/hotel-booking-core/languages/*.l10n.php
+/wp-content/plugins/hotel-booking-core/languages/*.json
+/wp-content/themes/hotel-booking/languages/*.mo
+/wp-content/themes/hotel-booking/languages/*.l10n.php
 /wp-content/mu-plugins/
+
+# Core language packs from `wp language core install` (not theme/plugin catalogs)
+/wp-content/languages/
 
 # DDEV-generated WordPress config
 /wp-config.php

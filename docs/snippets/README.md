@@ -14,5 +14,6 @@ These files are **not** loaded by WordPress or DDEV. Do **not** copy them into `
 | [rabbitmq-publish.php.example](rabbitmq-publish.php.example) | AMQP `inquiry.created` / `room.updated` |
 | [elasticsearch-room-mapping.json.example](elasticsearch-room-mapping.json.example) | Room index mapping |
 | [elasticsearch-search.php.example](elasticsearch-search.php.example) | Guests range + full-text `_search` body |
+| [inquiries-locale-column.php.example](inquiries-locale-column.php.example) | Optional guest UI locale on an inquiry — **not** in `dbDelta` |
 
-Architecture: [SCALING.md](../SCALING.md), [JOBS.md](../JOBS.md).
+Architecture: [SCALING.md](../SCALING.md), [JOBS.md](../JOBS.md), [I18N.md](../I18N.md).

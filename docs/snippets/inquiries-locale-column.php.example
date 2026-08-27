@@ -1,0 +1,36 @@
+<?php
+/**
+ * REFERENCE ONLY — not used by hotel_booking_install_inquiries_table().
+ *
+ * Optional later: record which UI locale the guest saw when they submitted.
+ * Do not translate guest_name / message. Do not add per-language row copies.
+ *
+ * @package Hotel_Booking_Docs
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// Hypothetical extra column (never run this dbDelta in this project):
+// locale varchar(20) NOT NULL DEFAULT ''
+//
+// On insert:
+// $locale = determine_locale(); // e.g. es_ES when WPLANG is Spanish
+
+/**
+ * @param object $inquiry Inquiry row.
+ * @return string Locale label for staff, not a translation of the message.
+ */
+function hotel_booking_docs_inquiry_locale_note( $inquiry ) {
+	$locale = isset( $inquiry->locale ) ? (string) $inquiry->locale : '';
+	if ( '' === $locale ) {
+		return '';
+	}
+
+	return sprintf(
+		/* translators: %s: locale code such as es_ES */
+		__( 'Submitted in %s', 'hotel-booking-core' ),
+		$locale
+	);
+}

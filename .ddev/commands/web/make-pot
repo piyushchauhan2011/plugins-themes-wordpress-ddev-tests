@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+## Description: Regenerate theme and plugin POT catalogs (does not overwrite .po)
+## Usage: make-pot
+## Example: ddev make-pot
+
+set -euo pipefail
+
+PROJECT_DIR="/var/www/html"
+THEME="${PROJECT_DIR}/wp-content/themes/hotel-booking"
+PLUGIN="${PROJECT_DIR}/wp-content/plugins/hotel-booking-core"
+
+mkdir -p "${THEME}/languages" "${PLUGIN}/languages"
+
+wp i18n make-pot "${THEME}" "${THEME}/languages/hotel-booking.pot" \
+	--domain=hotel-booking \
+	--exclude=assets,node_modules
+
+wp i18n make-pot "${PLUGIN}" "${PLUGIN}/languages/hotel-booking-core.pot" \
+	--domain=hotel-booking-core \
+	--exclude=node_modules,vendor,build
+
+chmod 644 "${THEME}/languages/"*.pot "${PLUGIN}/languages/"*.pot 2>/dev/null || true
+
+echo "POT files updated. Merge into .po with: wp i18n update-po <file.pot> <file.po>"
+echo "Then compile binaries: ddev compile-i18n"

@@ -37,3 +37,16 @@ test( 'home color scheme toggle switches light and dark', async ( { page } ) => 
 	await page.getByRole( 'button', { name: 'Use light appearance' } ).click();
 	await expect( html ).toHaveAttribute( 'data-color-scheme', 'light' );
 } );
+
+test( 'header language switcher translates chrome to Spanish', async ( { page } ) => {
+	await page.goto( '/' );
+
+	await page.getByRole( 'navigation', { name: 'Language' } ).getByRole( 'link', { name: 'Español' } ).click();
+
+	await expect( page.getByRole( 'heading', { name: /noche tranquila/i } ) ).toBeVisible();
+	await expect( page.getByRole( 'button', { name: 'Usar apariencia oscura' } ) ).toBeVisible();
+	await expect( page.getByRole( 'heading', { name: 'Deluxe King' } ) ).toBeVisible();
+
+	await page.getByRole( 'link', { name: 'English' } ).click();
+	await expect( page.getByRole( 'heading', { name: /quiet night/i } ) ).toBeVisible();
+} );

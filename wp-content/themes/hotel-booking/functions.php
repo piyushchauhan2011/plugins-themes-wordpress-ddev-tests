@@ -2,7 +2,7 @@
 /**
  * Hotel Booking theme bootstrap.
  *
- * Presentation plus theme-native Interactivity blocks (Stay FAQ, color scheme).
+ * Presentation plus theme-native Interactivity blocks (Stay FAQ, color scheme, language switcher).
  * Rooms CPT and shortcodes live in the Hotel Booking Core plugin.
  *
  * @package Hotel_Booking
@@ -23,9 +23,22 @@ function hotel_booking_setup() {
 	add_theme_support( 'wp-block-styles' );
 	add_theme_support( 'editor-styles' );
 	add_editor_style( 'style.css' );
-	load_theme_textdomain( 'hotel-booking', get_template_directory() . '/languages' );
+	hotel_booking_load_textdomain();
 }
 add_action( 'after_setup_theme', 'hotel_booking_setup' );
+
+/**
+ * Load theme translations from languages/ (needed for WP 6.7+ just-in-time loading).
+ */
+function hotel_booking_load_textdomain() {
+	$languages = get_template_directory() . '/languages';
+	load_theme_textdomain( 'hotel-booking', $languages );
+
+	$mofile = $languages . '/hotel-booking-' . determine_locale() . '.mo';
+	if ( is_readable( $mofile ) ) {
+		load_textdomain( 'hotel-booking', $mofile );
+	}
+}
 
 /**
  * Register theme Gutenberg blocks (unbundled view modules, no webpack).

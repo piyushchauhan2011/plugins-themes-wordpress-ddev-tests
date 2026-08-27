@@ -25,7 +25,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Primary/replica routing and sharding (docs only, not deployed): [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Primary/replica routing and sharding (docs only, not deployed): [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus content vs custom-table locale (Spanish catalogs shipped; Polylang not installed): [docs/I18N.md](docs/I18N.md).
 
 ```bash
 ddev start
@@ -44,11 +44,12 @@ wp-content/themes/hotel-booking/
   styles/dawn.json       Light style variation (Appearance → Editor → Styles)
   functions.php          Setup, fonts, pattern category, theme blocks
   templates/             Block templates (front-page, single, archives, 404)
-  parts/                 header.html (color scheme toggle), footer.html
+  parts/                 header.html (language switcher, color scheme toggle), footer.html
   patterns/              Landing-page sections (hero, rooms, amenities, stay FAQ, CTA)
-  blocks/                Theme Gutenberg blocks (Stay FAQ, color scheme toggle; Interactivity API, no webpack)
+  blocks/                Theme Gutenberg blocks (Stay FAQ, language switcher, color scheme toggle)
   template-parts/        PHP: inquiry-form.php, inquiries-list.php (`$wpdb` data)
   inc/patterns.php       Pattern category
+  languages/             gettext POT, es_ES.po, es_ES.mo
 ```
 
 The booking form **POSTs** into a custom MySQL table (`wp_hb_inquiries`). It is not a payment or reservation engine. Staff can read/update/delete rows on `/desk/` (log in as admin).
@@ -256,6 +257,8 @@ CI runs the same suite on push and pull request.
 | `ddev phpcs` | WordPress Extra + PHPCompatibility on theme and plugin |
 | `ddev phpstan` | PHPStan level 5 with WordPress stubs |
 | `ddev plugin-check` | WordPress Plugin Check on hotel-booking-core |
+| `ddev make-pot` | Regenerate theme and plugin `.pot` catalogs (does not overwrite `.po`) |
+| `ddev compile-i18n` | Compile `.po` to `.mo`, `.l10n.php`, and plugin editor JSON |
 | `ddev npm-audit` | npm audit (high and critical) |
 | `ddev e2e` | Playwright against the DDEV site |
 | `ddev wp …` | Any WP-CLI command |

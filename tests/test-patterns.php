@@ -29,4 +29,12 @@ class Test_Hotel_Booking_Patterns extends WP_UnitTestCase {
 		$patterns = WP_Block_Patterns_Registry::get_instance();
 		$this->assertTrue( $patterns->is_registered( 'hotel-booking/stay-faq' ) );
 	}
+
+	public function test_gettext_chrome_patterns_are_registered() {
+		$patterns = WP_Block_Patterns_Registry::get_instance();
+		$this->assertTrue( $patterns->is_registered( 'hotel-booking/404' ) );
+		$this->assertTrue( $patterns->is_registered( 'hotel-booking/rooms-archive' ) );
+		$this->assertTrue( $patterns->is_registered( 'hotel-booking/footer-bar' ) );
+		$this->assertTrue( $patterns->is_registered( 'hotel-booking/request-room' ) );
+	}
 }

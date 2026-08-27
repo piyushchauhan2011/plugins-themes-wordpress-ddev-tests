@@ -19,6 +19,24 @@ function hotel_booking_inquiry_statuses() {
 }
 
 /**
+ * Translated label for an inquiry status slug.
+ *
+ * Stored values stay English keys. Unknown slugs are returned unchanged.
+ *
+ * @param string $status pending|contacted|closed.
+ * @return string
+ */
+function hotel_booking_inquiry_status_label( $status ) {
+	$labels = array(
+		'pending'   => __( 'Pending', 'hotel-booking-core' ),
+		'contacted' => __( 'Contacted', 'hotel-booking-core' ),
+		'closed'    => __( 'Closed', 'hotel-booking-core' ),
+	);
+
+	return isset( $labels[ $status ] ) ? $labels[ $status ] : (string) $status;
+}
+
+/**
  * Sanitize and validate raw inquiry input.
  *
  * @param array $input Raw data.

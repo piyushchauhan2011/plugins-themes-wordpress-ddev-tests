@@ -115,6 +115,16 @@ class Test_Hotel_Booking_Inquiries extends WP_UnitTestCase {
 		$this->assertNull( hotel_booking_get_inquiry( $id ) );
 	}
 
+	public function test_inquiry_status_label_translates_known_slugs() {
+		$this->assertSame( 'Pending', hotel_booking_inquiry_status_label( 'pending' ) );
+		$this->assertSame( 'Contacted', hotel_booking_inquiry_status_label( 'contacted' ) );
+		$this->assertSame( 'Closed', hotel_booking_inquiry_status_label( 'closed' ) );
+	}
+
+	public function test_inquiry_status_label_leaves_unknown_slug() {
+		$this->assertSame( 'archived', hotel_booking_inquiry_status_label( 'archived' ) );
+	}
+
 	public function test_shortcodes_are_registered() {
 		$this->assertTrue( shortcode_exists( 'hotel_inquiry_form' ) );
 		$this->assertTrue( shortcode_exists( 'hotel_inquiry_list' ) );

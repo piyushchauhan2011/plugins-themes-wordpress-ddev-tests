@@ -77,7 +77,12 @@ function hotel_booking_register_blocks() {
 	foreach ( hotel_booking_block_slugs() as $slug ) {
 		$dir = $build . '/' . $slug;
 		if ( file_exists( $dir . '/block.json' ) ) {
-			register_block_type( $dir );
+			$block = register_block_type( $dir );
+			if ( $block && ! empty( $block->editor_script_handles ) ) {
+				foreach ( $block->editor_script_handles as $handle ) {
+					wp_set_script_translations( $handle, 'hotel-booking-core', HOTEL_BOOKING_CORE_PATH . 'languages' );
+				}
+			}
 		}
 	}
 

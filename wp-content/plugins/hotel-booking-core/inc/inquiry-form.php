@@ -312,7 +312,7 @@ function hotel_booking_render_inquiry_list() {
 						data-wp-on--click="actions.setFilter"
 						<?php echo wp_interactivity_data_wp_context( array( 'status' => $inquiry_status ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						data-wp-class--is-active="state.isFilterActive"
-					><?php echo esc_html( $inquiry_status ); ?></button>
+					><?php echo esc_html( hotel_booking_inquiry_status_label( $inquiry_status ) ); ?></button>
 				<?php endforeach; ?>
 			</div>
 			<div class="hb-desk__table-wrap">
@@ -348,7 +348,7 @@ function hotel_booking_render_inquiry_list() {
 									<?php wp_nonce_field( 'hb_update_inquiry', 'hb_update_nonce' ); ?>
 									<select name="status">
 										<?php foreach ( hotel_booking_inquiry_statuses() as $inquiry_status ) : ?>
-											<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( $inquiry_status ); ?></option>
+											<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( hotel_booking_inquiry_status_label( $inquiry_status ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
 									<button type="submit"><?php esc_html_e( 'Save', 'hotel-booking-core' ); ?></button>

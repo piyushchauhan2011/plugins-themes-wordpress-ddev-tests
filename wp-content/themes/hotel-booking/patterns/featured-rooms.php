@@ -12,11 +12,11 @@
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xl"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xl)">
 	<!-- wp:heading {"textAlign":"center"} -->
-	<h2 class="wp-block-heading has-text-align-center">Rooms with a view, and a desk</h2>
+	<h2 class="wp-block-heading has-text-align-center"><?php esc_html_e( 'Rooms with a view, and a desk', 'hotel-booking' ); ?></h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"align":"center"} -->
-	<p class="has-text-align-center">Four rooms, one house. Rates are nightly and include breakfast.</p>
+	<p class="has-text-align-center"><?php esc_html_e( 'Four rooms, one house. Rates are nightly and include breakfast.', 'hotel-booking' ); ?></p>
 	<!-- /wp:paragraph -->
 
 	<!-- wp:query {"query":{"perPage":4,"pages":0,"offset":0,"postType":"hb_room","order":"asc","orderBy":"title","author":"","search":"","exclude":[],"sticky":"","inherit":false},"align":"wide"} -->
@@ -33,7 +33,18 @@
 
 		<!-- wp:query-no-results -->
 			<!-- wp:paragraph {"align":"center"} -->
-			<p class="has-text-align-center">Rooms will appear here after you run <code>ddev seed-content</code>.</p>
+			<p class="has-text-align-center">
+			<?php
+			echo wp_kses(
+				sprintf(
+					/* translators: %s: CLI command wrapped in a code tag */
+					__( 'Rooms will appear here after you run %s.', 'hotel-booking' ),
+					'<code>ddev seed-content</code>'
+				),
+				array( 'code' => array() )
+			);
+			?>
+			</p>
 			<!-- /wp:paragraph -->
 		<!-- /wp:query-no-results -->
 	</div>

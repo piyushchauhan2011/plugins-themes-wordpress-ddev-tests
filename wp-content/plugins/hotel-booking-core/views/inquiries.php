@@ -52,7 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php wp_nonce_field( 'hb_update_inquiry', 'hb_update_nonce' ); ?>
 								<select name="status">
 									<?php foreach ( hotel_booking_inquiry_statuses() as $inquiry_status ) : ?>
-										<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( $inquiry_status ); ?></option>
+										<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( hotel_booking_inquiry_status_label( $inquiry_status ) ); ?></option>
 									<?php endforeach; ?>
 								</select>
 								<?php submit_button( __( 'Save', 'hotel-booking-core' ), 'secondary', 'submit', false ); ?>

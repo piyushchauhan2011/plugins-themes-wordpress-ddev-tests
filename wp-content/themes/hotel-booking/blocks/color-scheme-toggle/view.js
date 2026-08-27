@@ -38,12 +38,10 @@ const { state } = store( 'hotel-booking-theme/color-scheme', {
 			return state.scheme === 'dark';
 		},
 		get label() {
-			return state.scheme === 'dark'
-				? 'Use light appearance'
-				: 'Use dark appearance';
+			return state.scheme === 'dark' ? state.labelLight : state.labelDark;
 		},
 		get shortLabel() {
-			return state.scheme === 'dark' ? 'Light' : 'Dark';
+			return state.scheme === 'dark' ? state.shortLight : state.shortDark;
 		},
 	},
 	actions: {
