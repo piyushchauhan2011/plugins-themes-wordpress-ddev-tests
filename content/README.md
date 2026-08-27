@@ -16,10 +16,15 @@ ddev seed-content --force   # rebuild rooms and pages
 What it creates:
 
 - Static front page (`Home`) that uses `templates/front-page.html`
-- Pages: About, Amenities, Contact, Booking
-- Four `hb_room` posts with featured images and price/guest/bed/size meta
+- Pages: About, Amenities, Contact, Booking, Desk
+- Five `hb_room` posts (Deluxe King, Garden Suite, Family Room, Penthouse, Courtyard Twin)
+- Users: `desk` / `desk` (editor), `guest` / `guest` (subscriber); `admin` / `admin` from install
+- About six sample rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`)
+- Settings: hotel name The Oak House, desk email, max guests 6
 - A Primary `wp_navigation` menu for the block header
 - Pretty permalinks (`/%postname%/`)
+
+Joiner walkthrough: [`docs/ONBOARDING.md`](../docs/ONBOARDING.md). Extra fake data is applied by [`content/seed-demo.php`](seed-demo.php).
 
 After seeding, WP-CLI can export a WXR snapshot:
 
@@ -51,6 +56,6 @@ The XML file is gitignored because it is large and fetched on demand.
 
 | Goal | Use |
 | --- | --- |
-| Learn the hotel landing page | `ddev seed-content` |
+| Learn the hotel landing page, desk, and inquiries | `ddev seed-content` |
 | Stress-test templates like a reviewer | `ddev import-theme-unit-test` |
 | Automated assertions | `ddev phpunit` (`WP_UnitTestCase`) |

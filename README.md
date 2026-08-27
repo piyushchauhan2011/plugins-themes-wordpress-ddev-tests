@@ -2,6 +2,8 @@
 
 A DDEV WordPress site with a custom **block theme**, a companion **plugin** for rooms, hotel landing-page content, and `WP_UnitTestCase` tests.
 
+**New here?** Follow [docs/ONBOARDING.md](docs/ONBOARDING.md) (accounts, seed data, first-hour click-through).
+
 - Site: https://hotel-booking.ddev.site
 - Admin: https://hotel-booking.ddev.site/wp-admin  
   User `admin` / password `admin` (local learning only)
@@ -22,26 +24,12 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker.
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md).
 
 ```bash
-cd hotel-booking
 ddev start
-ddev wp plugin activate hotel-booking-core
-ddev wp theme activate hotel-booking
 ddev seed-content
 ddev launch
-```
-
-WordPress core is downloaded into this folder by WP-CLI and is gitignored. After a fresh clone:
-
-```bash
-ddev start
-ddev wp core download
-ddev wp core install --url='$DDEV_PRIMARY_URL' --title='Hotel Booking' --admin_user=admin --admin_password=admin --admin_email=admin@hotel-booking.ddev.site --skip-email
-ddev wp plugin activate hotel-booking-core
-ddev wp theme activate hotel-booking
-ddev seed-content
 ```
 
 ## Theme map
@@ -185,7 +173,7 @@ ddev seed-content
 ddev seed-content --force
 ```
 
-Creates Home, About, Amenities, Contact, Booking, four rooms with images, and a Primary navigation. Details: [`content/README.md`](content/README.md).
+Creates Home, About, Amenities, Contact, Booking, Desk, five rooms, demo users (`desk`, `guest`), sample inquiries, and hotel settings. First hour: [docs/ONBOARDING.md](docs/ONBOARDING.md). Dataset details: [`content/README.md`](content/README.md).
 
 Theme Unit Test data (mixed posts/comments/media used in theme review):
 
@@ -211,7 +199,7 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 | Command | Purpose |
 | --- | --- |
 | `ddev start` / `ddev launch` | Run the site |
-| `ddev seed-content` | Hotel pages, rooms, navigation |
+| `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings |
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
 | `ddev setup-tests` | Composer + WordPress PHPUnit library |
 | `ddev phpunit` | Run `WP_UnitTestCase` tests |

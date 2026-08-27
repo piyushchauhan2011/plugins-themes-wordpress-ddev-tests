@@ -25,6 +25,7 @@ if [[ "${FORCE}" == "--force" ]]; then
 		# shellcheck disable=SC2086
 		wp post delete ${ROOM_IDS} --force >/dev/null
 	fi
+	export HOTEL_BOOKING_SEED_FORCE=1
 fi
 
 wp rewrite structure '/%postname%/' >/dev/null
@@ -102,6 +103,11 @@ create_room "Penthouse" "penthouse" \
 	"<!-- wp:paragraph --><p>One bedroom, a parlor, and a terrace that catches the last of the evening.</p><!-- /wp:paragraph -->" \
 	540 2 1 70 "penthouse.jpg"
 
+create_room "Courtyard Twin" "courtyard-twin" \
+	"Two beds, courtyard light, and a rate that still feels like a hotel." \
+	"<!-- wp:paragraph --><p>A smaller room for a short stay: two twins, a window on the courtyard, and a desk against the wall.</p><!-- /wp:paragraph -->" \
+	190 2 2 22 "courtyard-twin.jpg"
+
 NAV_CONTENT=""
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Home\",\"url\":\"/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Rooms\",\"url\":\"/rooms/\",\"kind\":\"custom\"} /-->"
@@ -134,6 +140,8 @@ fi
 wp rewrite flush >/dev/null
 wp option update hotel_booking_seeded 1 >/dev/null
 
+wp eval-file /var/www/html/content/seed-demo.php
+
 echo
 echo "Seeded hotel demo content."
 echo "Front page: Home (#${HOME_ID})"
@@ -141,3 +149,4 @@ echo "Booking page: /booking/ (#${BOOKING_ID})"
 echo "Desk (inquiries): /desk/ (#${DESK_ID})"
 echo "Rooms archive: /rooms/"
 echo "Primary navigation ID: ${NAV_ID}"
+echo "Users: admin/admin, desk/desk (editor), guest/guest (subscriber)"

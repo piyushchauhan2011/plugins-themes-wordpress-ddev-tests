@@ -30,6 +30,7 @@ hotel_booking_make_placeholder( $dir . '/deluxe-king.jpg', 1600, 1000, '6b4a38',
 hotel_booking_make_placeholder( $dir . '/garden-suite.jpg', 1600, 1000, '6b7f6a', 'Garden Suite' );
 hotel_booking_make_placeholder( $dir . '/family-room.jpg', 1600, 1000, 'a65d3f', 'Family Room' );
 hotel_booking_make_placeholder( $dir . '/penthouse.jpg', 1600, 1000, '2c2118', 'Penthouse' );
+hotel_booking_make_placeholder( $dir . '/courtyard-twin.jpg', 1600, 1000, 'c4a574', 'Courtyard Twin' );
 hotel_booking_make_placeholder( dirname( $dir ) . '/../screenshot.jpg', 1200, 900, '3d2b22', 'Hotel Booking' );
 
 echo "placeholders written\n";
