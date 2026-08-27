@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-27T15:09:42+05:30\n"
+"POT-Creation-Date: 2026-08-27T21:27:22+05:30\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: hotel-booking-core\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: inc/admin.php:82
 #: inc/admin.php:83
-#: inc/blocks.php:39
+#: inc/blocks.php:40
 msgid "Hotel Booking"
 msgstr ""
 
@@ -59,55 +59,130 @@ msgstr ""
 msgid "You cannot manage Hotel Booking settings."
 msgstr ""
 
-#: inc/blocks.php:104
-msgid "Stay (blocks)"
+#: inc/auth.php:40
+msgid "Hotel Manager"
+msgstr ""
+
+#: inc/auth.php:176
+msgid "The login form expired. Please try again."
+msgstr ""
+
+#: inc/auth.php:229
+msgid "Open wp-admin"
+msgstr ""
+
+#: inc/auth.php:232
+msgid "Open the desk book"
+msgstr ""
+
+#: inc/auth.php:235
+msgid "You are already logged in."
+msgstr ""
+
+#: inc/auth.php:245
+msgid "That username or password is not correct."
+msgstr ""
+
+#: inc/auth.php:250
+msgid "Username"
+msgstr ""
+
+#: inc/auth.php:253
+msgid "Password"
+msgstr ""
+
+#: inc/auth.php:258
+msgid "Remember me"
+msgstr ""
+
+#: inc/auth.php:260
+#: inc/inquiry-form.php:287
+msgid "Log in"
 msgstr ""
 
 #: inc/blocks.php:105
+msgid "Stay (blocks)"
+msgstr ""
+
+#: inc/blocks.php:106
 msgid "Compose a stay page from Hotel Booking blocks."
 msgstr ""
 
-#: inc/blocks.php:122
+#: inc/blocks.php:123
 msgid "Breakfast"
 msgstr ""
 
-#: inc/blocks.php:123
+#: inc/blocks.php:124
 msgid "Served until ten in the dining room."
 msgstr ""
 
-#: inc/blocks.php:126
+#: inc/blocks.php:127
 msgid "Garden"
 msgstr ""
 
-#: inc/blocks.php:127
+#: inc/blocks.php:128
 msgid "A quiet courtyard for late light."
 msgstr ""
 
-#: inc/blocks.php:130
+#: inc/blocks.php:131
 msgid "Desk"
 msgstr ""
 
-#: inc/blocks.php:131
+#: inc/blocks.php:132
 msgid "Someone at the desk from seven until late."
 msgstr ""
 
-#: inc/blocks.php:139
+#: inc/blocks.php:140
 msgid "A quiet night, well kept."
 msgstr ""
 
-#: inc/blocks.php:140
+#: inc/blocks.php:141
 msgid "Book a room"
-msgstr ""
-
-#: inc/blocks.php:145
-#: inc/inquiry-form.php:191
-#: inc/inquiry-form.php:323
-#: views/inquiries.php:30
-msgid "Stay"
 msgstr ""
 
 #: inc/blocks.php:146
 msgid "Drop Hotel Booking blocks onto any page. This layout is a starting point: CTA, rooms, a featured card, amenities, and the inquiry form."
+msgstr ""
+
+#: inc/blocks.php:148
+#: inc/post-types.php:20
+msgid "Rooms"
+msgstr ""
+
+#: inc/cli.php:25
+msgid "WP_OPENSEARCH_HOST is not set; skip reindex."
+msgstr ""
+
+#. translators: %d: number of room documents
+#: inc/cli.php:37
+#, php-format
+msgid "Indexed %d rooms into hotel-booking-rooms."
+msgstr ""
+
+#: inc/cli.php:52
+msgid "WP_AMQP_HOST is not set or php-amqplib is missing."
+msgstr ""
+
+#: inc/cli.php:55
+msgid "Consuming hotel-booking.email and hotel-booking.search. Ctrl+C to stop."
+msgstr ""
+
+#. translators: %d: pending inquiry count
+#: inc/cli.php:76
+#, php-format
+msgid "Desk digest queued or sent (%d pending)."
+msgstr ""
+
+#. translators: %d: inquiries processed
+#: inc/cli.php:94
+#, php-format
+msgid "Stale-pending reminders queued or sent (%d)."
+msgstr ""
+
+#. translators: %d: due runs processed
+#: inc/cli.php:112
+#, php-format
+msgid "Workflow tick processed %d due run(s)."
 msgstr ""
 
 #. translators: %s: formatted dollar amount
@@ -116,34 +191,37 @@ msgstr ""
 msgid "$%s / night"
 msgstr ""
 
-#: inc/helpers.php:60
+#: inc/helpers.php:96
 msgid "From"
 msgstr ""
 
-#: inc/helpers.php:64
-#: inc/inquiry-form.php:195
-#: inc/inquiry-form.php:230
-#: inc/inquiry-form.php:324
+#: inc/helpers.php:100
+#: inc/inquiry-form.php:207
+#: inc/inquiry-form.php:242
+#: inc/inquiry-form.php:344
+#: src/room-search/render.php:81
 #: views/inquiries.php:31
 msgid "Guests"
 msgstr ""
 
-#: inc/helpers.php:68
+#: inc/helpers.php:104
+#: src/room-search/render.php:85
 msgid "Beds"
 msgstr ""
 
-#: inc/helpers.php:72
+#: inc/helpers.php:108
 msgid "Size"
 msgstr ""
 
 #. translators: %s: room size in square metres
-#: inc/helpers.php:76
+#: inc/helpers.php:112
 #, php-format
 msgid "%s m²"
 msgstr ""
 
 #. translators: %s: guest count
-#: inc/helpers.php:148
+#: inc/helpers.php:233
+#: inc/jobs.php:212
 #, php-format
 msgid "%s guests"
 msgstr ""
@@ -184,15 +262,25 @@ msgstr ""
 msgid "That room does not exist."
 msgstr ""
 
-#: inc/inquiries.php:131
+#: inc/inquiries.php:134
 msgid "Could not save the inquiry."
 msgstr ""
 
-#: inc/inquiries.php:247
+#: inc/inquiries.php:260
+#: inc/workflow.php:442
 msgid "Inquiry not found."
 msgstr ""
 
-#: inc/inquiries.php:277
+#: inc/inquiries.php:270
+#: inc/inquiry-form.php:78
+#: inc/workflow.php:452
+#: inc/workflow.php:461
+#: inc/workflow.php:480
+msgid "That status change is not allowed."
+msgstr ""
+
+#: inc/inquiries.php:304
+#: inc/workflow.php:499
 msgid "Could not update the inquiry."
 msgstr ""
 
@@ -208,119 +296,178 @@ msgstr ""
 msgid "The update form expired. Please try again."
 msgstr ""
 
-#: inc/inquiry-form.php:82
+#: inc/inquiry-form.php:94
 msgid "You cannot delete inquiries."
 msgstr ""
 
-#: inc/inquiry-form.php:87
+#: inc/inquiry-form.php:99
 msgid "The delete link expired. Please try again."
 msgstr ""
 
-#: inc/inquiry-form.php:125
+#: inc/inquiry-form.php:137
 msgid "Activate Hotel Booking Core to collect inquiries."
 msgstr ""
 
-#: inc/inquiry-form.php:180
+#: inc/inquiry-form.php:192
 msgid "The desk has your dates. This row is in the custom inquiries table."
 msgstr ""
 
-#: inc/inquiry-form.php:183
-#: inc/inquiry-form.php:206
+#: inc/inquiry-form.php:195
+#: inc/inquiry-form.php:218
 msgid "Name"
 msgstr ""
 
-#: inc/inquiry-form.php:187
-#: inc/inquiry-form.php:209
+#: inc/inquiry-form.php:199
+#: inc/inquiry-form.php:221
 msgid "Email"
 msgstr ""
 
-#: inc/inquiry-form.php:212
+#: inc/inquiry-form.php:203
+#: inc/inquiry-form.php:343
+#: views/inquiries.php:30
+msgid "Stay"
+msgstr ""
+
+#: inc/inquiry-form.php:224
 msgid "Check in"
 msgstr ""
 
-#: inc/inquiry-form.php:221
+#: inc/inquiry-form.php:233
 msgid "Check out"
 msgstr ""
 
-#: inc/inquiry-form.php:232
+#: inc/inquiry-form.php:244
 msgid "Fewer guests"
 msgstr ""
 
-#: inc/inquiry-form.php:240
+#: inc/inquiry-form.php:252
 msgid "More guests"
 msgstr ""
 
-#: inc/inquiry-form.php:243
+#: inc/inquiry-form.php:255
 #: inc/post-types.php:21
-#: src/room-card/edit.tsx:30
 msgid "Room"
 msgstr ""
 
-#: inc/inquiry-form.php:245
+#: inc/inquiry-form.php:257
 msgid "No preference"
 msgstr ""
 
-#: inc/inquiry-form.php:251
+#: inc/inquiry-form.php:263
 msgid "Note"
 msgstr ""
 
-#: inc/inquiry-form.php:254
+#: inc/inquiry-form.php:266
 msgid "Send inquiry"
 msgstr ""
 
-#: inc/inquiry-form.php:269
+#: inc/inquiry-form.php:281
 msgid "Activate Hotel Booking Core to list inquiries."
 msgstr ""
 
-#: inc/inquiry-form.php:275
-msgid "The desk book is for staff. Log in as an editor to read, update, and delete inquiries stored in the custom table."
+#. translators: %s: login link
+#: inc/inquiry-form.php:290
+#, php-format
+msgid "The desk book is for staff. %s as a hotel manager to read and update inquiries."
 msgstr ""
 
-#: inc/inquiry-form.php:300
+#: inc/inquiry-form.php:317
+msgid "Log out"
+msgstr ""
+
+#: inc/inquiry-form.php:320
 #: views/inquiries.php:20
 msgid "Inquiry deleted."
 msgstr ""
 
-#: inc/inquiry-form.php:304
+#: inc/inquiry-form.php:324
 msgid "No inquiries yet. Submit the booking form to insert a row."
 msgstr ""
 
-#: inc/inquiry-form.php:306
+#: inc/inquiry-form.php:326
 msgid "Filter by status"
 msgstr ""
 
-#: inc/inquiry-form.php:307
-#: src/rooms-grid/render.php:47
+#: inc/inquiry-form.php:327
+#: src/rooms-grid/render.php:49
 msgid "All"
 msgstr ""
 
-#: inc/inquiry-form.php:322
+#: inc/inquiry-form.php:342
 #: views/inquiries.php:29
 msgid "Guest"
 msgstr ""
 
-#: inc/inquiry-form.php:325
+#: inc/inquiry-form.php:345
 #: views/inquiries.php:32
 msgid "Status"
 msgstr ""
 
-#: inc/inquiry-form.php:326
+#: inc/inquiry-form.php:346
 #: views/inquiries.php:33
 msgid "Actions"
 msgstr ""
 
-#: inc/inquiry-form.php:354
-#: views/inquiries.php:58
+#: inc/inquiry-form.php:375
+#: views/inquiries.php:59
 msgid "Save"
 msgstr ""
 
-#: inc/inquiry-form.php:364
-#: views/inquiries.php:68
+#: inc/inquiry-form.php:392
+#: views/inquiries.php:76
 msgid "Delete"
 msgstr ""
 
-#: inc/post-types.php:20
-msgid "Rooms"
+#. translators: %s: guest name
+#: inc/jobs.php:201
+#, php-format
+msgid "New inquiry from %s"
+msgstr ""
+
+#. translators: %s: guest name
+#: inc/jobs.php:252
+#, php-format
+msgid "Pending inquiry still waiting: %s"
+msgstr ""
+
+#. translators: %d: pending inquiry count
+#: inc/jobs.php:287
+#, php-format
+msgid "Desk digest: %d pending inquiries"
+msgstr ""
+
+#. translators: %d: pending inquiry count
+#: inc/jobs.php:292
+#, php-format
+msgid "The desk book has %d pending inquiries."
+msgstr ""
+
+#: inc/jobs.php:336
+msgid "Mailed"
+msgstr ""
+
+#: inc/jobs.php:339
+msgid "Reminded"
+msgstr ""
+
+#: inc/opensearch.php:129
+msgid "OpenSearch is not configured."
+msgstr ""
+
+#: inc/opensearch.php:154
+msgid "Could not encode OpenSearch request."
+msgstr ""
+
+#: inc/opensearch.php:620
+msgid "WP_OPENSEARCH_HOST is not set."
+msgstr ""
+
+#: inc/opensearch.php:634
+msgid "Could not create the rooms index."
+msgstr ""
+
+#: inc/opensearch.php:685
+msgid "Bulk index failed."
 msgstr ""
 
 #: inc/post-types.php:22
@@ -363,33 +510,118 @@ msgstr ""
 msgid "Room size in square meters."
 msgstr ""
 
-#: inc/rest-api.php:25
+#: inc/rest-api.php:18
+msgid "Full-text query (title, excerpt, content)."
+msgstr ""
+
+#: inc/rest-api.php:23
 msgid "Minimum guest capacity."
 msgstr ""
 
-#: inc/rest-api.php:43
+#: inc/rest-api.php:29
+msgid "Minimum bed count."
+msgstr ""
+
+#: inc/rest-api.php:35
+msgid "Minimum nightly price."
+msgstr ""
+
+#: inc/rest-api.php:41
+msgid "Maximum nightly price."
+msgstr ""
+
+#: inc/rest-api.php:47
+#: inc/rest-api.php:78
+msgid "Polylang language slug (en, es)."
+msgstr ""
+
+#: inc/rest-api.php:73
+msgid "Title prefix for typeahead."
+msgstr ""
+
+#: inc/rest-api.php:95
 msgid "Room post ID."
 msgstr ""
 
-#: inc/rest-api.php:104
+#: inc/rest-api.php:162
 msgid "Room not found."
+msgstr ""
+
+#: inc/workflow.php:97
+msgid "Contact"
+msgstr ""
+
+#: inc/workflow.php:98
+msgid "Close"
+msgstr ""
+
+#: inc/workflow.php:99
+msgid "Reopen"
+msgstr ""
+
+#: inc/workflow.php:308
+msgid "Timer fired"
+msgstr ""
+
+#: inc/workflow.php:311
+msgid "Timer skipped"
+msgstr ""
+
+#: inc/workflow.php:349
+msgid "Inquiry id is missing."
+msgstr ""
+
+#: inc/workflow.php:382
+msgid "Could not start the inquiry workflow."
+msgstr ""
+
+#: inc/workflow.php:457
+msgid "The workflow library is not available."
+msgstr ""
+
+#: inc/workflow.php:656
+msgid "Every minute (Hotel Booking workflow tick)"
 msgstr ""
 
 #: src/room-card/render.php:40
 msgid "No published rooms yet."
 msgstr ""
 
-#: src/rooms-grid/render.php:36
+#: src/room-search/render.php:58
+msgid "Search rooms"
+msgstr ""
+
+#: src/room-search/render.php:65
+msgid "Garden, suite, courtyard…"
+msgstr ""
+
+#: src/room-search/render.php:89
+msgid "Min price"
+msgstr ""
+
+#: src/room-search/render.php:93
+msgid "Max price"
+msgstr ""
+
+#: src/room-search/render.php:96
+msgid "Search"
+msgstr ""
+
+#: src/room-search/render.php:101
+msgid "No rooms match those filters."
+msgstr ""
+
+#: src/rooms-grid/render.php:38
 msgid "Filter rooms by guests"
 msgstr ""
 
 #. translators: %d: minimum guest count
-#: src/rooms-grid/render.php:50
+#: src/rooms-grid/render.php:52
 #, php-format
 msgid "%d+"
 msgstr ""
 
-#: src/rooms-grid/render.php:58
+#: src/rooms-grid/render.php:60
 msgid "No rooms for that many guests."
 msgstr ""
 
@@ -419,70 +651,6 @@ msgstr ""
 
 #: views/settings.php:35
 msgid "Limits the guest dropdown on the public booking form (1–8)."
-msgstr ""
-
-#: src/amenities/edit.tsx:29
-msgid "Items"
-msgstr ""
-
-#: src/amenities/edit.tsx:33
-msgid "Title"
-msgstr ""
-
-#: src/amenities/edit.tsx:38
-msgid "Text"
-msgstr ""
-
-#: src/amenities/edit.tsx:47
-msgid "Remove"
-msgstr ""
-
-#: src/amenities/edit.tsx:52
-msgid "Add amenity"
-msgstr ""
-
-#: src/amenities/edit.tsx:59
-msgid "Untitled"
-msgstr ""
-
-#: src/booking-cta/edit.tsx:11
-msgid "Link"
-msgstr ""
-
-#: src/booking-cta/edit.tsx:13
-msgid "URL"
-msgstr ""
-
-#: src/booking-cta/edit.tsx:25
-msgid "Heading"
-msgstr ""
-
-#: src/booking-cta/edit.tsx:32
-msgid "Button"
-msgstr ""
-
-#: src/inquiry-form/index.js:11
-msgid "Inquiry form — guests submit to the custom table. Guest stepper and check-out min date use the Interactivity API on the front."
-msgstr ""
-
-#: src/inquiry-list/index.js:11
-msgid "Inquiry list — visible to editors on the front. Status chips filter rows with the Interactivity API; saves and deletes still use admin-post."
-msgstr ""
-
-#: src/room-card/edit.tsx:19
-msgid "Latest room"
-msgstr ""
-
-#: src/room-card/edit.tsx:35
-msgid "Show"
-msgstr ""
-
-#: src/rooms-grid/edit.tsx:12
-msgid "Filter"
-msgstr ""
-
-#: src/rooms-grid/edit.tsx:14
-msgid "Minimum guests (0 = all)"
 msgstr ""
 
 #: src/amenities/block.json
@@ -548,6 +716,16 @@ msgstr ""
 #: src/room-card/block.json
 msgctxt "block description"
 msgid "A single room with image, price, and guest count."
+msgstr ""
+
+#: src/room-search/block.json
+msgctxt "block title"
+msgid "Room search"
+msgstr ""
+
+#: src/room-search/block.json
+msgctxt "block description"
+msgid "Full-text room search with typeahead and guest, bed, and price filters."
 msgstr ""
 
 #: src/rooms-grid/block.json

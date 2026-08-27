@@ -13,6 +13,8 @@ class Test_Hotel_Booking_Workflow extends WP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 		hotel_booking_install_inquiries_table();
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $admin );
 		update_option(
 			'hotel_booking_settings',
 			hotel_booking_sanitize_settings(

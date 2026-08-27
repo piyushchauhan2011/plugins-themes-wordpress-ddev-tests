@@ -222,42 +222,47 @@ function hotel_booking_pll_seed_spanish_rooms() {
  */
 function hotel_booking_pll_seed_spanish_pages() {
 	$map = array(
-		'home'      => array(
+		'home'        => array(
 			'title'   => 'Inicio',
 			'slug'    => 'inicio',
 			'content' => null,
 		),
-		'about'     => array(
+		'about'       => array(
 			'title'   => 'Acerca de',
 			'slug'    => 'acerca',
 			'content' => '<!-- wp:paragraph --><p>Hotel Booking es un tema de aprendizaje: plantillas de bloques, un tipo de contenido para habitaciones, datos de demo y pruebas WP_UnitTestCase que se ejecutan con DDEV.</p><!-- /wp:paragraph -->',
 		),
-		'amenities' => array(
+		'amenities'   => array(
 			'title'   => 'Servicios',
 			'slug'    => 'servicios',
 			'content' => null,
 		),
-		'contact'   => array(
+		'contact'     => array(
 			'title'   => 'Contacto',
 			'slug'    => 'contacto',
 			'content' => '<!-- wp:paragraph --><p>La recepción está abierta de siete hasta tarde. Esta página es contenido de ejemplo.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Correo: desk@hotel-booking.ddev.site<br>Teléfono: (555) 010-1947</p><!-- /wp:paragraph -->',
 		),
-		'booking'   => array(
+		'booking'     => array(
 			'title'   => 'Reserva',
 			'slug'    => 'reserva',
 			'content' => null,
 		),
-		'desk'      => array(
+		'desk'        => array(
 			'title'   => 'Recepción',
 			'slug'    => 'recepcion',
 			'content' => null,
 		),
-		'stay'      => array(
+		'staff-login' => array(
+			'title'   => 'Acceso del personal',
+			'slug'    => 'acceso',
+			'content' => null,
+		),
+		'stay'        => array(
 			'title'   => 'Estancia',
 			'slug'    => 'estancia',
 			'content' => null,
 		),
-		'search'    => array(
+		'search'      => array(
 			'title'   => 'Buscar',
 			'slug'    => 'buscar',
 			'content' => null,

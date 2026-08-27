@@ -56,7 +56,7 @@ add_action( 'admin_post_hb_save_inquiry', 'hotel_booking_handle_save_inquiry' );
  * Handle staff status updates.
  */
 function hotel_booking_handle_update_inquiry() {
-	if ( ! current_user_can( 'edit_posts' ) ) {
+	if ( ! hotel_booking_authorize( 'desk.view' ) ) {
 		wp_die( esc_html__( 'You cannot update inquiries.', 'hotel-booking-core' ), '', array( 'response' => 403 ) );
 	}
 
@@ -67,6 +67,16 @@ function hotel_booking_handle_update_inquiry() {
 	$id         = isset( $_POST['inquiry_id'] ) ? absint( $_POST['inquiry_id'] ) : 0;
 	$transition = isset( $_POST['transition'] ) ? sanitize_key( wp_unslash( $_POST['transition'] ) ) : '';
 	if ( '' !== $transition ) {
+		$inquiry = hotel_booking_get_inquiry( $id );
+		if ( ! $inquiry || ! hotel_booking_authorize(
+			'inquiry.transition',
+			array(
+				'inquiry'    => $inquiry,
+				'transition' => $transition,
+			)
+		) ) {
+			wp_die( esc_html__( 'That status change is not allowed.', 'hotel-booking-core' ), '', array( 'response' => 403 ) );
+		}
 		hotel_booking_apply_inquiry_transition( $id, $transition );
 	}
 
@@ -80,7 +90,7 @@ add_action( 'admin_post_hb_update_inquiry', 'hotel_booking_handle_update_inquiry
  * Handle staff deletes.
  */
 function hotel_booking_handle_delete_inquiry() {
-	if ( ! current_user_can( 'edit_posts' ) ) {
+	if ( ! hotel_booking_authorize( 'inquiry.delete' ) ) {
 		wp_die( esc_html__( 'You cannot delete inquiries.', 'hotel-booking-core' ), '', array( 'response' => 403 ) );
 	}
 
@@ -108,7 +118,7 @@ function hotel_booking_inquiry_form_shortcode() {
 add_shortcode( 'hotel_inquiry_form', 'hotel_booking_inquiry_form_shortcode' );
 
 /**
- * Staff inquiry list (theme PHP or block). Visible to editors; others see a short note.
+ * Staff inquiry list (theme PHP or block). Visible with hb_access_desk; others see a short note.
  *
  * @return string
  */
@@ -273,8 +283,13 @@ function hotel_booking_render_inquiry_list() {
 
 	hotel_booking_enqueue_block_front_assets( 'hotel-booking/inquiry-list' );
 
-	if ( ! current_user_can( 'edit_posts' ) ) {
-		return '<p>' . esc_html__( 'The desk book is for staff. Log in as an editor to read, update, and delete inquiries stored in the custom table.', 'hotel-booking-core' ) . '</p>';
+	if ( ! hotel_booking_authorize( 'desk.view' ) ) {
+		$login = '<a href="' . esc_url( hotel_booking_login_url() ) . '">' . esc_html__( 'Log in', 'hotel-booking-core' ) . '</a>';
+		return '<p>' . sprintf(
+			/* translators: %s: login link */
+			esc_html__( 'The desk book is for staff. %s as a hotel manager to read and update inquiries.', 'hotel-booking-core' ),
+			$login
+		) . '</p>';
 	}
 
 	$inquiries = hotel_booking_get_inquiries(
@@ -298,6 +313,9 @@ function hotel_booking_render_inquiry_list() {
 	ob_start();
 	?>
 	<div class="hb-desk" data-wp-interactive="hotel-booking/inquiry-list">
+		<p class="hb-desk__session">
+			<a href="<?php echo esc_url( wp_logout_url( hotel_booking_login_url() ) ); ?>"><?php esc_html_e( 'Log out', 'hotel-booking-core' ); ?></a>
+		</p>
 		<?php if ( $deleted ) : ?>
 			<p class="hb-inquiry__notice hb-inquiry__notice--ok" role="status"><?php esc_html_e( 'Inquiry deleted.', 'hotel-booking-core' ); ?></p>
 		<?php endif; ?>
@@ -364,13 +382,15 @@ function hotel_booking_render_inquiry_list() {
 								<?php endif; ?>
 							</td>
 							<td>
-								<?php
-								$delete_url = wp_nonce_url(
-									admin_url( 'admin-post.php?action=hb_delete_inquiry&inquiry_id=' . (int) $row->id ),
-									'hb_delete_inquiry_' . (int) $row->id
-								);
-								?>
-								<a class="hb-desk__delete" href="<?php echo esc_url( $delete_url ); ?>"><?php esc_html_e( 'Delete', 'hotel-booking-core' ); ?></a>
+								<?php if ( hotel_booking_authorize( 'inquiry.delete' ) ) : ?>
+									<?php
+									$delete_url = wp_nonce_url(
+										admin_url( 'admin-post.php?action=hb_delete_inquiry&inquiry_id=' . (int) $row->id ),
+										'hb_delete_inquiry_' . (int) $row->id
+									);
+									?>
+									<a class="hb-desk__delete" href="<?php echo esc_url( $delete_url ); ?>"><?php esc_html_e( 'Delete', 'hotel-booking-core' ); ?></a>
+								<?php endif; ?>
 							</td>
 						</tr>
 					<?php endforeach; ?>

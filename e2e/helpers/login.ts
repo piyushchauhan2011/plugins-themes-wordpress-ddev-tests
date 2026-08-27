@@ -10,3 +10,11 @@ export async function loginAsAdmin( page: Page ): Promise<void> {
 	await page.locator( '#wp-submit' ).click();
 	await page.waitForURL( /\/wp-admin/ );
 }
+
+export async function loginAsDesk( page: Page ): Promise<void> {
+	await page.goto( '/staff-login/' );
+	await page.locator( '.hb-staff-login input[name="log"]' ).fill( 'desk' );
+	await page.locator( '.hb-staff-login input[name="pwd"]' ).fill( 'desk' );
+	await page.locator( '.hb-staff-login button[type="submit"]' ).click();
+	await page.waitForURL( /\/desk/ );
+}

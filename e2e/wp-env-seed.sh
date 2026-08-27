@@ -42,6 +42,7 @@ create_page() {
 HOME_ID="$(create_page "Home" "home" "")"
 create_page "Booking" "booking" "<!-- wp:shortcode -->[hotel_inquiry_form]<!-- /wp:shortcode -->" >/dev/null
 create_page "Desk" "desk" "<!-- wp:shortcode -->[hotel_inquiry_list]<!-- /wp:shortcode -->" >/dev/null
+create_page "Staff login" "staff-login" "<!-- wp:shortcode -->[hotel_staff_login]<!-- /wp:shortcode -->" >/dev/null
 create_page "Stay" "stay" "<!-- wp:hotel-booking/rooms-grid {\"guests\":0} /-->" >/dev/null
 create_page "Search" "search" "<!-- wp:hotel-booking/room-search /-->" >/dev/null
 
@@ -91,5 +92,12 @@ else
 fi
 
 wp eval 'hotel_booking_seed_polylang();'
+
+if wp user get desk --field=ID >/dev/null 2>&1; then
+	wp user set-role desk hotel_manager
+else
+	wp user create desk desk@hotel-booking.ddev.site --user_pass=desk --role=hotel_manager --display_name="Hotel manager"
+fi
+
 wp rewrite flush --hard
 echo "wp-env content ready."

@@ -141,7 +141,7 @@ function hotel_booking_inquiry_enabled_transitions( $inquiry ) {
 
 	$transitions = array_values( $workflow->getEnabledTransitions( $inquiry ) );
 
-	return hotel_booking_array_map(
+	$items = hotel_booking_array_map(
 		$transitions,
 		static function ( $transition ) {
 			return array(
@@ -149,6 +149,21 @@ function hotel_booking_inquiry_enabled_transitions( $inquiry ) {
 				'label' => hotel_booking_workflow_transition_label( $transition->getName() ),
 			);
 		}
+	);
+
+	return array_values(
+		array_filter(
+			$items,
+			static function ( $item ) use ( $inquiry ) {
+				return hotel_booking_authorize(
+					'inquiry.transition',
+					array(
+						'inquiry'    => $inquiry,
+						'transition' => $item['name'],
+					)
+				);
+			}
+		)
 	);
 }
 
@@ -425,6 +440,16 @@ function hotel_booking_apply_inquiry_transition( $inquiry_id, $name ) {
 	$inquiry    = hotel_booking_get_inquiry( $inquiry_id );
 	if ( ! $inquiry ) {
 		return new WP_Error( 'hotel_booking_inquiry_missing', __( 'Inquiry not found.', 'hotel-booking-core' ) );
+	}
+
+	if ( ! hotel_booking_authorize(
+		'inquiry.transition',
+		array(
+			'inquiry'    => $inquiry,
+			'transition' => $name,
+		)
+	) ) {
+		return new WP_Error( 'hotel_booking_workflow_blocked', __( 'That status change is not allowed.', 'hotel-booking-core' ) );
 	}
 
 	$workflow = hotel_booking_inquiry_workflow();

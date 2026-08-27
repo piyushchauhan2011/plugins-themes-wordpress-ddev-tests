@@ -24,6 +24,7 @@ define( 'HOTEL_BOOKING_CORE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'HOTEL_BOOKING_CORE_URL', plugin_dir_url( __FILE__ ) );
 
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/helpers.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/auth.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/locale.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/polylang.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/polylang-seed.php';
@@ -42,6 +43,7 @@ require_once HOTEL_BOOKING_CORE_PATH . 'inc/cli.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/blocks.php';
 
 register_activation_hook( __FILE__, 'hotel_booking_install_inquiries_table' );
+register_activation_hook( __FILE__, 'hotel_booking_register_roles' );
 register_deactivation_hook( __FILE__, 'hotel_booking_clear_cron_events' );
 
 /**

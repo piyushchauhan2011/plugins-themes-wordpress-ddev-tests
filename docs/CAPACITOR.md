@@ -18,7 +18,7 @@ WordPress still owns rooms, booking POST, inquiries, jobs
 | Public room catalog | `GET /wp-json/hotel-booking/v1/rooms` (also `/suggest`, `/{id}`) in [`inc/rest-api.php`](../wp-content/plugins/hotel-booking-core/inc/rest-api.php). `permission_callback` is `__return_true`. nginx FastCGI **bypasses** `/wp-json/` |
 | Language on REST | `lang` query arg (`en`, `es`); see [I18N.md](I18N.md) |
 | Booking | PHP form + nonce to `admin-post.php`, [`inc/inquiry-form.php`](../wp-content/plugins/hotel-booking-core/inc/inquiry-form.php). **Not** REST |
-| Desk | Cookie + `edit_posts` on `/desk/`. No Application Passwords, no inquiry REST |
+| Desk | Cookie + `hb_access_desk` on `/desk/` after `/staff-login/`. No Application Passwords, no inquiry REST |
 | CORS | None in the plugin |
 
 ## Ladder

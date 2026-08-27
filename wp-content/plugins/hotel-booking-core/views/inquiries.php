@@ -66,13 +66,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<?php endif; ?>
 						</td>
 						<td>
-							<?php
-							$delete_url = wp_nonce_url(
-								admin_url( 'admin-post.php?action=hb_delete_inquiry&inquiry_id=' . (int) $row->id ),
-								'hb_delete_inquiry_' . (int) $row->id
-							);
-							?>
-							<a href="<?php echo esc_url( $delete_url ); ?>"><?php esc_html_e( 'Delete', 'hotel-booking-core' ); ?></a>
+							<?php if ( hotel_booking_authorize( 'inquiry.delete' ) ) : ?>
+								<?php
+								$delete_url = wp_nonce_url(
+									admin_url( 'admin-post.php?action=hb_delete_inquiry&inquiry_id=' . (int) $row->id ),
+									'hb_delete_inquiry_' . (int) $row->id
+								);
+								?>
+								<a href="<?php echo esc_url( $delete_url ); ?>"><?php esc_html_e( 'Delete', 'hotel-booking-core' ); ?></a>
+							<?php endif; ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>

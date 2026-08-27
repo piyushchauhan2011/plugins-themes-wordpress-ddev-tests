@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { loginAsAdmin } from './helpers/login';
+import { loginAsDesk } from './helpers/login';
 
 test( 'desk is closed to guests and lists inquiries for staff', async ( { page } ) => {
 	const guest = `E2E Guest ${Date.now()}`;
@@ -15,8 +15,8 @@ test( 'desk is closed to guests and lists inquiries for staff', async ( { page }
 	await page.getByRole( 'button', { name: 'Send inquiry' } ).click();
 	await expect( page.locator( '.hb-inquiry__notice--ok' ) ).toBeVisible();
 
-	await loginAsAdmin( page );
-	await page.goto( '/desk/' );
+	await loginAsDesk( page );
 	await expect( page.getByText( guest ) ).toBeVisible();
 	await expect( page.locator( '.hb-desk__table' ) ).toBeVisible();
+	await expect( page.locator( '.hb-desk__delete' ) ).toHaveCount( 0 );
 } );

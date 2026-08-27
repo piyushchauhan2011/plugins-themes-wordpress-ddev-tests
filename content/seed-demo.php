@@ -30,8 +30,8 @@ $users = array(
 		'user_login'    => 'desk',
 		'user_pass'     => 'desk',
 		'user_email'    => 'desk@hotel-booking.ddev.site',
-		'display_name'  => 'Desk editor',
-		'role'          => 'editor',
+		'display_name'  => 'Hotel manager',
+		'role'          => 'hotel_manager',
 	),
 	array(
 		'user_login'    => 'guest',
@@ -43,8 +43,15 @@ $users = array(
 );
 
 foreach ( $users as $user ) {
-	if ( username_exists( $user['user_login'] ) ) {
-		WP_CLI::log( 'User already exists: ' . $user['user_login'] );
+	$existing_id = username_exists( $user['user_login'] );
+	if ( $existing_id ) {
+		$existing = get_userdata( (int) $existing_id );
+		if ( $existing && 'desk' === $user['user_login'] && ! in_array( 'hotel_manager', (array) $existing->roles, true ) ) {
+			$existing->set_role( 'hotel_manager' );
+			WP_CLI::log( 'Updated user desk role to hotel_manager.' );
+		} else {
+			WP_CLI::log( 'User already exists: ' . $user['user_login'] );
+		}
 		continue;
 	}
 	$id = wp_insert_user( $user );

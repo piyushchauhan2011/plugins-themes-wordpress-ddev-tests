@@ -139,7 +139,7 @@ class Test_Hotel_Booking_Integration extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( 'hb-desk__table', $html );
 	}
 
-	public function test_desk_page_shows_inquiry_for_editor() {
+	public function test_desk_page_shows_inquiry_for_hotel_manager() {
 		hotel_booking_insert_inquiry(
 			array(
 				'guest_name'  => 'Ada Lovelace',
@@ -150,7 +150,7 @@ class Test_Hotel_Booking_Integration extends WP_UnitTestCase {
 			)
 		);
 
-		$editor  = self::factory()->user->create( array( 'role' => 'editor' ) );
+		$manager = self::factory()->user->create( array( 'role' => 'hotel_manager' ) );
 		$page_id = self::factory()->post->create(
 			array(
 				'post_type'    => 'page',
@@ -160,12 +160,13 @@ class Test_Hotel_Booking_Integration extends WP_UnitTestCase {
 			)
 		);
 
-		wp_set_current_user( $editor );
+		wp_set_current_user( $manager );
 		$this->go_to( get_permalink( $page_id ) );
 		the_post();
 		$html = apply_filters( 'the_content', get_the_content() );
 
 		$this->assertStringContainsString( 'Ada Lovelace', $html );
 		$this->assertStringContainsString( 'hb-desk__table', $html );
+		$this->assertStringNotContainsString( 'hb-desk__delete', $html );
 	}
 }

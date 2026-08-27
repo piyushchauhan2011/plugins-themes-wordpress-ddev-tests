@@ -81,7 +81,7 @@ function hotel_booking_register_admin_menu() {
 	add_menu_page(
 		__( 'Hotel Booking', 'hotel-booking-core' ),
 		__( 'Hotel Booking', 'hotel-booking-core' ),
-		'edit_posts',
+		'manage_options',
 		'hotel-booking',
 		'hotel_booking_render_inquiries_page',
 		'dashicons-building',
@@ -92,7 +92,7 @@ function hotel_booking_register_admin_menu() {
 		'hotel-booking',
 		__( 'Inquiries', 'hotel-booking-core' ),
 		__( 'Inquiries', 'hotel-booking-core' ),
-		'edit_posts',
+		'manage_options',
 		'hotel-booking',
 		'hotel_booking_render_inquiries_page'
 	);
@@ -109,10 +109,10 @@ function hotel_booking_register_admin_menu() {
 add_action( 'admin_menu', 'hotel_booking_register_admin_menu' );
 
 /**
- * Inquiries list (edit_posts).
+ * Inquiries list (manage_options).
  */
 function hotel_booking_render_inquiries_page() {
-	if ( ! current_user_can( 'edit_posts' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( esc_html__( 'You cannot view inquiries.', 'hotel-booking-core' ) );
 	}
 

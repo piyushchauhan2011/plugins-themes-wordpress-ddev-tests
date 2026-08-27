@@ -25,7 +25,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache and nginx FastCGI page cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). WP-Cron, RabbitMQ jobs, and OpenSearch room search on DDEV: [docs/JOBS.md](docs/JOBS.md). Inquiry desk state machine (not Temporal): [docs/WORKFLOW.md](docs/WORKFLOW.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md). Capacitor iOS/Android shell still docs-only: [docs/CAPACITOR.md](docs/CAPACITOR.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache and nginx FastCGI page cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). WP-Cron, RabbitMQ jobs, and OpenSearch room search on DDEV: [docs/JOBS.md](docs/JOBS.md). Inquiry desk state machine (not Temporal): [docs/WORKFLOW.md](docs/WORKFLOW.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md). Capacitor iOS/Android shell still docs-only: [docs/CAPACITOR.md](docs/CAPACITOR.md). Front-end staff login and hotel_manager policies: [docs/AUTH.md](docs/AUTH.md).
 
 ```bash
 ddev start
@@ -54,7 +54,7 @@ wp-content/themes/hotel-booking/
   languages/             gettext POT, es_ES.po, es_ES.mo
 ```
 
-The booking form **POSTs** into a custom MySQL table (`wp_hb_inquiries`). It is not a payment or reservation engine. Staff can read/update/delete rows on `/desk/` (log in as admin).
+The booking form **POSTs** into a custom MySQL table (`wp_hb_inquiries`). It is not a payment or reservation engine. Staff can read/update rows on `/desk/` after `/staff-login/` as `desk` / `desk`.
 
 ## Theme styles (fluid type, Dawn/Dusk, light/dark toggle)
 
@@ -124,7 +124,7 @@ CI boots the same specs with `@wordpress/env` (`pnpm exec wp-env start` + `e2e/w
 
 ## wp-admin (plugin)
 
-Hotel Booking Core adds **Hotel Booking** in the dashboard (capability `edit_posts` for inquiries, `manage_options` for settings).
+Hotel Booking Core adds **Hotel Booking** in the dashboard (capability `manage_options` for inquiries and settings). Hotel managers use `/staff-login/` → `/desk/` and cannot open wp-admin. See [docs/AUTH.md](docs/AUTH.md).
 
 ```bash
 # Log in as admin / admin
@@ -153,7 +153,8 @@ The theme only renders: [template-parts/inquiry-form.php](wp-content/themes/hote
 # Book a stay (public)
 open https://hotel-booking.ddev.site/booking/
 
-# Staff desk (log in as admin first)
+# Staff desk (log in at /staff-login/ as desk / desk)
+open https://hotel-booking.ddev.site/staff-login/
 open https://hotel-booking.ddev.site/desk/
 
 ddev phpunit --filter Test_Hotel_Booking_Inquiries

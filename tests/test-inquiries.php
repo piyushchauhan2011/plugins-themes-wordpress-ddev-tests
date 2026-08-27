@@ -13,6 +13,8 @@ class Test_Hotel_Booking_Inquiries extends WP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 		hotel_booking_install_inquiries_table();
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $admin );
 	}
 
 	public function tear_down() {
@@ -127,6 +129,7 @@ class Test_Hotel_Booking_Inquiries extends WP_UnitTestCase {
 	public function test_shortcodes_are_registered() {
 		$this->assertTrue( shortcode_exists( 'hotel_inquiry_form' ) );
 		$this->assertTrue( shortcode_exists( 'hotel_inquiry_list' ) );
+		$this->assertTrue( shortcode_exists( 'hotel_staff_login' ) );
 	}
 
 	public function test_theme_form_template_exists() {

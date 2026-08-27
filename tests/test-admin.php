@@ -36,17 +36,26 @@ class Test_Hotel_Booking_Admin extends WP_UnitTestCase {
 		$this->assertContains( 'hotel-booking-settings', $slugs );
 	}
 
-	public function test_editor_can_view_inquiries_but_not_settings() {
-		$editor = self::factory()->user->create( array( 'role' => 'editor' ) );
+	public function test_hotel_manager_can_view_desk_but_not_settings() {
+		$manager = self::factory()->user->create( array( 'role' => 'hotel_manager' ) );
 
-		$this->assertTrue( user_can( $editor, 'edit_posts' ) );
-		$this->assertFalse( user_can( $editor, 'manage_options' ) );
+		$this->assertTrue( user_can( $manager, 'hb_access_desk' ) );
+		$this->assertFalse( user_can( $manager, 'manage_options' ) );
+		$this->assertFalse( user_can( $manager, 'hb_delete_inquiries' ) );
+	}
+
+	public function test_editor_is_not_desk_staff() {
+		$editor = self::factory()->user->create( array( 'role' => 'editor' ) );
+		wp_set_current_user( $editor );
+
+		$this->assertFalse( hotel_booking_authorize( 'desk.view' ) );
 	}
 
 	public function test_subscriber_cannot_view_inquiries() {
 		$subscriber = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		wp_set_current_user( $subscriber );
 
-		$this->assertFalse( user_can( $subscriber, 'edit_posts' ) );
+		$this->assertFalse( hotel_booking_authorize( 'desk.view' ) );
 		$this->assertFalse( user_can( $subscriber, 'manage_options' ) );
 	}
 
@@ -85,8 +94,8 @@ class Test_Hotel_Booking_Admin extends WP_UnitTestCase {
 	}
 
 	public function test_inquiries_page_renders_guest_name() {
-		$editor = self::factory()->user->create( array( 'role' => 'editor' ) );
-		wp_set_current_user( $editor );
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $admin );
 
 		hotel_booking_insert_inquiry(
 			array(

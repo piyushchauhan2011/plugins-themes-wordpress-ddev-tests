@@ -9,7 +9,7 @@ Requires [DDEV](https://ddev.com/) and Docker. Deeper topic notes live in the [r
 | User | Password | Role | What it is for |
 | --- | --- | --- | --- |
 | `admin` | `admin` | Administrator | Settings, wp-admin, everything |
-| `desk` | `desk` | Editor | `/desk/` and **Hotel Booking → Inquiries** (not Settings) |
+| `desk` | `desk` | Hotel manager | `/staff-login/` → `/desk/` (not wp-admin, not Settings, cannot delete) |
 | `guest` | `guest` | Subscriber | Public site only; desk stays closed |
 
 Site: https://hotel-booking.ddev.site  
@@ -53,7 +53,7 @@ Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (us
 
 ## What seed gives you
 
-- Home (static front page), About, Amenities, Contact, Booking, Desk, Search
+- Home (static front page), About, Amenities, Contact, Booking, Desk, Staff login, Search
 - Five rooms on `/rooms/` (Deluxe King, Garden Suite, Family Room, Penthouse, Courtyard Twin)
 - Spanish copies at `/es/` (King Deluxe, …) via Polylang; header **English / Español** switches URL and content
 - Booking form guest dropdown **1–6** (`max_guests` in settings)
@@ -72,13 +72,13 @@ Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (us
 3. https://hotel-booking.ddev.site/stay/ — plugin custom blocks; click **4+** on the rooms grid (Interactivity + REST)
 4. https://hotel-booking.ddev.site/search/ — type **gar** for Garden Suite typeahead; try guests/beds/price filters
 5. https://hotel-booking.ddev.site/booking/ — guest stepper; submit if you want another row (desk email appears in Mailpit; `/desk/` shows **Mailed**)
-6. https://hotel-booking.ddev.site/desk/ — logged out: staff-only note. Log in as `desk` / `desk`: named guests in the table
-7. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking — same inquiries
+6. https://hotel-booking.ddev.site/staff-login/ — `desk` / `desk`, then `/desk/`: named guests; Contact/Close, no Delete
+7. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking — same inquiries (`admin` only)
 8. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking-settings — The Oak House (`admin` only)
 
 In the editor: Pages → Stay, or add a block and pick the **Hotel Booking** category.
 
-Log in as `guest` / `guest` and hit `/desk/` again: still closed (no `edit_posts`).
+Log in as `guest` / `guest` and hit `/desk/` again: still closed (no `hb_access_desk`).
 
 ## Commands to run once
 
@@ -149,6 +149,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [WORKFLOW.md](WORKFLOW.md) — inquiry state machine (Symfony Workflow + MariaDB runs; not Temporal)
 - [PHPSTAN.md](PHPSTAN.md) — PHPDoc `@template` helpers (`hotel_booking_array_map` / `array_find`); `ddev phpstan` is the checker
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows
+- [AUTH.md](AUTH.md) — front-end `/staff-login/`, `hotel_manager` role, desk policies (not wp-admin)
 - [CAPACITOR.md](CAPACITOR.md) — Capacitor iOS/Android shell (documentation only; no native app in this repo)
 
 ## Next
