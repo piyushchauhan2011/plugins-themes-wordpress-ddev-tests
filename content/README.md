@@ -16,13 +16,14 @@ ddev seed-content --force   # rebuild rooms and pages
 What it creates:
 
 - Static front page (`Home`) that uses `templates/front-page.html` (includes the theme Stay FAQ accordion)
-- Pages: About, Amenities, Contact, Booking, Desk, Stay (Gutenberg blocks demo)
+- Pages: About, Amenities, Contact, Booking, Desk, Stay (Gutenberg blocks demo), Search (room search block)
 - Five `hb_room` posts (Deluxe King, Garden Suite, Family Room, Penthouse, Courtyard Twin)
-- Spanish **Layer B** copies via free Polylang (not committed): King Deluxe, Suite Jardín, Habitación familiar, Ático, Twin del patio, plus Home/Stay/About/Booking pages and a Primary nav at `/es/…`. English URLs stay unprefixed (`/rooms/`).
+- Spanish **Layer B** copies via free Polylang (not committed): King Deluxe, Suite Jardín, Habitación familiar, Ático, Twin del patio, plus Home/Stay/Search/About/Booking pages and a Primary nav at `/es/…`. English URLs stay unprefixed (`/rooms/`).
 - Users: `desk` / `desk` (editor), `guest` / `guest` (subscriber); `admin` / `admin` from install
 - About six sample rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`) — guest text is not translated
 - Settings: hotel name The Oak House, desk email, max guests 6
 - Redis Object Cache plugin (not committed) and `wp-content/object-cache.php` drop-in, talking to the DDEV `redis` service
+- OpenSearch index `hotel-booking-rooms` (DDEV `opensearch` service; `wp hotel-booking reindex` after rooms and Polylang copies)
 - A Primary `wp_navigation` menu for the block header
 - Pretty permalinks (`/%postname%/`)
 

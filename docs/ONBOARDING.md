@@ -47,15 +47,18 @@ Object cache: `ddev describe` lists **redis**. After seed, `ddev redis-cli ping`
 
 Page cache: anonymous Home is nginx FastCGI. `curl -sI https://hotel-booking.ddev.site/` twice should show `X-Cache: MISS` then `HIT`. `/wp-json/` and logged-in requests should show `BYPASS`. Flush with `ddev nginx-cache-flush`.
 
+Room search: `ddev describe` lists **opensearch**. After seed, `ddev exec curl -s http://opensearch:9200/_cluster/health` should show `green` or `yellow`. Rebuild the index with `ddev wp hotel-booking reindex`. Dashboards: `ddev launch :5602`. The Search page is `/search/` (Spanish `/es/buscar/`).
+
 ## What seed gives you
 
-- Home (static front page), About, Amenities, Contact, Booking, Desk
+- Home (static front page), About, Amenities, Contact, Booking, Desk, Search
 - Five rooms on `/rooms/` (Deluxe King, Garden Suite, Family Room, Penthouse, Courtyard Twin)
 - Spanish copies at `/es/` (King Deluxe, …) via Polylang; header **English / Español** switches URL and content
 - Booking form guest dropdown **1–6** (`max_guests` in settings)
 - Settings: hotel name **The Oak House**, desk email `desk@hotel-booking.ddev.site`
 - Redis object cache (plugin via seed; drop-in gitignored)
 - nginx FastCGI page cache (anonymous HTML; not a WordPress plugin)
+- OpenSearch rooms index (`hotel-booking-rooms`; plugin HTTP client, not a WordPress plugin)
 - About six rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`)
 - Primary navigation
 
@@ -64,10 +67,11 @@ Page cache: anonymous Home is nginx FastCGI. `curl -sI https://hotel-booking.dde
 1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings; click **Dark** in the header (theme Interactivity); click **Quiet hours** on the Stay FAQ; click **Español** (Spanish rooms and `/es/`)
 2. https://hotel-booking.ddev.site/rooms/ — archive grid; open **Courtyard Twin**
 3. https://hotel-booking.ddev.site/stay/ — plugin custom blocks; click **4+** on the rooms grid (Interactivity + REST)
-4. https://hotel-booking.ddev.site/booking/ — guest stepper; submit if you want another row
-5. https://hotel-booking.ddev.site/desk/ — logged out: staff-only note. Log in as `desk` / `desk`: named guests in the table
-6. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking — same inquiries
-7. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking-settings — The Oak House (`admin` only)
+4. https://hotel-booking.ddev.site/search/ — type **gar** for Garden Suite typeahead; try guests/beds/price filters
+5. https://hotel-booking.ddev.site/booking/ — guest stepper; submit if you want another row
+6. https://hotel-booking.ddev.site/desk/ — logged out: staff-only note. Log in as `desk` / `desk`: named guests in the table
+7. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking — same inquiries
+8. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking-settings — The Oak House (`admin` only)
 
 In the editor: Pages → Stay, or add a block and pick the **Hotel Booking** category.
 
@@ -130,7 +134,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [BACKUP.md](BACKUP.md) — `ddev snapshot`, SQL dumps, uploads, recovery drill
 - [DEPLOYMENT.md](DEPLOYMENT.md) — zip/SFTP or git onto a real WordPress install
 - [SCALING.md](SCALING.md) — primary/replica routing and sharding (documentation only; DDEV still has one database)
-- [JOBS.md](JOBS.md) — WP-Cron, Action Scheduler, RabbitMQ, Elasticsearch (documentation only; not wired)
+- [JOBS.md](JOBS.md) — WP-Cron and RabbitMQ still documentation only; OpenSearch room search is wired on DDEV
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows
 
 ## Next

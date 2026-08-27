@@ -257,6 +257,11 @@ function hotel_booking_pll_seed_spanish_pages() {
 			'slug'    => 'estancia',
 			'content' => null,
 		),
+		'search'    => array(
+			'title'   => 'Buscar',
+			'slug'    => 'buscar',
+			'content' => null,
+		),
 	);
 
 	foreach ( $map as $en_slug => $es ) {
@@ -272,7 +277,19 @@ function hotel_booking_pll_seed_spanish_pages() {
 			$content = (string) get_post_field( 'post_content', $en_id );
 		}
 
-		$es_id      = hotel_booking_pll_find_post( 'page', $es['slug'] );
+		$es_id = 0;
+		if ( function_exists( 'pll_get_post_translations' ) ) {
+			$tr = pll_get_post_translations( $en_id );
+			if ( ! empty( $tr['es'] ) ) {
+				$es_id = (int) $tr['es'];
+			}
+		}
+		if ( ! $es_id ) {
+			$es_id = hotel_booking_pll_find_post( 'page', $es['slug'] );
+			if ( $es_id === $en_id ) {
+				$es_id = 0;
+			}
+		}
 		$es_payload = array(
 			'post_type'    => 'page',
 			'post_status'  => 'publish',
@@ -318,6 +335,7 @@ function hotel_booking_pll_seed_spanish_navigation() {
 		array( 'Inicio', '/es/' ),
 		array( 'Habitaciones', '/es/rooms/' ),
 		array( 'Estancia', '/es/estancia/' ),
+		array( 'Buscar', '/es/buscar/' ),
 		array( 'Servicios', '/es/servicios/' ),
 		array( 'Acerca de', '/es/acerca/' ),
 		array( 'Contacto', '/es/contacto/' ),

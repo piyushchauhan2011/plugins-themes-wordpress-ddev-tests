@@ -244,3 +244,132 @@ function hotel_booking_query_rooms_for_grid( $guests = 0, $lang = '' ) {
 
 	return $rooms;
 }
+
+/**
+ * Normalize room search/filter arguments.
+ *
+ * @param mixed $args Raw args (REST, block, CLI).
+ * @return array{q:string,guests:int,beds:int,price_min:int,price_max:int,lang:string}
+ */
+function hotel_booking_normalize_room_search_args( $args = array() ) {
+	$args = is_array( $args ) ? $args : array();
+
+	return array(
+		'q'         => isset( $args['q'] ) ? sanitize_text_field( (string) $args['q'] ) : '',
+		'guests'    => isset( $args['guests'] ) ? absint( $args['guests'] ) : 0,
+		'beds'      => isset( $args['beds'] ) ? absint( $args['beds'] ) : 0,
+		'price_min' => isset( $args['price_min'] ) ? absint( $args['price_min'] ) : 0,
+		'price_max' => isset( $args['price_max'] ) ? absint( $args['price_max'] ) : 0,
+		'lang'      => isset( $args['lang'] ) ? (string) $args['lang'] : '',
+	);
+}
+
+/**
+ * Published rooms via WP_Query (OpenSearch fallback and PHPUnit).
+ *
+ * @param array<string, mixed> $args Search args from hotel_booking_normalize_room_search_args().
+ * @return array<int, array<string, mixed>>
+ */
+function hotel_booking_query_rooms_for_search( $args = array() ) {
+	$args       = hotel_booking_normalize_room_search_args( $args );
+	$query_args = array(
+		'post_type'      => 'hb_room',
+		'post_status'    => 'publish',
+		'posts_per_page' => 100,
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+		'no_found_rows'  => true,
+	);
+	$query_args = hotel_booking_query_args_with_lang( $query_args, $args['lang'] );
+
+	if ( '' !== $args['q'] ) {
+		$query_args['s'] = $args['q'];
+	}
+
+	$meta_query = array();
+	if ( $args['guests'] > 0 ) {
+		$meta_query[] = array(
+			'key'     => 'hb_guests',
+			'value'   => $args['guests'],
+			'type'    => 'NUMERIC',
+			'compare' => '>=',
+		);
+	}
+	if ( $args['beds'] > 0 ) {
+		$meta_query[] = array(
+			'key'     => 'hb_beds',
+			'value'   => $args['beds'],
+			'type'    => 'NUMERIC',
+			'compare' => '>=',
+		);
+	}
+	if ( $args['price_min'] > 0 ) {
+		$meta_query[] = array(
+			'key'     => 'hb_price',
+			'value'   => $args['price_min'],
+			'type'    => 'NUMERIC',
+			'compare' => '>=',
+		);
+	}
+	if ( $args['price_max'] > 0 ) {
+		$meta_query[] = array(
+			'key'     => 'hb_price',
+			'value'   => $args['price_max'],
+			'type'    => 'NUMERIC',
+			'compare' => '<=',
+		);
+	}
+	if ( count( $meta_query ) > 1 ) {
+		$meta_query['relation'] = 'AND';
+	}
+	if ( $meta_query ) {
+		$query_args['meta_query'] = $meta_query;
+	}
+
+	$query = new WP_Query( $query_args );
+	$rooms = array();
+
+	foreach ( $query->posts as $post ) {
+		$rooms[] = hotel_booking_prepare_room_for_rest( $post );
+	}
+
+	return $rooms;
+}
+
+/**
+ * Title suggestions via WP_Query (OpenSearch fallback).
+ *
+ * @param string $q    Prefix or search text.
+ * @param string $lang Optional Polylang slug.
+ * @return array<int, array{text:string,permalink:string}>
+ */
+function hotel_booking_query_room_suggestions( $q, $lang = '' ) {
+	$q = sanitize_text_field( (string) $q );
+	if ( '' === $q ) {
+		return array();
+	}
+
+	$query_args = array(
+		'post_type'              => 'hb_room',
+		'post_status'            => 'publish',
+		'posts_per_page'         => 8,
+		's'                      => $q,
+		'orderby'                => 'title',
+		'order'                  => 'ASC',
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+	);
+	$query_args = hotel_booking_query_args_with_lang( $query_args, $lang );
+
+	$query       = new WP_Query( $query_args );
+	$suggestions = array();
+
+	foreach ( $query->posts as $post ) {
+		$suggestions[] = array(
+			'text'      => $post->post_title,
+			'permalink' => (string) get_permalink( $post ),
+		);
+	}
+
+	return $suggestions;
+}

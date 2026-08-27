@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking/room-search",
+	"title": "Room search",
+	"category": "hotel-booking",
+	"icon": "search",
+	"description": "Full-text room search with typeahead and guest, bed, and price filters.",
+	"textdomain": "hotel-booking-core",
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"interactivity": true
+	},
+	"editorScript": "file:./index.tsx",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.ts",
+	"render": "file:./render.php"
+}

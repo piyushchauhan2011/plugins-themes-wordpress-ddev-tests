@@ -5,14 +5,17 @@
 			"title": {
 				"type": "text",
 				"fields": {
-					"raw": { "type": "keyword" }
+					"raw": { "type": "keyword" },
+					"suggest": { "type": "completion" }
 				}
 			},
 			"excerpt": { "type": "text" },
+			"content": { "type": "text" },
 			"guests": { "type": "integer" },
 			"price": { "type": "integer" },
 			"beds": { "type": "integer" },
 			"size": { "type": "integer" },
+			"locale": { "type": "keyword" },
 			"permalink": { "type": "keyword", "index": false },
 			"modified": { "type": "date" }
 		}

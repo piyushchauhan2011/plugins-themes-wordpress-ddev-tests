@@ -12,8 +12,8 @@ These files are **not** loaded by WordPress or DDEV. Do **not** copy them into `
 | [system-cron.example](system-cron.example) | Crontab tick for WP-Cron / Action Scheduler |
 | [action-scheduler-enqueue.php.example](action-scheduler-enqueue.php.example) | Async email/index after inquiry insert |
 | [rabbitmq-publish.php.example](rabbitmq-publish.php.example) | AMQP `inquiry.created` / `room.updated` |
-| [elasticsearch-room-mapping.json.example](elasticsearch-room-mapping.json.example) | Room index mapping |
-| [elasticsearch-search.php.example](elasticsearch-search.php.example) | Guests range + full-text `_search` body |
+| [elasticsearch-room-mapping.json.example](elasticsearch-room-mapping.json.example) | Room index mapping (matches DDEV OpenSearch) |
+| [elasticsearch-search.php.example](elasticsearch-search.php.example) | Guests range + full-text `_search` body (sketch; live code is `inc/opensearch.php`) |
 | [inquiries-locale-column.php.example](inquiries-locale-column.php.example) | Optional guest UI locale on an inquiry — **not** in `dbDelta` |
 
 Architecture: [SCALING.md](../SCALING.md), [JOBS.md](../JOBS.md), [I18N.md](../I18N.md).

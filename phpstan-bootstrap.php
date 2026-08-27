@@ -50,6 +50,66 @@ if ( ! function_exists( 'pll_the_languages' ) ) {
 	}
 }
 
+if ( ! function_exists( 'pll_get_post_translations' ) ) {
+	/**
+	 * @param int $post_id Post ID.
+	 * @return array<string, int>
+	 */
+	function pll_get_post_translations( $post_id ) {
+		unset( $post_id );
+		return array();
+	}
+}
+
+if ( ! class_exists( 'WP_CLI' ) ) {
+	/**
+	 * Minimal WP-CLI surface for static analysis.
+	 */
+	class WP_CLI {
+		/**
+		 * @param string $name     Command name.
+		 * @param mixed  $callable Handler.
+		 * @return void
+		 */
+		public static function add_command( $name, $callable ) {
+			unset( $name, $callable );
+		}
+
+		/**
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function success( $message ) {
+			unset( $message );
+		}
+
+		/**
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function warning( $message ) {
+			unset( $message );
+		}
+
+		/**
+		 * @param string $message Message.
+		 * @return never
+		 */
+		public static function error( $message ) {
+			unset( $message );
+			throw new RuntimeException( 'WP_CLI::error' );
+		}
+
+		/**
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function log( $message ) {
+			unset( $message );
+		}
+	}
+}
+
 if ( ! function_exists( 'pll_get_post_language' ) ) {
 	/**
 	 * @param int    $post_id Post ID.

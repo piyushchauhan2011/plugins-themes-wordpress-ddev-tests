@@ -22,6 +22,11 @@ wp redis enable >/dev/null
 
 if wp option get hotel_booking_seeded >/dev/null 2>&1 && [[ "${FORCE}" != "--force" ]]; then
 	echo "Hotel demo content already exists. Re-run with: ddev seed-content --force"
+	if wp hotel-booking reindex; then
+		:
+	else
+		echo "OpenSearch reindex skipped (cluster unreachable)."
+	fi
 	exit 0
 fi
 
@@ -66,6 +71,7 @@ CONTACT_ID="$(create_page "Contact" "contact" "<!-- wp:paragraph --><p>The desk 
 BOOKING_ID="$(create_page "Booking" "booking" "<!-- wp:pattern {\"slug\":\"hotel-booking/inquiry-form\"} /-->")"
 DESK_ID="$(create_page "Desk" "desk" "<!-- wp:heading {\"level\":1} --><h1 class=\"wp-block-heading\">Desk book</h1><!-- /wp:heading --><!-- wp:paragraph --><p>Inquiries are stored in the custom <code>wp_hb_inquiries</code> table. Log in as admin to update status or delete rows. This page is rendered by theme PHP.</p><!-- /wp:paragraph --><!-- wp:shortcode -->[hotel_inquiry_list]<!-- /wp:shortcode -->")"
 STAY_ID="$(create_page "Stay" "stay" "<!-- wp:pattern {\"slug\":\"hotel-booking/stay-blocks\"} /-->")"
+SEARCH_ID="$(create_page "Search" "search" "<!-- wp:hotel-booking/room-search /-->")"
 
 wp option update show_on_front page
 wp option update page_on_front "${HOME_ID}"
@@ -127,6 +133,7 @@ NAV_CONTENT=""
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Home\",\"url\":\"/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Rooms\",\"url\":\"/rooms/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Stay\",\"url\":\"/stay/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Search\",\"url\":\"/search/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Amenities\",\"url\":\"/amenities/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"About\",\"url\":\"/about/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Contact\",\"url\":\"/contact/\",\"kind\":\"custom\"} /-->"
@@ -155,6 +162,12 @@ fi
 
 wp eval 'hotel_booking_seed_polylang();'
 
+if wp hotel-booking reindex; then
+	:
+else
+	echo "OpenSearch reindex skipped (cluster unreachable)."
+fi
+
 wp rewrite flush >/dev/null
 wp option update hotel_booking_seeded 1 >/dev/null
 
@@ -166,6 +179,7 @@ echo "Front page: Home (#${HOME_ID})"
 echo "Spanish front: /es/"
 echo "Booking page: /booking/ (#${BOOKING_ID})"
 echo "Stay (blocks): /stay/ (#${STAY_ID})"
+echo "Search (rooms): /search/ (#${SEARCH_ID})"
 echo "Desk (inquiries): /desk/ (#${DESK_ID})"
 echo "Rooms archive: /rooms/"
 echo "Primary navigation ID: ${NAV_ID}"

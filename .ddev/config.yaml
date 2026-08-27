@@ -27,6 +27,8 @@ hooks:
               wp config set WP_REDIS_HOST redis --type=constant --quiet
               wp config set WP_REDIS_PORT 6379 --raw --type=constant --quiet
               wp config set WP_REDIS_PREFIX 'hotel-booking:' --type=constant --quiet
+              wp config set WP_OPENSEARCH_HOST opensearch --type=constant --quiet
+              wp config set WP_OPENSEARCH_PORT 9200 --raw --type=constant --quiet
             fi
 
 # Key features of DDEV's config.yaml:

@@ -19,6 +19,7 @@ function hotel_booking_block_slugs() {
 		'booking-cta',
 		'room-card',
 		'rooms-grid',
+		'room-search',
 		'inquiry-form',
 		'inquiry-list',
 		'amenities',

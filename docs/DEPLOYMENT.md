@@ -87,6 +87,24 @@ On a real host, enable nginx FastCGI (or a CDN) with the same bypasses this demo
 
 Do not copy the DDEV FastCGI files onto the server. Object cache (`ddev redis-flush`) does not empty the page cache.
 
+## OpenSearch (not in this zip)
+
+Local DDEV runs OpenSearch as a Docker service. The zip does **not** include that compose file. Room search falls back to `WP_Query` when the cluster is unset or down.
+
+On a real host:
+
+1. Run OpenSearch (or Elasticsearch with a compatible REST API) on the private network.
+2. In `wp-config.php` (before `require wp-settings.php`):
+
+```php
+define( 'WP_OPENSEARCH_HOST', '127.0.0.1' );
+define( 'WP_OPENSEARCH_PORT', 9200 );
+```
+
+3. After deploy, reindex published rooms: `wp hotel-booking reindex`.
+
+Do not copy the DDEV OpenSearch compose file onto the server.
+
 ## Database scale (not in this zip)
 
-The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Cron, queues, and Elasticsearch sketches in [JOBS.md](JOBS.md) are also **not** part of deploying the theme and plugin folders. Gettext **source** catalogs (`.pot` / `.po`) **are** inside those two folders. Compile `.mo` / `.l10n.php` / plugin editor `.json` with `ddev compile-i18n` before a zip if you need Spanish at runtime; see [I18N.md](I18N.md). Free Polylang is installed by local seed, not shipped in the zip. An inquiry `locale` column is not.
+The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Cron and RabbitMQ sketches in [JOBS.md](JOBS.md) are **not** part of deploying the theme and plugin folders; production OpenSearch is a host URL as above, not the DDEV service. Gettext **source** catalogs (`.pot` / `.po`) **are** inside those two folders. Compile `.mo` / `.l10n.php` / plugin editor `.json` with `ddev compile-i18n` before a zip if you need Spanish at runtime; see [I18N.md](I18N.md). Free Polylang is installed by local seed, not shipped in the zip. An inquiry `locale` column is not.

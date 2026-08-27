@@ -31,6 +31,7 @@ require_once HOTEL_BOOKING_CORE_PATH . 'inc/database.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/post-types.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiries.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/shortcodes.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/opensearch.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/rest-api.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiry-form.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/admin.php';

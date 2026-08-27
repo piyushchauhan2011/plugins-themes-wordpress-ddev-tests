@@ -45,6 +45,7 @@ class Test_Hotel_Booking_Rest_Rooms extends WP_UnitTestCase {
 	public function test_rooms_route_is_registered() {
 		$routes = rest_get_server()->get_routes();
 		$this->assertArrayHasKey( '/hotel-booking/v1/rooms', $routes );
+		$this->assertArrayHasKey( '/hotel-booking/v1/rooms/suggest', $routes );
 		$this->assertArrayHasKey( '/hotel-booking/v1/rooms/(?P<id>\\d+)', $routes );
 	}
 
@@ -195,6 +196,114 @@ class Test_Hotel_Booking_Rest_Rooms extends WP_UnitTestCase {
 
 		$request = new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms' );
 		$request->set_param( 'lang', 'es' );
+		$response = rest_do_request( $request );
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertCount( 1, $response->get_data() );
+		$this->assertSame( 'Garden Suite', $response->get_data()[0]['title'] );
+	}
+
+	public function test_list_rooms_filters_by_search_query() {
+		$this->create_room(
+			array(
+				'post_title' => 'Deluxe King',
+			)
+		);
+		$garden_id = $this->create_room(
+			array(
+				'post_title'   => 'Garden Suite',
+				'post_excerpt' => 'Opens onto the garden.',
+			)
+		);
+
+		$request = new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms' );
+		$request->set_param( 'q', 'garden' );
+		$response = rest_do_request( $request );
+		$data     = $response->get_data();
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertCount( 1, $data );
+		$this->assertSame( $garden_id, $data[0]['id'] );
+	}
+
+	public function test_list_rooms_filters_by_beds_and_price() {
+		$this->create_room(
+			array(
+				'post_title' => 'Courtyard Twin',
+				'meta_input' => array(
+					'hb_price'  => 190,
+					'hb_guests' => 2,
+					'hb_beds'   => 2,
+					'hb_size'   => 22,
+				),
+			)
+		);
+		$family_id = $this->create_room(
+			array(
+				'post_title' => 'Family Room',
+				'meta_input' => array(
+					'hb_price'  => 420,
+					'hb_guests' => 4,
+					'hb_beds'   => 3,
+					'hb_size'   => 56,
+				),
+			)
+		);
+
+		$beds = new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms' );
+		$beds->set_param( 'beds', 3 );
+		$beds_data = rest_do_request( $beds )->get_data();
+		$this->assertCount( 1, $beds_data );
+		$this->assertSame( $family_id, $beds_data[0]['id'] );
+
+		$price = new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms' );
+		$price->set_param( 'price_min', 400 );
+		$price->set_param( 'price_max', 500 );
+		$price_data = rest_do_request( $price )->get_data();
+		$this->assertCount( 1, $price_data );
+		$this->assertSame( $family_id, $price_data[0]['id'] );
+	}
+
+	public function test_suggest_rooms_returns_matching_titles() {
+		$this->create_room(
+			array(
+				'post_title' => 'Deluxe King',
+			)
+		);
+		$this->create_room(
+			array(
+				'post_title' => 'Garden Suite',
+			)
+		);
+
+		$request = new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms/suggest' );
+		$request->set_param( 'q', 'gar' );
+		$response = rest_do_request( $request );
+		$data     = $response->get_data();
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertNotEmpty( $data );
+		$texts = wp_list_pluck( $data, 'text' );
+		$this->assertContains( 'Garden Suite', $texts );
+		$this->assertNotContains( 'Deluxe King', $texts );
+	}
+
+	public function test_list_rooms_falls_back_when_opensearch_request_fails() {
+		$this->create_room(
+			array(
+				'post_title' => 'Garden Suite',
+			)
+		);
+
+		add_filter( 'hotel_booking_opensearch_enabled', '__return_true' );
+		add_filter(
+			'pre_http_request',
+			static function () {
+				return new WP_Error( 'http_request_failed', 'OpenSearch is down.' );
+			}
+		);
+
+		$request  = new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms' );
 		$response = rest_do_request( $request );
 
 		$this->assertSame( 200, $response->get_status() );

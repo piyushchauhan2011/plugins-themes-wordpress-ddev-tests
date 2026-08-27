@@ -31,7 +31,7 @@ Inquiry writes already go through `$wpdb`. A replica drop-in can split connectio
 ## Scale ladder
 
 1. **Object cache** — running locally: `ddev redis-cli ping`, `ddev wp redis status`, `ddev redis-flush`. Production uses host Redis/Valkey, not the DDEV compose file; see [DEPLOYMENT.md](DEPLOYMENT.md).
-2. **Page cache** — running locally: nginx FastCGI. `curl -sI https://hotel-booking.ddev.site/` twice should show `X-Cache: MISS` then `HIT`. Bypass for POST, logged-in cookies, `/wp-admin/`, `/wp-json/`. Flush with `ddev nginx-cache-flush`. Production uses host nginx FastCGI or a CDN, not the DDEV `nginx_full` files; see [DEPLOYMENT.md](DEPLOYMENT.md). Async email, workers, and a search index: [JOBS.md](JOBS.md).
+2. **Page cache** — running locally: nginx FastCGI. `curl -sI https://hotel-booking.ddev.site/` twice should show `X-Cache: MISS` then `HIT`. Bypass for POST, logged-in cookies, `/wp-admin/`, `/wp-json/`. Flush with `ddev nginx-cache-flush`. Production uses host nginx FastCGI or a CDN, not the DDEV `nginx_full` files; see [DEPLOYMENT.md](DEPLOYMENT.md). Async email and workers: [JOBS.md](JOBS.md). Room search: OpenSearch on DDEV, [jobs-search.md](jobs-search.md).
 3. **Vertical** sizing of the primary (CPU, buffer pool, IOPS).
 4. **Read replicas** + HyperDB/LudicrousDB and/or ProxySQL. See [scaling-wordpress-routing.md](scaling-wordpress-routing.md) and [scaling-replicas.md](scaling-replicas.md).
 5. **Shard only what you own** (inquiries by property/tenant), never `wp_options`. See [scaling-sharding.md](scaling-sharding.md).

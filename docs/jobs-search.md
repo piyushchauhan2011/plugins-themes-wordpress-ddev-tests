@@ -1,55 +1,63 @@
-# Elasticsearch / OpenSearch for rooms and inquiries
+# OpenSearch for rooms (DDEV)
 
-Today search is MySQL:
+Room search on DDEV uses **OpenSearch**. Inquiries stay in MariaDB (`SELECT` / `LIKE` if you add desk search later). PHPUnit and wp-env never start a cluster: `GET /hotel-booking/v1/rooms` falls back to `WP_Query`.
 
-- Rooms: `WP_Query` `post_type = hb_room` and optional `meta_query` on `hb_guests` ([`hotel_booking_rest_get_rooms()`](../wp-content/plugins/hotel-booking-core/inc/rest-api.php), [`hotel_booking_query_rooms_for_grid()`](../wp-content/plugins/hotel-booking-core/inc/helpers.php)). Cap is 100 posts. Fine for a boutique catalog.
-- Inquiries: `SELECT * FROM wp_hb_inquiries WHERE status = … LIMIT n`. No full-text on `message` or guest name beyond what you add later with `LIKE`.
+**When the index matters:** faceted filters (guests + price + beds + free text) and typeahead. Five seeded rooms still work through MySQL if OpenSearch is down.
 
-**When to add an index:** thousands of rooms, faceted filters (guests + price + beds + free text), or desk search across message bodies. Not for five seeded rooms.
+## What runs locally
+
+- Add-on [`ddev/ddev-opensearch`](https://github.com/ddev/ddev-opensearch), image tag **2.x** in [`.ddev/.env.opensearch`](../.ddev/.env.opensearch)
+- Cluster `http://opensearch:9200` on the Docker network (security plugin off)
+- Dashboards: `ddev launch :5602` — inspect index `hotel-booking-rooms`
+- `WP_OPENSEARCH_HOST` / `WP_OPENSEARCH_PORT` from DDEV `post-start` (same idea as Redis)
+- Plugin HTTP via `wp_remote_request` in [`inc/opensearch.php`](../wp-content/plugins/hotel-booking-core/inc/opensearch.php) — no Composer client
+
+```bash
+ddev describe
+ddev exec curl -s http://opensearch:9200/_cluster/health
+ddev wp hotel-booking reindex
+```
 
 ## Documents
 
-**Room** (from `hb_room` + meta):
+**Room** (from `hb_room` + meta), document id = post ID:
 
-- `id` (post ID), `title`, `excerpt`, `content` (optional), `guests`, `price`, `beds`, `size`, `permalink`, `modified`
+- `title` / `excerpt` / `content` (`text`), `title.raw` (`keyword`), `title.suggest` (`completion`)
+- `guests`, `price`, `beds`, `size` (`integer`)
+- `locale` (`keyword`, Polylang slug or `en`)
+- `permalink` (`keyword`, not analyzed)
 
-**Inquiry** (from `wp_hb_inquiries`):
-
-- `id`, `guest_name`, `guest_email`, `check_in`, `check_out`, `guests`, `room_id`, `status`, `message`, `created_at`
-
-Index names e.g. `hotel-booking-rooms`, `hotel-booking-inquiries`. Mapping sketch: [`snippets/elasticsearch-room-mapping.json.example`](snippets/elasticsearch-room-mapping.json.example).
+Inquiries are **not** indexed. Mapping: [`snippets/elasticsearch-room-mapping.json.example`](snippets/elasticsearch-room-mapping.json.example).
 
 ## Write path
 
-Do **not** call ES inside the REST GET. Index **asynchronously** after MySQL commits ([jobs-queues.md](jobs-queues.md)):
+Synchronous (demo-sized). Not RabbitMQ:
 
-- `room.updated` / `room.deleted` → index or delete room document
-- `inquiry.created` / `inquiry.updated` → index inquiry document
-
-Reads can be stale for a second (same class of problem as replica lag — [scaling-replicas.md](scaling-replicas.md)). The rooms-grid Interactivity filter can keep using MySQL until you switch the REST callback.
+- `save_post_hb_room` — index published rooms; delete draft/trash
+- `before_delete_post` — delete document
+- `wp hotel-booking reindex` — put mapping + bulk index all published `hb_room` (all Polylang languages)
+- `ddev seed-content` runs reindex after rooms and Spanish copies (including the already-seeded early-exit path)
 
 ## Read path
 
-Later, `GET /hotel-booking/v1/rooms?guests=4&q=garden` would:
+`GET /hotel-booking/v1/rooms`:
 
-1. Query ES (`range` on `guests`, `multi_match` on title/excerpt).
-2. Optionally hydrate permalinks from `WP_Query` by ID if you do not store all fields in ES.
-3. Fall back to MySQL if ES is down (degraded: current `WP_Query` behavior).
+1. Query OpenSearch (`multi_match` on `q`, `range` on guests/beds/price, `term` on `locale`)
+2. Hydrate permalinks and images from WordPress by hit ID
+3. Fall back to `WP_Query` if the cluster is down, the index is missing, or the host is unset (CI)
 
-Sketch: [`snippets/elasticsearch-search.php.example`](snippets/elasticsearch-search.php.example).
+`GET /hotel-booking/v1/rooms/suggest?q=&lang=` uses the completion suggester on `title.suggest`. Fallback: a short `WP_Query` `s`.
 
-Analyzers: `standard` or language-specific for titles; `keyword` for `status`; `date` for check-in. Guest capacity is `integer` + `range` query, not full-text.
+Stay’s rooms-grid stays guests-only; it already hits `/rooms`, so it uses OpenSearch when the cluster is up. The seeded **Search** page (`/search/`, Spanish `/es/buscar/`) sends `q` plus facets.
 
 ## Elasticsearch vs OpenSearch
 
-Both speak a similar REST API. **OpenSearch** is a common self-hosted fork if Elastic’s license does not fit. This repo does not pick a vendor; snippets use generic `_search` JSON.
+Both speak a similar REST API. This project uses **OpenSearch 2.x** on DDEV. Production is a host URL in `wp-config.php` (`WP_OPENSEARCH_HOST`, `WP_OPENSEARCH_PORT`) — do not copy the DDEV compose file. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
-Managed options: Elastic Cloud, AWS OpenSearch, Elastic on k8s. DDEV would gain a service only when you implement this.
+## What would still change for scale
 
-## What would change in this plugin
+- Index asynchronously after MySQL commits ([jobs-queues.md](jobs-queues.md)) if saves get slow
+- Inquiry documents if the desk needs full-text on message bodies
+- Action Scheduler batches for huge catalogs
 
-- New dependency (official ES PHP client or OpenSearch client) **in the worker**, not necessarily in the web request.
-- REST list: optional branch `if ( get_option( 'hotel_booking_use_search_index' ) )`.
-- Reindex CLI: walk all `hb_room` posts and inquiries (Action Scheduler batches) for mapping changes.
-
-Until then, keep `WP_Query` and SQL. They are correct and testable (`ddev phpunit`, `e2e/stay.spec.ts`).
+Until the cluster is up, keep using the fallback. It is correct and testable (`ddev phpunit`, `e2e/search.spec.ts` on wp-env).
