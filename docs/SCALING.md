@@ -1,6 +1,6 @@
 # Database scaling
 
-This DDEV site uses **one MariaDB**. WordPress core and Hotel Booking Core talk to it through a single `global $wpdb`. **Redis object cache is wired** (DDEV `redis` service + Redis Object Cache plugin). Read replicas and `db.php` are still not.
+This DDEV site uses **one MariaDB**. WordPress core and Hotel Booking Core talk to it through a single `global $wpdb`. **Redis object cache** and **nginx FastCGI page cache** are wired. Read replicas and `db.php` are still not.
 
 **Possible:** yes — WordPress can send writes to a **primary** and `SELECT`s to **replicas** if you replace the database layer with a [drop-in](https://developer.wordpress.org/advanced-administration/wordpress/drop-ins/). **Sharding WordPress core tables is a poor fit.** Sharding only `wp_hb_inquiries` is conceivable later if you add a tenant key this demo does not have.
 
@@ -19,6 +19,7 @@ Request → PHP (theme, plugin, core)
 | --- | --- |
 | One database | DDEV `db` service (MariaDB) |
 | Object cache | DDEV `redis` service, `WP_REDIS_HOST=redis`, Redis Object Cache plugin (seed, not committed) |
+| Page cache | nginx FastCGI (`X-Cache` header); anonymous HTML only. Flush with `ddev nginx-cache-flush` |
 | Connection | `wp-config.php` `DB_HOST` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` |
 | Core content | `wp_posts` (`hb_room`), options, users |
 | Custom table | `{$wpdb->prefix}hb_inquiries` via [`inc/database.php`](../wp-content/plugins/hotel-booking-core/inc/database.php) |
@@ -29,10 +30,11 @@ Inquiry writes already go through `$wpdb`. A replica drop-in can split connectio
 
 ## Scale ladder
 
-1. **Object cache** — running locally: `ddev redis-cli ping`, `ddev wp redis status`, `ddev redis-flush`. Production uses host Redis/Valkey, not the DDEV compose file; see [DEPLOYMENT.md](DEPLOYMENT.md). A page cache or CDN is still a separate layer. Async email, workers, and a search index: [JOBS.md](JOBS.md).
-2. **Vertical** sizing of the primary (CPU, buffer pool, IOPS).
-3. **Read replicas** + HyperDB/LudicrousDB and/or ProxySQL. See [scaling-wordpress-routing.md](scaling-wordpress-routing.md) and [scaling-replicas.md](scaling-replicas.md).
-4. **Shard only what you own** (inquiries by property/tenant), never `wp_options`. See [scaling-sharding.md](scaling-sharding.md).
+1. **Object cache** — running locally: `ddev redis-cli ping`, `ddev wp redis status`, `ddev redis-flush`. Production uses host Redis/Valkey, not the DDEV compose file; see [DEPLOYMENT.md](DEPLOYMENT.md).
+2. **Page cache** — running locally: nginx FastCGI. `curl -sI https://hotel-booking.ddev.site/` twice should show `X-Cache: MISS` then `HIT`. Bypass for POST, logged-in cookies, `/wp-admin/`, `/wp-json/`. Flush with `ddev nginx-cache-flush`. Production uses host nginx FastCGI or a CDN, not the DDEV `nginx_full` files; see [DEPLOYMENT.md](DEPLOYMENT.md). Async email, workers, and a search index: [JOBS.md](JOBS.md).
+3. **Vertical** sizing of the primary (CPU, buffer pool, IOPS).
+4. **Read replicas** + HyperDB/LudicrousDB and/or ProxySQL. See [scaling-wordpress-routing.md](scaling-wordpress-routing.md) and [scaling-replicas.md](scaling-replicas.md).
+5. **Shard only what you own** (inquiries by property/tenant), never `wp_options`. See [scaling-sharding.md](scaling-sharding.md).
 
 ## Documents
 
@@ -51,3 +53,4 @@ Inquiry writes already go through `$wpdb`. A replica drop-in can split connectio
 - No PHPUnit against two MySQL instances
 - No change to `hotel_booking_insert_inquiry()`
 - No Redis in GitHub Actions / wp-env (PHPUnit boots `.wp-tests`, not the DDEV drop-in)
+- No nginx FastCGI cache in GitHub Actions / wp-env (they never hit this nginx)

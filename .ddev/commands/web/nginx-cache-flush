@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+## Description: Delete nginx FastCGI page-cache files
+## Usage: nginx-cache-flush
+## Example: ddev nginx-cache-flush
+
+set -euo pipefail
+
+CACHE_DIR="/tmp/nginx-fastcgi-cache"
+if [[ -d "${CACHE_DIR}" ]]; then
+	find "${CACHE_DIR}" -mindepth 1 -delete
+fi
+echo "Flushed nginx FastCGI cache (${CACHE_DIR})."

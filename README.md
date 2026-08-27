@@ -25,7 +25,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache and nginx FastCGI page cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
 
 ```bash
 ddev start
@@ -299,4 +299,5 @@ CI runs the same suite on push and pull request.
 | `ddev pnpm-audit` | pnpm audit (high and critical) |
 | `ddev e2e` | Playwright against the DDEV site |
 | `ddev redis-cli` / `ddev redis-flush` | Redis CLI and flush object cache |
+| `ddev nginx-cache-flush` | Flush nginx FastCGI page cache |
 | `ddev wp …` | Any WP-CLI command |

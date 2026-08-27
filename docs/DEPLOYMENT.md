@@ -73,6 +73,20 @@ define( 'WP_REDIS_PREFIX', 'hotel-booking:' );
 
 3. Install and activate [Redis Object Cache](https://wordpress.org/plugins/redis-cache/), then enable the drop-in (`wp redis enable` or the plugin settings screen). PHP needs the **phpredis** extension (or Predis if you set `WP_REDIS_CLIENT` to `predis`).
 
+## Page cache (not in this zip)
+
+Local DDEV caches anonymous HTML in **nginx FastCGI** (`X-Cache: HIT` / `MISS` / `BYPASS`). The zip does **not** include the DDEV `nginx_full` files.
+
+On a real host, enable nginx FastCGI (or a CDN) with the same bypasses this demo uses:
+
+- POST (inquiry `admin-post.php` saves)
+- Cookies `wordpress_logged_in_`, `comment_author_`, `wp-postpass_`
+- `/wp-admin/`, `wp-login.php`, `wp-cron.php`, `xmlrpc.php`
+- `/wp-json/` (Stay rooms-grid filter)
+- URLs with a query string (previews, search)
+
+Do not copy the DDEV FastCGI files onto the server. Object cache (`ddev redis-flush`) does not empty the page cache.
+
 ## Database scale (not in this zip)
 
 The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Cron, queues, and Elasticsearch sketches in [JOBS.md](JOBS.md) are also **not** part of deploying the theme and plugin folders. Gettext **source** catalogs (`.pot` / `.po`) **are** inside those two folders. Compile `.mo` / `.l10n.php` / plugin editor `.json` with `ddev compile-i18n` before a zip if you need Spanish at runtime; see [I18N.md](I18N.md). Free Polylang is installed by local seed, not shipped in the zip. An inquiry `locale` column is not.

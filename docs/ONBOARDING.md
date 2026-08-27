@@ -45,6 +45,8 @@ Rebuild demo data: `ddev seed-content --force`.
 
 Object cache: `ddev describe` lists **redis**. After seed, `ddev redis-cli ping` should print `PONG` and `ddev wp redis status` should show Connected. Flush with `ddev redis-flush`.
 
+Page cache: anonymous Home is nginx FastCGI. `curl -sI https://hotel-booking.ddev.site/` twice should show `X-Cache: MISS` then `HIT`. `/wp-json/` and logged-in requests should show `BYPASS`. Flush with `ddev nginx-cache-flush`.
+
 ## What seed gives you
 
 - Home (static front page), About, Amenities, Contact, Booking, Desk
@@ -53,6 +55,7 @@ Object cache: `ddev describe` lists **redis**. After seed, `ddev redis-cli ping`
 - Booking form guest dropdown **1–6** (`max_guests` in settings)
 - Settings: hotel name **The Oak House**, desk email `desk@hotel-booking.ddev.site`
 - Redis object cache (plugin via seed; drop-in gitignored)
+- nginx FastCGI page cache (anonymous HTML; not a WordPress plugin)
 - About six rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`)
 - Primary navigation
 
@@ -94,6 +97,10 @@ ddev pnpm-audit
 # Object cache (after ddev start / seed)
 ddev redis-cli ping
 ddev wp redis status
+
+# Page cache (anonymous HTML)
+curl -sI https://hotel-booking.ddev.site/ | grep -i x-cache
+ddev nginx-cache-flush
 
 # Rebuild plugin and theme blocks/CSS after clone, or leave watchers running while you edit
 ddev build-blocks
