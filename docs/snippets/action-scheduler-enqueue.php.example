@@ -1,0 +1,61 @@
+<?php
+/**
+ * REFERENCE ONLY — not loaded by Hotel Booking Core.
+ *
+ * Sketch: after a successful inquiry insert, enqueue async work with
+ * Action Scheduler (library or WooCommerce). Requires as_enqueue_async_action().
+ *
+ * @package Hotel_Booking_Docs
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * @param int $inquiry_id Insert id from hotel_booking_insert_inquiry().
+ */
+function hotel_booking_docs_enqueue_inquiry_jobs( $inquiry_id ) {
+	$inquiry_id = absint( $inquiry_id );
+	if ( $inquiry_id < 1 || ! function_exists( 'as_enqueue_async_action' ) ) {
+		return;
+	}
+
+	as_enqueue_async_action(
+		'hotel_booking_send_desk_email',
+		array( $inquiry_id ),
+		'hotel-booking-email'
+	);
+
+	as_enqueue_async_action(
+		'hotel_booking_index_inquiry',
+		array( $inquiry_id ),
+		'hotel-booking-search'
+	);
+}
+
+/**
+ * Would be hooked from hotel_booking_insert_inquiry() after insert_id is known.
+ * add_action( 'hotel_booking_inquiry_created', 'hotel_booking_docs_enqueue_inquiry_jobs' );
+ *
+ * @param int $inquiry_id Inquiry id.
+ */
+function hotel_booking_docs_send_desk_email( $inquiry_id ) {
+	$inquiry = hotel_booking_get_inquiry( $inquiry_id );
+	if ( ! $inquiry ) {
+		return;
+	}
+
+	// wp_mail( get_option( 'hotel_booking_settings' )['desk_email'], … );
+}
+
+add_action( 'hotel_booking_send_desk_email', 'hotel_booking_docs_send_desk_email' );
+add_action( 'hotel_booking_index_inquiry', 'hotel_booking_docs_index_inquiry_stub' );
+
+/**
+ * @param int $inquiry_id Inquiry id.
+ */
+function hotel_booking_docs_index_inquiry_stub( $inquiry_id ) {
+	unset( $inquiry_id );
+	// PUT to Elasticsearch / OpenSearch — see elasticsearch-search.php.example.
+}

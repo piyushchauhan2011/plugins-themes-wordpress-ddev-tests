@@ -1,0 +1,43 @@
+<?php
+/**
+ * REFERENCE ONLY — not loaded by Hotel Booking Core.
+ *
+ * Fire-and-forget AMQP publish after MySQL commit. Production should consider
+ * a transactional outbox if losing a message is unacceptable.
+ *
+ * Requires php-amqplib (or ext-amqp) and AMQP_URL in the environment.
+ *
+ * @package Hotel_Booking_Docs
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * @param string $routing_key inquiry.created|room.updated|…
+ * @param array  $payload     JSON-serializable body (ids only, not whole rows).
+ */
+function hotel_booking_docs_amqp_publish( $routing_key, array $payload ) {
+	$url = getenv( 'AMQP_URL' );
+	if ( ! is_string( $url ) || '' === $url ) {
+		return;
+	}
+
+	// PhpAmqpLib\Connection\AMQPStreamConnection::create_from_uri( $url )
+	// channel->exchange_declare( 'hotel-booking', 'topic', false, true, false );
+	// channel->basic_publish( new AMQPMessage( wp_json_encode( $payload ) ), 'hotel-booking', $routing_key );
+
+	unset( $routing_key, $payload );
+}
+
+/**
+ * add_action( 'hotel_booking_inquiry_created', function ( $id ) {
+ *     hotel_booking_docs_amqp_publish( 'inquiry.created', array( 'inquiry_id' => (int) $id ) );
+ * } );
+ *
+ * add_action( 'save_post_hb_room', function ( $post_id, $post, $update ) {
+ *     if ( wp_is_post_revision( $post_id ) ) { return; }
+ *     hotel_booking_docs_amqp_publish( 'room.updated', array( 'room_id' => (int) $post_id ) );
+ * }, 10, 3 );
+ */

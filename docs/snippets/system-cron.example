@@ -1,0 +1,17 @@
+# REFERENCE ONLY — not used by DDEV.
+# Production: disable spawn-on-visit WP-Cron, then tick due events every minute.
+#
+# In wp-config.php (not in this repo's gitignored file):
+#   define( 'DISABLE_WP_CRON', true );
+#
+# WP-CLI (preferred when available):
+
+* * * * * www-data wp cron event run --due-now --path=/var/www/html >/dev/null 2>&1
+
+# HTTP spawn (if you cannot use WP-CLI):
+
+# * * * * * curl -fsS -o /dev/null https://example.com/wp-cron.php?doing_wp_cron
+
+# If Action Scheduler is installed, also drain its queue (plugin-dependent command):
+
+# * * * * * www-data wp action-scheduler run --path=/var/www/html >/dev/null 2>&1

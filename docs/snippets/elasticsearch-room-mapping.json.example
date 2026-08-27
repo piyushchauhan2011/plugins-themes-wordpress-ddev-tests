@@ -1,0 +1,20 @@
+{
+	"mappings": {
+		"properties": {
+			"id": { "type": "integer" },
+			"title": {
+				"type": "text",
+				"fields": {
+					"raw": { "type": "keyword" }
+				}
+			},
+			"excerpt": { "type": "text" },
+			"guests": { "type": "integer" },
+			"price": { "type": "integer" },
+			"beds": { "type": "integer" },
+			"size": { "type": "integer" },
+			"permalink": { "type": "keyword", "index": false },
+			"modified": { "type": "date" }
+		}
+	}
+}

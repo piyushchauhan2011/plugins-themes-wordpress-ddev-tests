@@ -1,4 +1,4 @@
-# Scaling snippets (reference only)
+# Scaling and jobs snippets (reference only)
 
 These files are **not** loaded by WordPress or DDEV. Do **not** copy them into `wp-content/` or `.ddev/` unless you are standing up a real cluster in another project.
 
@@ -9,5 +9,10 @@ These files are **not** loaded by WordPress or DDEV. Do **not** copy them into `
 | [ludicrousdb-db-config.php.example](ludicrousdb-db-config.php.example) | Same topology for LudicrousDB |
 | [proxysql.cnf.example](proxysql.cnf.example) | Writer/reader hostgroups and `SELECT` rules |
 | [inquiries-shard-sketch.php.example](inquiries-shard-sketch.php.example) | Hypothetical table name per property — **not** in the plugin |
+| [system-cron.example](system-cron.example) | Crontab tick for WP-Cron / Action Scheduler |
+| [action-scheduler-enqueue.php.example](action-scheduler-enqueue.php.example) | Async email/index after inquiry insert |
+| [rabbitmq-publish.php.example](rabbitmq-publish.php.example) | AMQP `inquiry.created` / `room.updated` |
+| [elasticsearch-room-mapping.json.example](elasticsearch-room-mapping.json.example) | Room index mapping |
+| [elasticsearch-search.php.example](elasticsearch-search.php.example) | Guests range + full-text `_search` body |
 
-Architecture: [SCALING.md](../SCALING.md).
+Architecture: [SCALING.md](../SCALING.md), [JOBS.md](../JOBS.md).

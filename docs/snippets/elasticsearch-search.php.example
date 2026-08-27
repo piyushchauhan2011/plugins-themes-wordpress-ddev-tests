@@ -1,0 +1,59 @@
+<?php
+/**
+ * REFERENCE ONLY — not used by hotel_booking_rest_get_rooms().
+ *
+ * Example _search body: guests >= 4 and full-text "garden".
+ * PUT mapping first: elasticsearch-room-mapping.json.example
+ *
+ * @package Hotel_Booking_Docs
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * @param int    $guests Minimum capacity (0 = skip range).
+ * @param string $q      Free text.
+ * @return array Elasticsearch query DSL.
+ */
+function hotel_booking_docs_room_search_body( $guests, $q ) {
+	$filter = array();
+	$guests = absint( $guests );
+	if ( $guests > 0 ) {
+		$filter[] = array(
+			'range' => array(
+				'guests' => array(
+					'gte' => $guests,
+				),
+			),
+		);
+	}
+
+	$must = array();
+	$q    = sanitize_text_field( $q );
+	if ( '' !== $q ) {
+		$must[] = array(
+			'multi_match' => array(
+				'query'  => $q,
+				'fields' => array( 'title', 'excerpt' ),
+			),
+		);
+	}
+
+	return array(
+		'size'  => 100,
+		'query' => array(
+			'bool' => array(
+				'filter' => $filter,
+				'must'   => $must,
+			),
+		),
+		'sort'  => array(
+			array( 'title.raw' => 'asc' ),
+		),
+	);
+}
+
+// POST https://es.internal:9200/hotel-booking-rooms/_search
+// Body: wp_json_encode( hotel_booking_docs_room_search_body( 4, 'garden' ) )

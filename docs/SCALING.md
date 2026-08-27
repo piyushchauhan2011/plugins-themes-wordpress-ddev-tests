@@ -28,7 +28,7 @@ Inquiry writes already go through `$wpdb`. A replica drop-in can split connectio
 
 ## Scale ladder
 
-1. **Object cache (Redis/Memcached)** and a page cache or CDN. Most WordPress load is options, posts, and repeat reads — not inquiry `INSERT`s. Do this before replicas.
+1. **Object cache (Redis/Memcached)** and a page cache or CDN. Most WordPress load is options, posts, and repeat reads — not inquiry `INSERT`s. Do this before replicas. Async email, workers, and a search index are a **different** ladder: [JOBS.md](JOBS.md).
 2. **Vertical** sizing of the primary (CPU, buffer pool, IOPS).
 3. **Read replicas** + HyperDB/LudicrousDB and/or ProxySQL. See [scaling-wordpress-routing.md](scaling-wordpress-routing.md) and [scaling-replicas.md](scaling-replicas.md).
 4. **Shard only what you own** (inquiries by property/tenant), never `wp_options`. See [scaling-sharding.md](scaling-sharding.md).
