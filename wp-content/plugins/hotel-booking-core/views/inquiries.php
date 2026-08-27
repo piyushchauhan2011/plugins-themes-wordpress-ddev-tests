@@ -57,6 +57,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</select>
 								<?php submit_button( __( 'Save', 'hotel-booking-core' ), 'secondary', 'submit', false ); ?>
 							</form>
+							<?php
+							$job_notes = hotel_booking_inquiry_job_notes( $row );
+							if ( $job_notes ) :
+								?>
+								<p><small><?php echo esc_html( $job_notes ); ?></small></p>
+							<?php endif; ?>
 						</td>
 						<td>
 							<?php

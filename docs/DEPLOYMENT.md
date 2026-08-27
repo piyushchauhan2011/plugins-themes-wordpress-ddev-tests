@@ -105,6 +105,33 @@ define( 'WP_OPENSEARCH_PORT', 9200 );
 
 Do not copy the DDEV OpenSearch compose file onto the server.
 
+## RabbitMQ and WP-Cron (not in this zip)
+
+Local DDEV runs RabbitMQ as a Docker service and ticks WP-Cron from a web daemon. The zip does **not** include that compose file or project `vendor/php-amqplib`. Desk email and OpenSearch still run **in-request** when `WP_AMQP_HOST` is unset.
+
+On a real host:
+
+1. Run RabbitMQ (or another AMQP broker) on the private network. Install [`php-amqplib/php-amqplib`](https://github.com/php-amqplib/php-amqplib) next to WordPress (`composer require` at the project root, or another autoload WordPress can see).
+2. In `wp-config.php` (before `require wp-settings.php`):
+
+```php
+define( 'WP_AMQP_HOST', '127.0.0.1' );
+define( 'WP_AMQP_PORT', 5672 );
+define( 'WP_AMQP_USER', 'hotel' );
+define( 'WP_AMQP_PASS', 'change-me' );
+define( 'WP_AMQP_VHOST', '/' );
+define( 'DISABLE_WP_CRON', true );
+```
+
+3. Tick cron and consume queues (systemd, Supervisor, or crontab):
+
+```
+* * * * * wp cron event run --due-now --path=/var/www/html --quiet
+wp hotel-booking worker
+```
+
+Do not copy the DDEV RabbitMQ compose file onto the server.
+
 ## Database scale (not in this zip)
 
-The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Cron and RabbitMQ sketches in [JOBS.md](JOBS.md) are **not** part of deploying the theme and plugin folders; production OpenSearch is a host URL as above, not the DDEV service. Gettext **source** catalogs (`.pot` / `.po`) **are** inside those two folders. Compile `.mo` / `.l10n.php` / plugin editor `.json` with `ddev compile-i18n` before a zip if you need Spanish at runtime; see [I18N.md](I18N.md). Free Polylang is installed by local seed, not shipped in the zip. An inquiry `locale` column is not.
+The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Production OpenSearch and AMQP are host URLs as above, not DDEV services. Gettext **source** catalogs (`.pot` / `.po`) **are** inside those two folders. Compile `.mo` / `.l10n.php` / plugin editor `.json` with `ddev compile-i18n` before a zip if you need Spanish at runtime; see [I18N.md](I18N.md). Free Polylang is installed by local seed, not shipped in the zip. An inquiry `locale` column is not.

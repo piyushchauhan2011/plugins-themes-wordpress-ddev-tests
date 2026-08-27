@@ -31,11 +31,11 @@ Inquiries are **not** indexed. Mapping: [`snippets/elasticsearch-room-mapping.js
 
 ## Write path
 
-Synchronous (demo-sized). Not RabbitMQ:
+Publish first, sync if the broker is down:
 
-- `save_post_hb_room` — index published rooms; delete draft/trash
-- `before_delete_post` — delete document
-- `wp hotel-booking reindex` — put mapping + bulk index all published `hb_room` (all Polylang languages)
+- `save_post_hb_room` — AMQP `room.updated` / `room.deleted`; on publish failure, the same PUT/DELETE as before
+- `before_delete_post` — AMQP `room.deleted`, or sync DELETE
+- `wp hotel-booking reindex` — put mapping + bulk index all published `hb_room` (all Polylang languages); seed still runs this at the end (source of truth after Polylang copies)
 - `ddev seed-content` runs reindex after rooms and Spanish copies (including the already-seeded early-exit path)
 
 ## Read path
@@ -56,7 +56,7 @@ Both speak a similar REST API. This project uses **OpenSearch 2.x** on DDEV. Pro
 
 ## What would still change for scale
 
-- Index asynchronously after MySQL commits ([jobs-queues.md](jobs-queues.md)) if saves get slow
+- Index asynchronously after MySQL commits — **done** via RabbitMQ `room.updated` ([jobs-queues.md](jobs-queues.md)); sync PUT remains the fallback
 - Inquiry documents if the desk needs full-text on message bodies
 - Action Scheduler batches for huge catalogs
 

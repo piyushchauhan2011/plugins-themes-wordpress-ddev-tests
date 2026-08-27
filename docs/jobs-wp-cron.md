@@ -2,7 +2,20 @@
 
 WordPress “cron” is **not** the Unix daemon. It is a list of timestamps in `wp_options` (`cron`). By default, a front-end or admin hit may spawn `wp-cron.php` in the background. If nobody visits, jobs **do not run**.
 
-Hotel Booking Core registers **no** `wp_schedule_event` hooks. Core and plugins you activate (Plugin Check, etc.) may still schedule their own events.
+Hotel Booking Core schedules two **daily** events on `init` if they are missing, and clears them on plugin deactivation:
+
+| Hook | Job |
+| --- | --- |
+| `hotel_booking_stale_pending` | Pending inquiries older than 48 hours with empty `reminded_at` → `inquiry.remind` (or in-request mail) |
+| `hotel_booking_desk_digest` | Count pending rows → `desk.digest` (or in-request mail) |
+
+Run them now without waiting for midnight:
+
+```bash
+ddev wp hotel-booking remind-stale
+ddev wp hotel-booking digest
+ddev wp cron event run --due-now
+```
 
 ## Spawn-on-visit vs real cron
 
@@ -18,13 +31,19 @@ Problems in production:
 - Busy sites spawn overlapping `wp-cron.php` until the lock (`doing_cron` transient) serializes them.
 - The visitor waits on loopback HTTP (or a race if the loopback fails).
 
-Production pattern:
+DDEV and production pattern:
 
 ```php
 define( 'DISABLE_WP_CRON', true );
 ```
 
-Then a **system** crontab (or systemd timer) hits the site every minute. Sketches: [`snippets/system-cron.example`](snippets/system-cron.example).
+DDEV `post-start` writes that constant. A **web_extra_daemons** loop ticks instead of visitors:
+
+```
+while true; do wp cron event run --due-now --quiet; sleep 60; done
+```
+
+On a real host, a **system** crontab (or systemd timer) does the same. Sketches: [`snippets/system-cron.example`](snippets/system-cron.example).
 
 ```
 * * * * * wp cron event run --due-now --path=/var/www/html
@@ -36,13 +55,13 @@ Then a **system** crontab (or systemd timer) hits the site every minute. Sketche
 
 ### Locks and missed events
 
-WP-Cron uses a transient lock. If a job runs longer than the lock TTL, another spawn can start. Long jobs should **not** be WP-Cron callbacks; enqueue them (Action Scheduler or RabbitMQ) and return quickly.
+WP-Cron uses a transient lock. If a job runs longer than the lock TTL, another spawn can start. The plugin callbacks **publish a small AMQP message** (or send one email) and return; the worker does SMTP / OpenSearch.
 
 Missed events: WP-Cron runs **due** hooks on the next tick; it does not catch up 24 missed nightlies as 24 runs. Recurring events reschedule from “now.”
 
 ## Action Scheduler
 
-[Action Scheduler](https://actionscheduler.org/) (ships with WooCommerce; also a Composer library) stores jobs in **custom tables**, not `wp_options`. It is the usual WordPress **queue** before you add RabbitMQ.
+[Action Scheduler](https://actionscheduler.org/) (ships with WooCommerce; also a Composer library) stores jobs in **custom tables**, not `wp_options`. It is the usual WordPress **queue** before you add RabbitMQ. This repo does **not** depend on it.
 
 | Feature | WP-Cron | Action Scheduler |
 | --- | --- | --- |
@@ -56,17 +75,14 @@ Runner: still needs **something** to process the queue — WP-Cron, or `wp actio
 
 Sketch: [`snippets/action-scheduler-enqueue.php.example`](snippets/action-scheduler-enqueue.php.example).
 
-### Hotel examples (not coded)
+### Hotel examples (coded vs not)
 
-- After `hotel_booking_insert_inquiry()`: enqueue `hotel_booking_send_desk_email` with the insert id (do not send SMTP inside the POST handler).
-- After `save_post_hb_room`: enqueue reindex (or publish AMQP — [jobs-queues.md](jobs-queues.md)).
-- Recurring `twicedaily`: remind `pending` inquiries older than 48 hours.
-- Recurring `daily`: desk digest to `desk@…` from settings.
+**In the plugin** ([`inc/jobs.php`](../wp-content/plugins/hotel-booking-core/inc/jobs.php)):
 
-Keep callbacks **idempotent** (email once per inquiry id; store `email_sent_at` or a unique action hint).
+- After `hotel_booking_insert_inquiry()`: `inquiry.created` → desk `wp_mail` (idempotent via `desk_mailed_at`)
+- Recurring daily: remind `pending` inquiries older than 48 hours (`reminded_at`)
+- Recurring daily: desk digest of pending count
 
-## What would change in this plugin
-
-Add `wp_schedule_event` on activation and `wp_clear_scheduled_hook` on deactivation — or depend on `woocommerce` / `action-scheduler` and call `as_schedule_recurring_action`.
+**Still a sketch:** Action Scheduler instead of RabbitMQ; huge CSV exports in a cron hook.
 
 Do **not** put `dbDelta` or large exports in a cron hook that shares the web request. Offload: [jobs-queues.md](jobs-queues.md).

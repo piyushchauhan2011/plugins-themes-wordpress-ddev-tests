@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HOTEL_BOOKING_DB_VERSION', '1.0.0' );
+define( 'HOTEL_BOOKING_DB_VERSION', '1.1.0' );
 
 /**
  * Prefixed inquiries table name.
@@ -43,6 +43,8 @@ function hotel_booking_install_inquiries_table() {
 		room_id bigint(20) unsigned DEFAULT NULL,
 		message text NULL,
 		status varchar(20) NOT NULL DEFAULT 'pending',
+		desk_mailed_at datetime DEFAULT NULL,
+		reminded_at datetime DEFAULT NULL,
 		created_at datetime NOT NULL,
 		updated_at datetime NOT NULL,
 		PRIMARY KEY  (id),

@@ -353,6 +353,12 @@ function hotel_booking_render_inquiry_list() {
 									</select>
 									<button type="submit"><?php esc_html_e( 'Save', 'hotel-booking-core' ); ?></button>
 								</form>
+								<?php
+								$job_notes = hotel_booking_inquiry_job_notes( $row );
+								if ( $job_notes ) :
+									?>
+									<br><small><?php echo esc_html( $job_notes ); ?></small>
+								<?php endif; ?>
 							</td>
 							<td>
 								<?php

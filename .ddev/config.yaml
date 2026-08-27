@@ -22,6 +22,10 @@ hooks:
         - exec: mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test; GRANT ALL PRIVILEGES ON wordpress_test.* TO 'db'@'%'; FLUSH PRIVILEGES;"
           service: db
         - exec: |
+            if [ ! -d vendor/php-amqplib ]; then
+              composer install --no-interaction
+            fi
+        - exec: |
             if [ -f wp-config.php ]; then
               wp config set WP_REDIS_CLIENT phpredis --type=constant --quiet
               wp config set WP_REDIS_HOST redis --type=constant --quiet
@@ -29,7 +33,21 @@ hooks:
               wp config set WP_REDIS_PREFIX 'hotel-booking:' --type=constant --quiet
               wp config set WP_OPENSEARCH_HOST opensearch --type=constant --quiet
               wp config set WP_OPENSEARCH_PORT 9200 --raw --type=constant --quiet
+              wp config set WP_AMQP_HOST rabbitmq --type=constant --quiet
+              wp config set WP_AMQP_PORT 5672 --raw --type=constant --quiet
+              wp config set WP_AMQP_USER rabbitmq --type=constant --quiet
+              wp config set WP_AMQP_PASS rabbitmq --type=constant --quiet
+              wp config set WP_AMQP_VHOST '/' --type=constant --quiet
+              wp config set DISABLE_WP_CRON true --raw --type=constant --quiet
             fi
+
+web_extra_daemons:
+    - name: "wp-cron-tick"
+      command: "bash -c 'while true; do wp cron event run --due-now --quiet; sleep 60; done'"
+      directory: /var/www/html
+    - name: "hotel-booking-worker"
+      command: "bash -c 'while true; do wp hotel-booking worker; sleep 5; done'"
+      directory: /var/www/html
 
 # Key features of DDEV's config.yaml:
 

@@ -160,4 +160,16 @@ foreach ( $samples as $row ) {
 		continue;
 	}
 	WP_CLI::log( 'Inquiry #' . $result . ' ' . $row['guest_name'] . ' (' . $row['status'] . ')' );
+	if ( 'Priya Shah' === $row['guest_name'] ) {
+		global $wpdb;
+		$wpdb->query(
+			$wpdb->prepare(
+				'UPDATE %i SET created_at = DATE_SUB(%s, INTERVAL 50 HOUR) WHERE id = %d',
+				hotel_booking_inquiries_table_name(),
+				current_time( 'mysql' ),
+				$result
+			)
+		);
+		WP_CLI::log( 'Backdated inquiry #' . $result . ' for stale-pending cron.' );
+	}
 }

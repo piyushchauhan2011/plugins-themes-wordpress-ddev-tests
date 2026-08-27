@@ -3,7 +3,8 @@
 	"description": "Hotel Booking WordPress learning project: block theme, core plugin, and WP_UnitTestCase tests.",
 	"license": "GPL-2.0-or-later",
 	"require": {
-		"php": ">=8.2"
+		"php": ">=8.2",
+		"php-amqplib/php-amqplib": "^3.7"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",

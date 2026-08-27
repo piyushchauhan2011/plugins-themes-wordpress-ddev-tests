@@ -1,22 +1,35 @@
 # Offloading work and RabbitMQ
 
-The HTTP request should **commit MySQL and return**. Email, PDF exports, search indexing, and “notify Slack” belong in a worker. If the worker is down, the inquiry row must still exist; the job retries.
+The HTTP request should **commit MySQL and return**. Email, search indexing, and “notify Slack” belong in a worker. If the worker is down, the inquiry row must still exist; the job retries or the same request falls back.
 
-## What to offload here
+## Live path (DDEV)
 
-| Trigger | Heavy work | Why not in-request |
-| --- | --- | --- |
-| `hotel_booking_insert_inquiry()` | Email desk, index inquiry | SMTP and ES latency, timeouts |
-| `save_post_hb_room` / trash | Reindex or delete ES document | Mapping/bulk API |
-| wp-admin “export inquiries” | CSV of thousands of rows | PHP time limit |
-| Recurring digest | Query + email | Minutes of work |
+[`inc/amqp.php`](../wp-content/plugins/hotel-booking-core/inc/amqp.php) uses project Composer [`php-amqplib/php-amqplib`](https://github.com/php-amqplib/php-amqplib) (not a plugin package). The zip does not ship `vendor/`.
+
+| Trigger | Routing key | Queue | Worker |
+| --- | --- | --- | --- |
+| `hotel_booking_insert_inquiry()` | `inquiry.created` | `hotel-booking.email` | `wp_mail` desk; set `desk_mailed_at` |
+| Daily WP-Cron stale pending | `inquiry.remind` | `hotel-booking.email` | `wp_mail` desk; set `reminded_at` |
+| Daily WP-Cron digest | `desk.digest` | `hotel-booking.email` | `wp_mail` “N pending inquiries” |
+| `save_post_hb_room` | `room.updated` / `room.deleted` | `hotel-booking.search` | OpenSearch PUT/DELETE |
+| `before_delete_post` | `room.deleted` | `hotel-booking.search` | OpenSearch DELETE |
 
 Pattern:
 
 1. Write the source of truth (MySQL).
-2. Publish a **small message** (`inquiry_id`, `room_id`, event name).
+2. Publish a **small message** (`inquiry_id`, `room_id`, `pending_count`).
 3. Return 200 / redirect.
 4. Consumer loads the row, does I/O, **acks**.
+
+If publish fails (broker down, library missing, `WP_AMQP_HOST` unset), the plugin runs the same mail/index function in the request. No transactional outbox.
+
+```bash
+ddev wp hotel-booking worker   # blocking consume (DDEV already runs this as a daemon)
+ddev launch :15673             # RabbitMQ management (rabbitmq / rabbitmq)
+ddev launch :8026              # Mailpit
+```
+
+PHPUnit never defines `WP_AMQP_HOST`, so tests exercise the in-request fallback.
 
 ## Action Scheduler vs RabbitMQ
 
@@ -30,44 +43,33 @@ Use a **broker (RabbitMQ)** when:
 
 - Workers are separate processes or languages
 - Fan-out (email **and** index **and** analytics from one `inquiry.created`)
-- Backpressure (web can publish faster than ES can index)
+- Backpressure (web can publish faster than OpenSearch can index)
 - You already run AMQP for other services
 
-You can use both: WordPress publishes to RabbitMQ from a tiny Action Scheduler job if you do not want AMQP libraries in the web request. Simplest production story: publish from the request **after** insert if the AMQP client is fast and failure is logged + retried.
+This project publishes from the request **after** insert. Failure is logged and the in-request fallback runs.
 
 ## RabbitMQ shape
 
 ```
-WordPress  --publish-->  exchange hotel-booking
-                              ├─ queue email     (routing key inquiry.created)
-                              ├─ queue search    (inquiry.created, room.updated)
-                              └─ queue analytics (optional)
+WordPress  --publish-->  exchange hotel-booking (topic, durable)
+                              ├─ queue hotel-booking.email   (inquiry.created, inquiry.remind, desk.digest)
+                              └─ queue hotel-booking.search  (room.updated, room.deleted)
 ```
 
-- **Exchange:** topic `hotel-booking`
-- **Routing keys:** `inquiry.created`, `inquiry.updated`, `room.updated`, `room.deleted`
-- **Consumer:** long-running `php bin/worker.php` (or a small Go/Python worker) using php-amqp / php-amqplib
-- **Ack:** after success. **Nack / requeue** on retryable errors. **Dead-letter** after N failures
-- **Idempotency:** key `inquiry:{id}:email` in Redis or a `wp_hb_inquiry_jobs` table so double delivery does not double-email
+- **Consumer:** `wp hotel-booking worker` (loads WordPress, then php-amqplib)
+- **Ack:** after success. **Nack / requeue** on retryable errors
+- **Idempotency:** `desk_mailed_at` / `reminded_at` so double delivery does not double-email
 
-Sketch: [`snippets/rabbitmq-publish.php.example`](snippets/rabbitmq-publish.php.example).
+Sketch (not loaded): [`snippets/rabbitmq-publish.php.example`](snippets/rabbitmq-publish.php.example).
 
 ### Connection and credentials
 
-Web and workers use `AMQP_URL` from the environment, not git. Do not block the request on a missing broker in production without a fallback (enqueue Action Scheduler, or fail the job log).
-
-### What would change in Hotel Booking Core
-
-- After successful `$wpdb->insert`, `do_action( 'hotel_booking_inquiry_created', $id )` and a listener that publishes (or `as_enqueue_async_action`).
-- `save_post_hb_room` → `room.updated` with post ID.
-- **No** change to form validation or table schema for a first worker.
-
-Workers need WordPress loaded (`wp-load.php`) if they call `hotel_booking_get_inquiry()` — or they speak only SQL/ES and skip WP. Loading WP in a worker is simpler for this plugin; it is heavier.
+Web and workers use `WP_AMQP_HOST`, `WP_AMQP_PORT`, `WP_AMQP_USER`, `WP_AMQP_PASS`, `WP_AMQP_VHOST` from the environment / `wp-config.php`, not git. DDEV values: host `rabbitmq`, port `5672`, user/pass `rabbitmq`, vhost `/`. Production: a private AMQP URL — do not copy the DDEV compose file. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Failure modes
 
-- Broker down: insert succeeded, message lost unless you write an outbox row in the **same** MySQL transaction (transactional outbox). Document that as the robust pattern; the snippet is fire-and-forget for clarity.
-- Worker crash after side effect before ack: at-least-once delivery → idempotent consumers.
-- Poison message: dead-letter queue + alert, do not block the queue.
+- Broker down: insert succeeded; email/index still happens in-request. Robust production can add an outbox row in the **same** MySQL transaction; this plugin does not.
+- Worker crash after side effect before ack: at-least-once delivery → idempotent consumers (`desk_mailed_at`).
+- Poison message: nack/requeue can loop; a dead-letter queue is the next step, not coded here.
 
 Index search documents from the **search** queue: [jobs-search.md](jobs-search.md).

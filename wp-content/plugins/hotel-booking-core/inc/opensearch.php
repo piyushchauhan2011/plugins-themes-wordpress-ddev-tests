@@ -294,6 +294,17 @@ function hotel_booking_opensearch_on_save_room( $post_id, $post, $update ) { // 
 		return;
 	}
 
+	$routing = 'publish' === $post->post_status ? 'room.updated' : 'room.deleted';
+	$queued  = hotel_booking_amqp_publish(
+		$routing,
+		array(
+			'room_id' => (int) $post_id,
+		)
+	);
+	if ( $queued ) {
+		return;
+	}
+
 	if ( 'publish' === $post->post_status ) {
 		hotel_booking_opensearch_index_room( $post_id );
 		return;
@@ -312,6 +323,16 @@ add_action( 'save_post_hb_room', 'hotel_booking_opensearch_on_save_room', 20, 3 
 function hotel_booking_opensearch_on_delete_post( $post_id ) {
 	$post = get_post( (int) $post_id );
 	if ( ! $post || 'hb_room' !== $post->post_type ) {
+		return;
+	}
+
+	$queued = hotel_booking_amqp_publish(
+		'room.deleted',
+		array(
+			'room_id' => (int) $post_id,
+		)
+	);
+	if ( $queued ) {
 		return;
 	}
 
@@ -668,35 +689,4 @@ function hotel_booking_opensearch_reindex() {
 	hotel_booking_opensearch_request( 'POST', '/' . $index . '/_refresh', null, 5 );
 
 	return count( $query->posts );
-}
-
-/**
- * WP-CLI: recreate the rooms index (`wp hotel-booking reindex`).
- *
- * @param array<int, string>    $args       Positional args.
- * @param array<string, string> $assoc_args Assoc args.
- * @return void
- */
-function hotel_booking_cli_reindex( $args = array(), $assoc_args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	if ( ! hotel_booking_opensearch_is_configured() ) {
-		WP_CLI::warning( __( 'WP_OPENSEARCH_HOST is not set; skip reindex.', 'hotel-booking-core' ) );
-		return;
-	}
-
-	$result = hotel_booking_opensearch_reindex();
-	if ( is_wp_error( $result ) ) {
-		WP_CLI::error( $result->get_error_message() );
-	}
-
-	WP_CLI::success(
-		sprintf(
-			/* translators: %d: number of room documents */
-			__( 'Indexed %d rooms into hotel-booking-rooms.', 'hotel-booking-core' ),
-			(int) $result
-		)
-	);
-}
-
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	WP_CLI::add_command( 'hotel-booking reindex', 'hotel_booking_cli_reindex' );
 }

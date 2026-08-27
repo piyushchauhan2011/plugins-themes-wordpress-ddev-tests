@@ -25,7 +25,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache and nginx FastCGI page cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). Cron, queues still docs-only; **room search** uses OpenSearch on DDEV: [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache and nginx FastCGI page cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). WP-Cron, RabbitMQ jobs, and OpenSearch room search on DDEV: [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
 
 ```bash
 ddev start
@@ -98,6 +98,7 @@ Tests cover:
 - `GET /wp-json/hotel-booking/v1/rooms` REST catalog
 - Custom table CRUD (`hotel_booking_insert_inquiry`, get, update, delete)
 - Inquiry `admin-post` save + `go_to()` booking/desk HTML
+- Desk email fallback, stale-pending query, and digest count when AMQP is unset
 - wp-admin inquiries list and Settings API
 - Block patterns / pattern category
 - `set_up()` / `tear_down()` calling `parent::`
@@ -282,6 +283,10 @@ CI runs the same suite on push and pull request.
 | --- | --- |
 | `ddev start` / `ddev launch` | Run the site |
 | `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings, Redis Object Cache, OpenSearch reindex |
+| `ddev wp hotel-booking reindex` | Rebuild the OpenSearch rooms index |
+| `ddev wp hotel-booking worker` | Consume RabbitMQ email and search queues (also a DDEV daemon) |
+| `ddev wp hotel-booking remind-stale` / `digest` | Run the daily inquiry jobs now |
+| `ddev rabbitmq launch` | RabbitMQ management UI |
 | `ddev snapshot` / `ddev snapshot restore` | Named DB (+ files) snapshot; see [BACKUP.md](docs/BACKUP.md) |
 | `ddev export-db` / `ddev import-db` | SQL-only dump and restore |
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
@@ -300,5 +305,4 @@ CI runs the same suite on push and pull request.
 | `ddev e2e` | Playwright against the DDEV site |
 | `ddev redis-cli` / `ddev redis-flush` | Redis CLI and flush object cache |
 | `ddev nginx-cache-flush` | Flush nginx FastCGI page cache |
-| `ddev wp hotel-booking reindex` | Rebuild the OpenSearch rooms index |
 | `ddev wp …` | Any WP-CLI command |

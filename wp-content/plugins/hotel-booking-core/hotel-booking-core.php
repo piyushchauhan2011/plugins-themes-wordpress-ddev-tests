@@ -35,9 +35,13 @@ require_once HOTEL_BOOKING_CORE_PATH . 'inc/opensearch.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/rest-api.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiry-form.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/admin.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/amqp.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/jobs.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/cli.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/blocks.php';
 
 register_activation_hook( __FILE__, 'hotel_booking_install_inquiries_table' );
+register_deactivation_hook( __FILE__, 'hotel_booking_clear_cron_events' );
 
 /**
  * Load plugin translations.

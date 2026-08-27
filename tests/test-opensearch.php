@@ -94,4 +94,20 @@ class Test_Hotel_Booking_OpenSearch extends WP_UnitTestCase {
 		$this->assertFalse( hotel_booking_opensearch_is_configured() );
 		$this->assertWPError( hotel_booking_opensearch_search_rooms( array() ) );
 	}
+
+	public function test_save_room_uses_sync_index_when_amqp_is_off() {
+		$this->assertFalse( hotel_booking_amqp_is_configured() );
+		$this->assertNotFalse( has_action( 'save_post_hb_room', 'hotel_booking_opensearch_on_save_room' ) );
+
+		$post_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'hb_room',
+				'post_status' => 'publish',
+				'post_title'  => 'AMQP Fallback Room',
+			)
+		);
+
+		$this->assertIsInt( $post_id );
+		$this->assertGreaterThan( 0, $post_id );
+	}
 }

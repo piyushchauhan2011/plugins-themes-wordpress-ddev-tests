@@ -9,9 +9,9 @@ These files are **not** loaded by WordPress or DDEV. Do **not** copy them into `
 | [ludicrousdb-db-config.php.example](ludicrousdb-db-config.php.example) | Same topology for LudicrousDB |
 | [proxysql.cnf.example](proxysql.cnf.example) | Writer/reader hostgroups and `SELECT` rules |
 | [inquiries-shard-sketch.php.example](inquiries-shard-sketch.php.example) | Hypothetical table name per property — **not** in the plugin |
-| [system-cron.example](system-cron.example) | Crontab tick for WP-Cron / Action Scheduler |
-| [action-scheduler-enqueue.php.example](action-scheduler-enqueue.php.example) | Async email/index after inquiry insert |
-| [rabbitmq-publish.php.example](rabbitmq-publish.php.example) | AMQP `inquiry.created` / `room.updated` |
+| [system-cron.example](system-cron.example) | Crontab tick for WP-Cron / Action Scheduler (DDEV uses a web daemon instead) |
+| [action-scheduler-enqueue.php.example](action-scheduler-enqueue.php.example) | Async email/index after inquiry insert — **not loaded**; live jobs are the plugin |
+| [rabbitmq-publish.php.example](rabbitmq-publish.php.example) | AMQP sketch — **not loaded**; live client is `inc/amqp.php` |
 | [elasticsearch-room-mapping.json.example](elasticsearch-room-mapping.json.example) | Room index mapping (matches DDEV OpenSearch) |
 | [elasticsearch-search.php.example](elasticsearch-search.php.example) | Guests range + full-text `_search` body (sketch; live code is `inc/opensearch.php`) |
 | [inquiries-locale-column.php.example](inquiries-locale-column.php.example) | Optional guest UI locale on an inquiry — **not** in `dbDelta` |

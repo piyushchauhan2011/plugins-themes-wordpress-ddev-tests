@@ -131,7 +131,10 @@ function hotel_booking_insert_inquiry( $input, $already_sanitized = false ) {
 		return new WP_Error( 'hotel_booking_insert_failed', __( 'Could not save the inquiry.', 'hotel-booking-core' ) );
 	}
 
-	return (int) $wpdb->insert_id;
+	$id = (int) $wpdb->insert_id;
+	do_action( 'hotel_booking_inquiry_created', $id );
+
+	return $id;
 }
 
 /**
