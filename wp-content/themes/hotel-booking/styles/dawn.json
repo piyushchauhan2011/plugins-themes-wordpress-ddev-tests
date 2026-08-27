@@ -1,25 +1,25 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/theme.json",
 	"version": 3,
-	"title": "Dusk",
+	"title": "Dawn",
 	"styles": {
 		"color": {
-			"background": "var:preset|color|espresso",
-			"text": "var:preset|color|cream"
+			"background": "var:preset|color|cream",
+			"text": "var:preset|color|espresso"
 		},
 		"elements": {
 			"heading": {
 				"color": {
-					"text": "var:preset|color|cream"
+					"text": "var:preset|color|espresso"
 				}
 			},
 			"link": {
 				"color": {
-					"text": "var:preset|color|gold"
+					"text": "var:preset|color|terracotta"
 				},
 				":hover": {
 					"color": {
-						"text": "var:preset|color|linen"
+						"text": "var:preset|color|espresso"
 					}
 				}
 			},
@@ -27,11 +27,6 @@
 				"color": {
 					"background": "var:preset|color|terracotta",
 					"text": "var:preset|color|linen"
-				}
-			},
-			"caption": {
-				"color": {
-					"text": "var:preset|color|gold"
 				}
 			}
 		}

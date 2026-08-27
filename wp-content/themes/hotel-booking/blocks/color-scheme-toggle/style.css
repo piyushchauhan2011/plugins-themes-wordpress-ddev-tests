@@ -1,0 +1,40 @@
+.hb-color-scheme {
+	display: flex;
+	align-items: center;
+}
+
+.hb-color-scheme__button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 2.5rem;
+	padding: 0.35rem 0.75rem;
+	border: 1px solid var(--hb-border, #e4d6c5);
+	border-radius: 2px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.hb-color-scheme__icon {
+	width: 0.7rem;
+	height: 0.7rem;
+	border-radius: 50%;
+	background: currentColor;
+	box-shadow: inset -0.2rem 0 0 0 var(--wp--preset--color--linen, #fffbf5);
+}
+
+html[data-color-scheme="dark"] .hb-color-scheme__icon {
+	box-shadow: none;
+}
+
+@media (max-width: 600px) {
+	.hb-color-scheme__button {
+		min-height: 2.75rem;
+	}
+}

@@ -9,8 +9,8 @@
  * @package Hotel_Booking
  */
 ?>
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xl"}},"color":{"background":"#2c2118","text":"#f7f1e8"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-text-color has-background" style="color:#f7f1e8;background-color:#2c2118;padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xl)">
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xl"}}},"backgroundColor":"espresso","textColor":"cream","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-cream-color has-espresso-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xl)">
 	<!-- wp:heading {"textAlign":"center"} -->
 	<h2 class="wp-block-heading has-text-align-center">Write to the desk</h2>
 	<!-- /wp:heading -->

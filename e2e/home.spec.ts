@@ -20,3 +20,20 @@ test( 'home stay FAQ accordion toggles with Interactivity', async ( { page } ) =
 	await expect( faq.getByText( /after 10pm the house stays still/i ) ).toBeVisible();
 	await expect( faq.getByText( /rooms are ready after 3pm/i ) ).toBeHidden();
 } );
+
+test( 'home color scheme toggle switches light and dark', async ( { page } ) => {
+	await page.addInitScript( () => {
+		localStorage.setItem( 'hotel-booking-color-scheme', 'light' );
+	} );
+
+	await page.goto( '/' );
+
+	const html = page.locator( 'html' );
+	await expect( html ).toHaveAttribute( 'data-color-scheme', 'light' );
+
+	await page.getByRole( 'button', { name: 'Use dark appearance' } ).click();
+	await expect( html ).toHaveAttribute( 'data-color-scheme', 'dark' );
+
+	await page.getByRole( 'button', { name: 'Use light appearance' } ).click();
+	await expect( html ).toHaveAttribute( 'data-color-scheme', 'light' );
+} );

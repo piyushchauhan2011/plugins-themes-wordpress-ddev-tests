@@ -1,9 +1,14 @@
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"1rem","bottom":"1rem"}},"border":{"bottom":{"color":"#e4d6c5","width":"1px"}}},"backgroundColor":"linen","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-linen-background-color has-background" style="border-bottom-color:#e4d6c5;border-bottom-width:1px;padding-top:1rem;padding-bottom:1rem">
+<!-- wp:group {"align":"full","className":"hb-site-header","style":{"spacing":{"padding":{"top":"1rem","bottom":"1rem"}},"border":{"bottom":{"width":"1px"}}},"backgroundColor":"linen","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull hb-site-header has-linen-background-color has-background" style="border-bottom-width:1px;padding-top:1rem;padding-bottom:1rem">
 	<!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
 	<div class="wp-block-group alignwide">
 		<!-- wp:site-title {"level":0,"style":{"typography":{"fontStyle":"normal","fontWeight":"600"}}} /-->
-		<!-- wp:navigation {"overlayMenu":"mobile","overlayBackgroundColor":"linen","overlayTextColor":"espresso","layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"right"}} /-->
+		<!-- wp:group {"style":{"spacing":{"blockGap":"0.75rem"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"right"}} -->
+		<div class="wp-block-group">
+			<!-- wp:navigation {"overlayMenu":"mobile","overlayBackgroundColor":"linen","overlayTextColor":"espresso","layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"right"}} /-->
+			<!-- wp:hotel-booking-theme/color-scheme-toggle /-->
+		</div>
+		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
 </div>

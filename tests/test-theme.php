@@ -57,6 +57,7 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 		$titles = wp_list_pluck( WP_Theme_JSON_Resolver::get_style_variations(), 'title' );
 
 		$this->assertContains( 'Dusk', $titles );
+		$this->assertContains( 'Dawn', $titles );
 	}
 
 	public function test_style_css_has_media_queries() {
@@ -84,5 +85,18 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'data-wp-interactive="hotel-booking-theme/stay-faq"', $html );
 		$this->assertStringContainsString( 'hb-stay-faq', $html );
 		$this->assertStringContainsString( 'Check-in', $html );
+	}
+
+	public function test_color_scheme_toggle_block_is_registered() {
+		$registry = WP_Block_Type_Registry::get_instance();
+		$this->assertTrue( $registry->is_registered( 'hotel-booking-theme/color-scheme-toggle' ) );
+	}
+
+	public function test_color_scheme_toggle_renders_interactivity_root() {
+		$html = do_blocks( '<!-- wp:hotel-booking-theme/color-scheme-toggle /-->' );
+
+		$this->assertStringContainsString( 'data-wp-interactive="hotel-booking-theme/color-scheme"', $html );
+		$this->assertStringContainsString( 'hb-color-scheme', $html );
+		$this->assertStringContainsString( 'Use dark appearance', $html );
 	}
 }

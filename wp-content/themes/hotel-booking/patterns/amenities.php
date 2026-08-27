@@ -9,8 +9,8 @@
  * @package Hotel_Booking
  */
 ?>
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xl"}},"color":{"background":"#fffbf5"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-background" style="background-color:#fffbf5;padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xl)">
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xl"}}},"backgroundColor":"linen","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-linen-background-color has-background" style="padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xl)">
 	<!-- wp:heading {"textAlign":"center"} -->
 	<h2 class="wp-block-heading has-text-align-center">What stays with the room</h2>
 	<!-- /wp:heading -->

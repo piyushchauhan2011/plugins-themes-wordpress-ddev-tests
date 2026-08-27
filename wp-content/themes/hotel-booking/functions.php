@@ -2,7 +2,7 @@
 /**
  * Hotel Booking theme bootstrap.
  *
- * Presentation plus a theme-native Stay FAQ block (Interactivity API).
+ * Presentation plus theme-native Interactivity blocks (Stay FAQ, color scheme).
  * Rooms CPT and shortcodes live in the Hotel Booking Core plugin.
  *
  * @package Hotel_Booking
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HOTEL_BOOKING_VERSION', '1.1.0' );
+define( 'HOTEL_BOOKING_VERSION', '1.2.0' );
 
 require_once get_template_directory() . '/inc/patterns.php';
 
@@ -31,13 +31,56 @@ add_action( 'after_setup_theme', 'hotel_booking_setup' );
  * Register theme Gutenberg blocks (unbundled view modules, no webpack).
  */
 function hotel_booking_register_theme_blocks() {
-	$block_dir = get_template_directory() . '/blocks/stay-faq';
+	$blocks = glob( get_template_directory() . '/blocks/*/block.json' );
 
-	if ( file_exists( $block_dir . '/block.json' ) ) {
-		register_block_type( $block_dir );
+	if ( ! $blocks ) {
+		return;
+	}
+
+	foreach ( $blocks as $block_json ) {
+		register_block_type( dirname( $block_json ) );
 	}
 }
 add_action( 'init', 'hotel_booking_register_theme_blocks' );
+
+/**
+ * Default light scheme on <html> when JavaScript is off.
+ *
+ * @param string $output Language attributes.
+ * @return string
+ */
+function hotel_booking_html_color_scheme( $output ) {
+	if ( false === strpos( $output, 'data-color-scheme' ) ) {
+		$output .= ' data-color-scheme="light"';
+	}
+
+	return $output;
+}
+add_filter( 'language_attributes', 'hotel_booking_html_color_scheme' );
+
+/**
+ * Apply stored or system color scheme before first paint.
+ */
+function hotel_booking_color_scheme_boot() {
+	$script = <<<'JS'
+(function () {
+	var k = 'hotel-booking-color-scheme';
+	var s;
+	try {
+		s = localStorage.getItem( k );
+	} catch ( e ) {
+		s = null;
+	}
+	if ( s !== 'dark' && s !== 'light' ) {
+		s = window.matchMedia( '(prefers-color-scheme: dark)' ).matches ? 'dark' : 'light';
+	}
+	document.documentElement.setAttribute( 'data-color-scheme', s );
+})();
+JS;
+
+	wp_print_inline_script_tag( $script );
+}
+add_action( 'wp_head', 'hotel_booking_color_scheme_boot', 0 );
 
 /**
  * Front-end styles and fonts.

@@ -6,7 +6,7 @@ Description: A block theme for learning WordPress theme development, with a bout
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.2
-Version: 1.1.0
+Version: 1.2.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: hotel-booking
@@ -16,13 +16,48 @@ Hotel Booking WordPress Theme, Copyright 2026 Hotel Booking Learners
 Hotel Booking is distributed under the terms of the GNU GPL.
 */
 
+:root {
+	--hb-border: #e4d6c5;
+	color-scheme: light;
+}
+
+html[data-color-scheme="light"] {
+	color-scheme: light;
+}
+
+html[data-color-scheme="dark"],
+html[data-color-scheme="dark"] body {
+	color-scheme: dark;
+	--wp--preset--color--cream: #1a1410;
+	--wp--preset--color--linen: #241c16;
+	--wp--preset--color--espresso: #f7f1e8;
+	--wp--preset--color--terracotta: #c4785c;
+	--wp--preset--color--gold: #d4bc94;
+	--wp--preset--color--white: #241c16;
+	--hb-border: #4a3b30;
+}
+
+html[data-color-scheme="light"] body {
+	background-color: var(--wp--preset--color--cream, #f7f1e8);
+	color: var(--wp--preset--color--espresso, #2c2118);
+}
+
+html[data-color-scheme="dark"] body {
+	background-color: var(--wp--preset--color--cream, #1a1410);
+	color: var(--wp--preset--color--espresso, #f7f1e8);
+}
+
+.hb-site-header {
+	border-bottom-color: var(--hb-border);
+}
+
 .hb-booking-form {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 	gap: 0.75rem;
 	margin-top: 2rem;
 	padding: 1.25rem;
-	background: rgba(255, 251, 245, 0.94);
+	background: var(--wp--preset--color--linen, #fffbf5);
 	color: var(--wp--preset--color--espresso, #2c2118);
 	border-radius: 4px;
 }
@@ -40,9 +75,10 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 .hb-booking-form select {
 	font: inherit;
 	padding: 0.6rem 0.7rem;
-	border: 1px solid #d7c7b3;
+	border: 1px solid var(--hb-border, #d7c7b3);
 	border-radius: 2px;
-	background: #fff;
+	background: var(--wp--preset--color--white, #fff);
+	color: inherit;
 }
 
 .hb-booking-form button {
@@ -51,7 +87,7 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 	border: 0;
 	border-radius: 2px;
 	background: var(--wp--preset--color--terracotta, #a65d3f);
-	color: #fffbf5;
+	color: var(--wp--preset--color--linen, #fffbf5);
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -64,8 +100,8 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 	gap: 1.25rem;
 	margin: 1.5rem 0;
 	padding: 1rem 0;
-	border-top: 1px solid #e4d6c5;
-	border-bottom: 1px solid #e4d6c5;
+	border-top: 1px solid var(--hb-border, #e4d6c5);
+	border-bottom: 1px solid var(--hb-border, #e4d6c5);
 	font-size: 0.95rem;
 }
 
@@ -86,7 +122,7 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 	background:
 		linear-gradient(180deg, rgba(44, 33, 24, 0.35), rgba(44, 33, 24, 0.55)),
 		linear-gradient(120deg, #3d2b22 0%, #6b4a38 45%, #a65d3f 100%);
-	color: #fffbf5;
+	color: var(--wp--preset--color--linen, #fffbf5);
 }
 
 .hb-booking-form__wide {
@@ -96,9 +132,10 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 .hb-booking-form textarea {
 	font: inherit;
 	padding: 0.6rem 0.7rem;
-	border: 1px solid #d7c7b3;
+	border: 1px solid var(--hb-border, #d7c7b3);
 	border-radius: 2px;
-	background: #fff;
+	background: var(--wp--preset--color--white, #fff);
+	color: inherit;
 }
 
 .hb-inquiry__notice {
@@ -125,7 +162,7 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 .hb-desk__table td {
 	text-align: left;
 	padding: 0.75rem 0.5rem;
-	border-bottom: 1px solid #e4d6c5;
+	border-bottom: 1px solid var(--hb-border, #e4d6c5);
 	vertical-align: top;
 }
 
@@ -238,7 +275,7 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 }
 
 .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item {
-	border-bottom: 1px solid #e4d6c5;
+	border-bottom: 1px solid var(--hb-border, #e4d6c5);
 }
 
 .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item__content {
@@ -260,4 +297,8 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 
 .wp-block-navigation__responsive-container.is-menu-open .current-menu-item .wp-block-navigation-item__content {
 	color: var(--wp--preset--color--terracotta, #a65d3f);
+}
+
+html[data-color-scheme="dark"] .hb-hero .hb-booking-form {
+	box-shadow: 0 0 0 1px var(--hb-border);
 }

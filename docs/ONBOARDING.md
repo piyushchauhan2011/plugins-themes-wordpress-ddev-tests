@@ -54,7 +54,7 @@ Rebuild demo data: `ddev seed-content --force`.
 
 ## Click through
 
-1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings; click **Quiet hours** on the Stay FAQ (theme Interactivity, no `ddev build-blocks`)
+1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings; click **Dark** in the header (theme Interactivity); click **Quiet hours** on the Stay FAQ
 2. https://hotel-booking.ddev.site/rooms/ — archive grid; open **Courtyard Twin**
 3. https://hotel-booking.ddev.site/stay/ — plugin custom blocks; click **4+** on the rooms grid (Interactivity + REST)
 4. https://hotel-booking.ddev.site/booking/ — guest stepper; submit if you want another row

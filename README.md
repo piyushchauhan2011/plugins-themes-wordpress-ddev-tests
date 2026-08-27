@@ -40,26 +40,28 @@ wp-content/themes/hotel-booking/
   style.css              Theme header, GPL copyright notice, booking-form CSS
   readme.txt             WordPress.org-style readme
   theme.json             Palette, fonts, fluid type, spacing (Site Editor → Styles)
-  styles/dusk.json       Style variation (Appearance → Editor → Styles)
-  functions.php          Setup, fonts, pattern category, theme Stay FAQ block
+  styles/dusk.json       Dark style variation (Appearance → Editor → Styles)
+  styles/dawn.json       Light style variation (Appearance → Editor → Styles)
+  functions.php          Setup, fonts, pattern category, theme blocks
   templates/             Block templates (front-page, single, archives, 404)
-  parts/                 header.html, footer.html
+  parts/                 header.html (color scheme toggle), footer.html
   patterns/              Landing-page sections (hero, rooms, amenities, stay FAQ, CTA)
-  blocks/                Theme Gutenberg block (Stay FAQ, Interactivity API, no webpack)
+  blocks/                Theme Gutenberg blocks (Stay FAQ, color scheme toggle; Interactivity API, no webpack)
   template-parts/        PHP: inquiry-form.php, inquiries-list.php (`$wpdb` data)
   inc/patterns.php       Pattern category
 ```
 
 The booking form **POSTs** into a custom MySQL table (`wp_hb_inquiries`). It is not a payment or reservation engine. Staff can read/update/delete rows on `/desk/` (log in as admin).
 
-## Theme styles (fluid type, Dusk, responsive CSS)
+## Theme styles (fluid type, Dawn/Dusk, light/dark toggle)
 
 Headings use fluid font sizes in `theme.json` (`clamp()` via `fluid.min` / `fluid.max`). Room Query loops use `minimumColumnWidth` so the grid wraps on small screens. `style.css` adds `@media` rules for the booking form and desk table.
 
-A **Dusk** style variation lives in `styles/dusk.json` (Appearance → Editor → Styles).
+**Dawn** (light) and **Dusk** (dark) style variations live in `styles/` (Appearance → Editor → Styles). Visitors can also switch the same palettes from the header **Dark** / **Light** toggle (`hotel-booking-theme/color-scheme-toggle`, Interactivity API, no `ddev build-blocks`). The choice is stored in `localStorage` and follows `prefers-color-scheme` until they click.
 
 ```bash
 ddev phpunit --filter Test_Hotel_Booking_Theme
+ddev e2e e2e/home.spec.ts
 ```
 
 ## PHPUnit (`WP_UnitTestCase`)
@@ -85,7 +87,7 @@ ddev phpunit --filter test_theme_is_block_theme
 Tests cover:
 
 - Theme is active and `wp_is_block_theme()` is true
-- Fluid `theme.json` font sizes, Dusk style variation, and `@media` in `style.css`
+- Fluid `theme.json` font sizes, Dawn/Dusk style variations, and `@media` in `style.css`
 - `hb_room` is registered by the plugin
 - `hotel_booking_format_price()`
 - `$this->factory()->post->create()` plus meta and `WP_Query`
