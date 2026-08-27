@@ -142,4 +142,50 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'wp_head', 'print_emoji_detection_script' ) );
 		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'wp_enqueue_emoji_styles' ) );
 	}
+
+	public function test_rooms_archive_post_titles_are_h2() {
+		$pattern = file_get_contents( get_template_directory() . '/patterns/rooms-archive.php' );
+		$this->assertNotFalse( strpos( $pattern, 'post-title {"isLink":true,"level":2}' ) );
+	}
+
+	public function test_terracotta_meets_link_contrast_on_cream() {
+		$json = json_decode( file_get_contents( get_template_directory() . '/theme.json' ), true );
+		$hex  = null;
+
+		foreach ( $json['settings']['color']['palette'] as $color ) {
+			if ( 'terracotta' === $color['slug'] ) {
+				$hex = $color['color'];
+				break;
+			}
+		}
+
+		$this->assertSame( '#9a5539', $hex );
+	}
+
+	public function test_favicon_file_exists() {
+		$this->assertFileExists( get_template_directory() . '/assets/images/favicon.png' );
+	}
+
+	public function test_wp_head_prints_meta_description_and_favicon() {
+		update_option( 'blogdescription', 'A quiet night, well kept' );
+		$this->go_to( home_url( '/' ) );
+
+		ob_start();
+		do_action( 'wp_head' );
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( '<meta name="description" content="A quiet night, well kept">', $html );
+		$this->assertStringContainsString( 'assets/images/favicon.png', $html );
+		$this->assertStringContainsString( 'rel="icon"', $html );
+	}
+
+	public function test_rooms_archive_meta_description_uses_intro() {
+		$this->go_to( home_url( '/?post_type=hb_room' ) );
+
+		ob_start();
+		do_action( 'wp_head' );
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'Quiet rooms with garden light', $html );
+	}
 }

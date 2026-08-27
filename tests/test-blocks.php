@@ -31,6 +31,13 @@ class Test_Hotel_Booking_Blocks extends WP_UnitTestCase {
 		$this->assertTrue( $patterns->is_registered( 'hotel-booking/stay-blocks' ) );
 	}
 
+	public function test_stay_pattern_uses_h2_not_a_second_h1() {
+		$content = hotel_booking_stay_pattern_content();
+		$this->assertStringNotContainsString( '<h1', $content );
+		$this->assertStringContainsString( '<h2 class="wp-block-heading">', $content );
+		$this->assertStringContainsString( 'hotel-booking/rooms-grid', $content );
+	}
+
 	public function test_room_card_renders_published_room() {
 		$room_id = self::factory()->post->create(
 			array(

@@ -87,7 +87,7 @@ html[data-color-scheme="dark"] body {
 	padding: 0.75rem 1rem;
 	border: 0;
 	border-radius: 2px;
-	background: var(--wp--preset--color--terracotta, #a65d3f);
+	background: var(--wp--preset--color--terracotta, #9a5539);
 	color: var(--wp--preset--color--linen, #fffbf5);
 	font-weight: 600;
 	letter-spacing: 0.06em;
@@ -174,7 +174,7 @@ html[data-color-scheme="dark"] body {
 }
 
 .hb-desk__delete {
-	color: var(--wp--preset--color--terracotta, #a65d3f);
+	color: var(--wp--preset--color--terracotta, #9a5539);
 }
 
 .hb-desk__table-wrap {
@@ -293,11 +293,20 @@ html[data-color-scheme="dark"] body {
 
 .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item__content:hover,
 .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item__content:focus {
-	color: var(--wp--preset--color--terracotta, #a65d3f);
+	color: var(--wp--preset--color--terracotta, #9a5539);
 }
 
 .wp-block-navigation__responsive-container.is-menu-open .current-menu-item .wp-block-navigation-item__content {
-	color: var(--wp--preset--color--terracotta, #a65d3f);
+	color: var(--wp--preset--color--terracotta, #9a5539);
+}
+
+.has-espresso-background-color a {
+	color: var(--wp--preset--color--gold, #c4a574);
+}
+
+.has-espresso-background-color a:hover,
+.has-espresso-background-color a:focus {
+	color: var(--wp--preset--color--cream, #f7f1e8);
 }
 
 html[data-color-scheme="dark"] .hb-hero .hb-booking-form {

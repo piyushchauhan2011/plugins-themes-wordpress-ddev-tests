@@ -108,6 +108,53 @@ function hotel_booking_preload_heading_font() {
 add_action( 'wp_head', 'hotel_booking_preload_heading_font', 1 );
 
 /**
+ * Document meta description for search snippets.
+ */
+function hotel_booking_meta_description() {
+	if ( is_front_page() ) {
+		$desc = get_bloginfo( 'description', 'display' );
+	} elseif ( is_singular() ) {
+		$post = get_queried_object();
+		if ( $post instanceof WP_Post && has_excerpt( $post ) ) {
+			$desc = (string) $post->post_excerpt;
+		} elseif ( $post instanceof WP_Post ) {
+			$desc = wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 30 );
+		} else {
+			$desc = '';
+		}
+	} elseif ( is_post_type_archive( 'hb_room' ) ) {
+		$desc = __( 'Quiet rooms with garden light, proper desks, and linen that still feels like linen.', 'hotel-booking' );
+	} else {
+		$desc = get_bloginfo( 'description', 'display' );
+	}
+
+	$desc = wp_strip_all_tags( (string) $desc );
+	$desc = preg_replace( '/\s+/', ' ', $desc );
+	$desc = is_string( $desc ) ? trim( $desc ) : '';
+	if ( '' === $desc ) {
+		$desc = trim( wp_strip_all_tags( get_bloginfo( 'description', 'display' ) ) );
+	}
+
+	if ( '' === $desc ) {
+		return;
+	}
+
+	printf( '<meta name="description" content="%s">' . "\n", esc_attr( $desc ) );
+}
+add_action( 'wp_head', 'hotel_booking_meta_description' );
+
+/**
+ * Theme favicon so browsers do not request /favicon.ico.
+ */
+function hotel_booking_favicon() {
+	printf(
+		'<link rel="icon" href="%s" type="image/png" sizes="32x32">' . "\n",
+		esc_url( get_template_directory_uri() . '/assets/images/favicon.png' )
+	);
+}
+add_action( 'wp_head', 'hotel_booking_favicon', 2 );
+
+/**
  * Front-end styles (fonts are self-hosted via theme.json fontFace).
  */
 function hotel_booking_enqueue_assets() {

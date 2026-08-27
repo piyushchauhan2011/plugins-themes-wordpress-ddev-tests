@@ -142,9 +142,9 @@ function hotel_booking_stay_pattern_content() {
 		)
 	);
 
-	return '<!-- wp:heading {"level":1} --><h1 class="wp-block-heading">' . esc_html__( 'Stay', 'hotel-booking-core' ) . '</h1><!-- /wp:heading -->'
-		. '<!-- wp:paragraph --><p>' . esc_html__( 'Drop Hotel Booking blocks onto any page. This layout is a starting point: CTA, rooms, a featured card, amenities, and the inquiry form.', 'hotel-booking-core' ) . '</p><!-- /wp:paragraph -->'
+	return '<!-- wp:paragraph --><p>' . esc_html__( 'Drop Hotel Booking blocks onto any page. This layout is a starting point: CTA, rooms, a featured card, amenities, and the inquiry form.', 'hotel-booking-core' ) . '</p><!-- /wp:paragraph -->'
 		. '<!-- wp:hotel-booking/booking-cta ' . $cta . ' /-->'
+		. '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html__( 'Rooms', 'hotel-booking-core' ) . '</h2><!-- /wp:heading -->'
 		. '<!-- wp:hotel-booking/rooms-grid {"guests":0} /-->'
 		. '<!-- wp:hotel-booking/room-card {"roomId":0} /-->'
 		. '<!-- wp:hotel-booking/amenities ' . $amenities . ' /-->'

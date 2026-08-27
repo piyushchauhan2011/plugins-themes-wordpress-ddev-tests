@@ -23,7 +23,7 @@
 			<!-- wp:group {"style":{"spacing":{"blockGap":"0.75rem"}}} -->
 			<div class="wp-block-group">
 				<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"4/3"} /-->
-				<!-- wp:post-title {"isLink":true,"level":3} /-->
+				<!-- wp:post-title {"isLink":true,"level":2} /-->
 				<?php
 				echo '<!-- wp:post-excerpt ' . wp_json_encode(
 					array(
