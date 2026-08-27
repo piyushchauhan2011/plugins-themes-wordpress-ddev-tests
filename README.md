@@ -17,6 +17,7 @@ A DDEV WordPress site with a custom **block theme**, a companion **plugin** for 
 | Demo hotel content | `ddev seed-content` |
 | Theme review content + Theme Check | `ddev import-theme-unit-test` |
 | PHPUnit + `WP_UnitTestCase` | `ddev phpunit` (lives **outside** the theme) |
+| PHPCS, PHPStan, Plugin Check, dependency audits | `ddev phpcs`, `ddev phpstan`, `ddev plugin-check`, `ddev npm-audit` |
 
 Block themes use `templates/*.html` instead of the classic PHP template hierarchy (`front-page.php`, `single.php`, …). WordPress still picks a template by the same *names*: `front-page.html` for the home page, `single-hb_room.html` for a room, `archive-hb_room.html` for `/rooms/`.
 
@@ -183,6 +184,20 @@ ddev import-theme-unit-test
 
 Then open **Appearance → Theme Check** and browse archives, singles, comments, and search. Check the **theme** folder only; plugin-territory code is in Hotel Booking Core.
 
+## Static analysis and security
+
+PHPCS uses WordPress Extra (escaping, nonces, prepared SQL) plus PHPCompatibility for PHP 8.2+. PHPStan runs at level 5 with WordPress stubs. Plugin Check is the WordPress.org PCP tool. Audits cover Composer and npm (`--audit-level=high`).
+
+```bash
+ddev phpcs
+ddev phpstan
+ddev plugin-check
+ddev composer audit
+ddev npm-audit
+```
+
+CI runs the same suite on push and pull request.
+
 ## What to read next
 
 - [Block themes](https://developer.wordpress.org/themes/block-themes/) vs [classic template hierarchy](https://developer.wordpress.org/themes/templates/template-hierarchy/)
@@ -205,5 +220,9 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
 | `ddev setup-tests` | Composer + WordPress PHPUnit library |
 | `ddev phpunit` | Run `WP_UnitTestCase` tests |
+| `ddev phpcs` | WordPress Extra + PHPCompatibility on theme and plugin |
+| `ddev phpstan` | PHPStan level 5 with WordPress stubs |
+| `ddev plugin-check` | WordPress Plugin Check on hotel-booking-core |
+| `ddev npm-audit` | npm audit (high and critical) |
 | `ddev e2e` | Playwright against the DDEV site |
 | `ddev wp …` | Any WP-CLI command |

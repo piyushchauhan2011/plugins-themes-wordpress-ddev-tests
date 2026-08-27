@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<h1><?php esc_html_e( 'Inquiries', 'hotel-booking-core' ); ?></h1>
 	<p><?php esc_html_e( 'Rows from the custom wp_hb_inquiries table. Status updates and deletes use the same admin-post handlers as the front-end desk.', 'hotel-booking-core' ); ?></p>
 
+	<?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- flash flag after a verified delete redirect. ?>
 	<?php if ( isset( $_GET['hb_deleted'] ) ) : ?>
 		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Inquiry deleted.', 'hotel-booking-core' ); ?></p></div>
 	<?php endif; ?>
@@ -50,8 +51,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<input type="hidden" name="inquiry_id" value="<?php echo esc_attr( (string) $row->id ); ?>">
 								<?php wp_nonce_field( 'hb_update_inquiry', 'hb_update_nonce' ); ?>
 								<select name="status">
-									<?php foreach ( hotel_booking_inquiry_statuses() as $status ) : ?>
-										<option value="<?php echo esc_attr( $status ); ?>" <?php selected( $row->status, $status ); ?>><?php echo esc_html( $status ); ?></option>
+									<?php foreach ( hotel_booking_inquiry_statuses() as $inquiry_status ) : ?>
+										<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( $inquiry_status ); ?></option>
 									<?php endforeach; ?>
 								</select>
 								<?php submit_button( __( 'Save', 'hotel-booking-core' ), 'secondary', 'submit', false ); ?>

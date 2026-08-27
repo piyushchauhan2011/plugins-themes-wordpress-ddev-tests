@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset name="Hotel Booking">
+	<description>WordPress Extra (security and DB sniffs) plus PHP 8.2 compatibility for the theme and plugin.</description>
+
+	<file>wp-content/plugins/hotel-booking-core</file>
+	<file>wp-content/themes/hotel-booking</file>
+
+	<exclude-pattern>*/assets/images/generate-placeholders.php</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+	<arg name="parallel" value="8"/>
+	<arg name="basepath" value="."/>
+
+	<config name="testVersion" value="8.2-"/>
+	<config name="minimum_supported_wp_version" value="6.7"/>
+
+	<rule ref="WordPress-Extra"/>
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

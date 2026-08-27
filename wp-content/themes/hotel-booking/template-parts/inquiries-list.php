@@ -29,6 +29,7 @@ $inquiries = hotel_booking_get_inquiries(
 	)
 );
 
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- flash flag after a verified delete redirect.
 $deleted = isset( $_GET['hb_deleted'] );
 ?>
 
@@ -69,8 +70,8 @@ $deleted = isset( $_GET['hb_deleted'] );
 								<input type="hidden" name="inquiry_id" value="<?php echo esc_attr( (string) $row->id ); ?>">
 								<?php wp_nonce_field( 'hb_update_inquiry', 'hb_update_nonce' ); ?>
 								<select name="status">
-									<?php foreach ( hotel_booking_inquiry_statuses() as $status ) : ?>
-										<option value="<?php echo esc_attr( $status ); ?>" <?php selected( $row->status, $status ); ?>><?php echo esc_html( $status ); ?></option>
+									<?php foreach ( hotel_booking_inquiry_statuses() as $inquiry_status ) : ?>
+										<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( $inquiry_status ); ?></option>
 									<?php endforeach; ?>
 								</select>
 								<button type="submit"><?php esc_html_e( 'Save', 'hotel-booking' ); ?></button>

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+## Description: Run PHPStan (level 5, WordPress stubs) on the theme and plugin
+## Usage: phpstan [phpstan-args...]
+## Example: ddev phpstan
+## Example: ddev phpstan --error-format=table
+
+set -euo pipefail
+
+PROJECT_DIR="/var/www/html"
+cd "${PROJECT_DIR}"
+
+if [[ ! -x vendor/bin/phpstan ]]; then
+	composer install
+fi
+
+./vendor/bin/phpstan analyse --memory-limit=1G "$@"

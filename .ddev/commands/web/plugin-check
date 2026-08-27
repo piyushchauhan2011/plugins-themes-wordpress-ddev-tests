@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+## Description: Run WordPress Plugin Check (static + runtime) on hotel-booking-core
+## Usage: plugin-check [plugin-check-args...]
+## Example: ddev plugin-check
+## Example: ddev plugin-check --format=json
+
+set -euo pipefail
+
+cd /var/www/html
+
+if ! wp plugin is-installed plugin-check --quiet; then
+	wp plugin install plugin-check --activate
+else
+	wp plugin activate plugin-check
+fi
+
+CLI_PHP="wp-content/plugins/plugin-check/cli.php"
+if [[ ! -f "${CLI_PHP}" ]]; then
+	echo "plugin-check cli.php not found at ${CLI_PHP}"
+	exit 1
+fi
+
+wp plugin check hotel-booking-core --require="${CLI_PHP}" --format=table "$@"

@@ -74,6 +74,13 @@ curl -s https://hotel-booking.ddev.site/wp-json/hotel-booking/v1/rooms?guests=4
 # Full PHPUnit (after ddev setup-tests, once)
 ddev phpunit
 
+# Static analysis and security
+ddev phpcs
+ddev phpstan
+ddev plugin-check
+ddev composer audit
+ddev npm-audit
+
 # Optional browser e2e (needs npm + Chromium on the host)
 npm install
 npx playwright install chromium

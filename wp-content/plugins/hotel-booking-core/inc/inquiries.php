@@ -25,11 +25,11 @@ function hotel_booking_inquiry_statuses() {
  * @return array|WP_Error
  */
 function hotel_booking_sanitize_inquiry_data( $input ) {
-	$name  = isset( $input['guest_name'] ) ? sanitize_text_field( wp_unslash( $input['guest_name'] ) ) : '';
-	$email = isset( $input['guest_email'] ) ? sanitize_email( wp_unslash( $input['guest_email'] ) ) : '';
-	$in    = isset( $input['check_in'] ) ? sanitize_text_field( wp_unslash( $input['check_in'] ) ) : '';
-	$out   = isset( $input['check_out'] ) ? sanitize_text_field( wp_unslash( $input['check_out'] ) ) : '';
-	$guests = isset( $input['guests'] ) ? absint( $input['guests'] ) : 0;
+	$name    = isset( $input['guest_name'] ) ? sanitize_text_field( wp_unslash( $input['guest_name'] ) ) : '';
+	$email   = isset( $input['guest_email'] ) ? sanitize_email( wp_unslash( $input['guest_email'] ) ) : '';
+	$in      = isset( $input['check_in'] ) ? sanitize_text_field( wp_unslash( $input['check_in'] ) ) : '';
+	$out     = isset( $input['check_out'] ) ? sanitize_text_field( wp_unslash( $input['check_out'] ) ) : '';
+	$guests  = isset( $input['guests'] ) ? absint( $input['guests'] ) : 0;
 	$room_id = isset( $input['room_id'] ) ? absint( $input['room_id'] ) : 0;
 	$message = isset( $input['message'] ) ? sanitize_textarea_field( wp_unslash( $input['message'] ) ) : '';
 	$status  = isset( $input['status'] ) ? sanitize_key( wp_unslash( $input['status'] ) ) : 'pending';
@@ -130,9 +130,13 @@ function hotel_booking_get_inquiry( $id ) {
 		return null;
 	}
 
-	$table = hotel_booking_inquiries_table_name();
-
-	return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) );
+	return $wpdb->get_row(
+		$wpdb->prepare(
+			'SELECT * FROM %i WHERE id = %d',
+			hotel_booking_inquiries_table_name(),
+			$id
+		)
+	);
 }
 
 /**
@@ -163,15 +167,51 @@ function hotel_booking_get_inquiries( $args = array() ) {
 	$orderby = in_array( $args['orderby'], array( 'id', 'created_at', 'check_in', 'guest_name' ), true ) ? $args['orderby'] : 'created_at';
 	$order   = 'ASC' === strtoupper( (string) $args['order'] ) ? 'ASC' : 'DESC';
 	$limit   = max( 1, absint( $args['limit'] ) );
+	$filter  = ( $args['status'] && in_array( $args['status'], hotel_booking_inquiry_statuses(), true ) );
 
-	if ( $args['status'] && in_array( $args['status'], hotel_booking_inquiry_statuses(), true ) ) {
-		$sql = "SELECT * FROM {$table} WHERE status = %s ORDER BY {$orderby} {$order} LIMIT %d";
-		return $wpdb->get_results( $wpdb->prepare( $sql, $args['status'], $limit ) );
+	if ( $filter && 'ASC' === $order ) {
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE status = %s ORDER BY %i ASC LIMIT %d',
+				$table,
+				$args['status'],
+				$orderby,
+				$limit
+			)
+		);
 	}
 
-	$sql = "SELECT * FROM {$table} ORDER BY {$orderby} {$order} LIMIT %d";
+	if ( $filter ) {
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE status = %s ORDER BY %i DESC LIMIT %d',
+				$table,
+				$args['status'],
+				$orderby,
+				$limit
+			)
+		);
+	}
 
-	return $wpdb->get_results( $wpdb->prepare( $sql, $limit ) );
+	if ( 'ASC' === $order ) {
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i ORDER BY %i ASC LIMIT %d',
+				$table,
+				$orderby,
+				$limit
+			)
+		);
+	}
+
+	return $wpdb->get_results(
+		$wpdb->prepare(
+			'SELECT * FROM %i ORDER BY %i DESC LIMIT %d',
+			$table,
+			$orderby,
+			$limit
+		)
+	);
 }
 
 /**

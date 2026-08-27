@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+## Description: Run PHPCS (WordPress Extra + PHPCompatibility) on the theme and plugin
+## Usage: phpcs [phpcs-args...]
+## Example: ddev phpcs
+## Example: ddev phpcs --report=summary
+
+set -euo pipefail
+
+PROJECT_DIR="/var/www/html"
+cd "${PROJECT_DIR}"
+
+if [[ ! -x vendor/bin/phpcs ]]; then
+	composer install
+fi
+
+./vendor/bin/phpcs "$@"

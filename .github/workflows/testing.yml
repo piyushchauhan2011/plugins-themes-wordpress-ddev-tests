@@ -73,3 +73,68 @@ jobs:
           WP_USERNAME: admin
           WP_PASSWORD: password
         run: npm run e2e
+
+  php-analysis:
+    name: PHPCS, PHPStan, composer audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: PHPCS
+        run: composer phpcs
+
+      - name: PHPStan
+        run: composer phpstan
+
+      - name: Composer audit
+        run: composer audit
+
+  npm-audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Audit high and critical
+        run: npm audit --audit-level=high
+
+  plugin-check:
+    name: Plugin Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Start wp-env
+        run: npx wp-env start
+
+      - name: Install Plugin Check
+        run: npx wp-env run cli -- wp plugin install plugin-check --activate
+
+      - name: Run Plugin Check
+        run: npx wp-env run cli -- wp plugin check hotel-booking-core --require=./wp-content/plugins/plugin-check/cli.php --format=table

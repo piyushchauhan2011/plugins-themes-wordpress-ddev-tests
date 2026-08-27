@@ -70,7 +70,12 @@ function hotel_booking_render_room_meta( $post_id ) {
 		</div>
 		<div>
 			<dt><?php esc_html_e( 'Size', 'hotel-booking-core' ); ?></dt>
-			<dd><?php echo esc_html( sprintf( __( '%s m²', 'hotel-booking-core' ), (string) $meta['size'] ) ); ?></dd>
+			<dd>
+				<?php
+				/* translators: %s: room size in square metres */
+				echo esc_html( sprintf( __( '%s m²', 'hotel-booking-core' ), (string) $meta['size'] ) );
+				?>
+			</dd>
 		</div>
 	</dl>
 	<?php

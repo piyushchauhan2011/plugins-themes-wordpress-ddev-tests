@@ -16,6 +16,7 @@ if ( ! function_exists( 'hotel_booking_insert_inquiry' ) ) {
 	return;
 }
 
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- display-only query args after a redirect.
 $prefill_name   = isset( $_GET['guest_name'] ) ? sanitize_text_field( wp_unslash( $_GET['guest_name'] ) ) : '';
 $prefill_email  = isset( $_GET['guest_email'] ) ? sanitize_email( wp_unslash( $_GET['guest_email'] ) ) : '';
 $prefill_in     = isset( $_GET['check_in'] ) ? sanitize_text_field( wp_unslash( $_GET['check_in'] ) ) : '';
@@ -26,9 +27,10 @@ $max_guests     = min( 8, max( 1, $max_guests ) );
 if ( $prefill_guests < 1 || $prefill_guests > $max_guests ) {
 	$prefill_guests = min( 2, $max_guests );
 }
-$saved_id       = isset( $_GET['inquiry'] ) ? absint( $_GET['inquiry'] ) : 0;
-$error          = isset( $_GET['hb_error'] ) ? sanitize_text_field( wp_unslash( $_GET['hb_error'] ) ) : '';
-$saved          = $saved_id ? hotel_booking_get_inquiry( $saved_id ) : null;
+$saved_id      = isset( $_GET['inquiry'] ) ? absint( $_GET['inquiry'] ) : 0;
+$inquiry_error = isset( $_GET['hb_error'] ) ? sanitize_text_field( wp_unslash( $_GET['hb_error'] ) ) : '';
+// phpcs:enable WordPress.Security.NonceVerification.Recommended
+$saved = $saved_id ? hotel_booking_get_inquiry( $saved_id ) : null;
 
 $rooms = get_posts(
 	array(
@@ -42,8 +44,8 @@ $rooms = get_posts(
 ?>
 
 <div class="hb-inquiry">
-	<?php if ( $error ) : ?>
-		<p class="hb-inquiry__notice hb-inquiry__notice--error" role="alert"><?php echo esc_html( $error ); ?></p>
+	<?php if ( $inquiry_error ) : ?>
+		<p class="hb-inquiry__notice hb-inquiry__notice--error" role="alert"><?php echo esc_html( $inquiry_error ); ?></p>
 	<?php endif; ?>
 
 	<?php if ( $saved ) : ?>

@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "@wordpress/env": "^10.28.0"
+    "@wordpress/env": "^11.14.0"
   },
   "allowScripts": {
     "fs-ext-extra-prebuilt@2.2.7": true,

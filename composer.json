@@ -6,13 +6,28 @@
 		"php": ">=8.2"
 	},
 	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpstan/phpstan": "^2.1",
 		"phpunit/phpunit": "^9.6",
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"wp-coding-standards/wpcs": "^3.1",
 		"yoast/phpunit-polyfills": "^2.0"
 	},
 	"scripts": {
-		"test": "phpunit"
+		"test": "phpunit",
+		"phpcs": "phpcs",
+		"phpcs:fix": "phpcbf",
+		"phpstan": "phpstan analyse --memory-limit=1G",
+		"analyse": [
+			"@phpcs",
+			"@phpstan"
+		]
 	},
 	"config": {
-		"sort-packages": true
+		"sort-packages": true,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }

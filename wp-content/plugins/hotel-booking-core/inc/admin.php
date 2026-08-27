@@ -49,10 +49,10 @@ function hotel_booking_sanitize_settings( $input ) {
 
 	$output['hotel_name'] = isset( $input['hotel_name'] ) ? sanitize_text_field( $input['hotel_name'] ) : '';
 
-	$email                 = isset( $input['desk_email'] ) ? sanitize_email( $input['desk_email'] ) : '';
-	$output['desk_email']  = is_email( $email ) ? $email : '';
+	$email                = isset( $input['desk_email'] ) ? sanitize_email( $input['desk_email'] ) : '';
+	$output['desk_email'] = is_email( $email ) ? $email : '';
 
-	$max                 = isset( $input['max_guests'] ) ? absint( $input['max_guests'] ) : 8;
+	$max                  = isset( $input['max_guests'] ) ? absint( $input['max_guests'] ) : 8;
 	$output['max_guests'] = min( 8, max( 1, $max ) );
 
 	return $output;
