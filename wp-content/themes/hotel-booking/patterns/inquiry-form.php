@@ -4,7 +4,7 @@
  * Slug: hotel-booking/inquiry-form
  * Categories: hotel-booking
  * Viewport Width: 800
- * Description: Marketing inquiry form posted to the booking page.
+ * Description: Server-rendered booking inquiry form saved to a custom table.
  *
  * @package Hotel_Booking
  */
@@ -16,33 +16,11 @@
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph -->
-	<p>This form does not charge a card. It is a GET request so you can inspect query args while learning theme templates.</p>
+	<p>This form POSTs to WordPress and inserts a row in the <code>wp_hb_inquiries</code> custom table. It does not charge a card.</p>
 	<!-- /wp:paragraph -->
 
-	<!-- wp:html -->
-	<form class="hb-booking-form" action="/booking/" method="get">
-		<label>Name
-			<input type="text" name="guest_name" required>
-		</label>
-		<label>Email
-			<input type="email" name="guest_email" required>
-		</label>
-		<label>Check in
-			<input type="date" name="check_in" required>
-		</label>
-		<label>Check out
-			<input type="date" name="check_out" required>
-		</label>
-		<label>Guests
-			<select name="guests">
-				<option value="1">1 guest</option>
-				<option value="2" selected>2 guests</option>
-				<option value="3">3 guests</option>
-				<option value="4">4 guests</option>
-			</select>
-		</label>
-		<button type="submit">Send inquiry</button>
-	</form>
-	<!-- /wp:html -->
+	<!-- wp:shortcode -->
+	[hotel_inquiry_form]
+	<!-- /wp:shortcode -->
 </div>
 <!-- /wp:group -->

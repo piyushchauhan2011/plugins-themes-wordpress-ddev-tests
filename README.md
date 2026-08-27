@@ -11,7 +11,7 @@ A DDEV WordPress site with a custom **block theme**, a companion **plugin** for 
 | Piece | Where |
 | --- | --- |
 | Block theme files (`theme.json`, HTML templates, patterns) | `wp-content/themes/hotel-booking/` |
-| Plugin-territory PHP (CPT, meta, shortcode, REST API) | `wp-content/plugins/hotel-booking-core/` |
+| Plugin-territory PHP (CPT, custom table, REST, shortcodes) | `wp-content/plugins/hotel-booking-core/` |
 | Demo hotel content | `ddev seed-content` |
 | Theme review content + Theme Check | `ddev import-theme-unit-test` |
 | PHPUnit + `WP_UnitTestCase` | `ddev phpunit` (lives **outside** the theme) |
@@ -55,10 +55,11 @@ wp-content/themes/hotel-booking/
   templates/             Block templates (front-page, single, archives, 404)
   parts/                 header.html, footer.html
   patterns/              Landing-page sections (hero, rooms, amenities, CTA)
+  template-parts/        PHP: inquiry-form.php, inquiries-list.php (`$wpdb` data)
   inc/patterns.php       Pattern category
 ```
 
-The booking form is a **GET inquiry** to `/booking/`. It is not a payment or reservation engine.
+The booking form **POSTs** into a custom MySQL table (`wp_hb_inquiries`). It is not a payment or reservation engine. Staff can read/update/delete rows on `/desk/` (log in as admin).
 
 ## PHPUnit (`WP_UnitTestCase`)
 
@@ -88,8 +89,33 @@ Tests cover:
 - `$this->factory()->post->create()` plus meta and `WP_Query`
 - `[hotel_room_meta]` shortcode
 - `GET /wp-json/hotel-booking/v1/rooms` REST catalog
+- Custom table CRUD (`hotel_booking_insert_inquiry`, get, update, delete)
 - Block patterns / pattern category
 - `set_up()` / `tear_down()` calling `parent::`
+
+## Custom table (inquiries)
+
+Hotel Booking Core creates `{$wpdb->prefix}hb_inquiries` with `dbDelta` on activation (and on `plugins_loaded` if the schema version is stale).
+
+| Function | Role |
+| --- | --- |
+| `hotel_booking_insert_inquiry()` | `$wpdb->insert` after sanitize/validate |
+| `hotel_booking_get_inquiry()` | `$wpdb->get_row` + `$wpdb->prepare` |
+| `hotel_booking_get_inquiries()` | `$wpdb->get_results` |
+| `hotel_booking_update_inquiry()` | `$wpdb->update` |
+| `hotel_booking_delete_inquiry()` | `$wpdb->delete` |
+
+The theme only renders: [template-parts/inquiry-form.php](wp-content/themes/hotel-booking/template-parts/inquiry-form.php) and [template-parts/inquiries-list.php](wp-content/themes/hotel-booking/template-parts/inquiries-list.php), loaded via `[hotel_inquiry_form]` and `[hotel_inquiry_list]`.
+
+```bash
+# Book a stay (public)
+open https://hotel-booking.ddev.site/booking/
+
+# Staff desk (log in as admin first)
+open https://hotel-booking.ddev.site/desk/
+
+ddev phpunit --filter Test_Hotel_Booking_Inquiries
+```
 
 ## Rooms API
 
@@ -128,6 +154,7 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 - [Block themes](https://developer.wordpress.org/themes/block-themes/) vs [classic template hierarchy](https://developer.wordpress.org/themes/templates/template-hierarchy/)
 - [Theme Unit Test](https://codex.wordpress.org/Theme_Unit_Test)
 - [Plugin / theme unit tests](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) and `WP_UnitTestCase` factories
+- [wpdb](https://developer.wordpress.org/reference/classes/wpdb/) and [Creating tables with plugins](https://developer.wordpress.org/plugins/creating-tables-with-plugins/) (`dbDelta`, `$wpdb->prepare`)
 - [REST API Handbook](https://developer.wordpress.org/rest-api/) (`register_rest_route`, `rest_do_request`)
 
 ## Commands

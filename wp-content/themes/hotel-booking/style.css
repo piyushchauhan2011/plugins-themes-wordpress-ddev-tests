@@ -88,3 +88,53 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 		linear-gradient(120deg, #3d2b22 0%, #6b4a38 45%, #a65d3f 100%);
 	color: #fffbf5;
 }
+
+.hb-booking-form__wide {
+	grid-column: 1 / -1;
+}
+
+.hb-booking-form textarea {
+	font: inherit;
+	padding: 0.6rem 0.7rem;
+	border: 1px solid #d7c7b3;
+	border-radius: 2px;
+	background: #fff;
+}
+
+.hb-inquiry__notice {
+	padding: 1rem 1.25rem;
+	margin-bottom: 1.5rem;
+	border-radius: 2px;
+}
+
+.hb-inquiry__notice--ok {
+	background: #e8f0e6;
+}
+
+.hb-inquiry__notice--error {
+	background: #f8e4dc;
+}
+
+.hb-desk__table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.95rem;
+}
+
+.hb-desk__table th,
+.hb-desk__table td {
+	text-align: left;
+	padding: 0.75rem 0.5rem;
+	border-bottom: 1px solid #e4d6c5;
+	vertical-align: top;
+}
+
+.hb-desk__status {
+	display: flex;
+	gap: 0.35rem;
+	align-items: center;
+}
+
+.hb-desk__delete {
+	color: var(--wp--preset--color--terracotta, #a65d3f);
+}

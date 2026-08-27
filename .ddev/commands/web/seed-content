@@ -49,6 +49,7 @@ ABOUT_ID="$(create_page "About" "about" "<!-- wp:paragraph --><p>Hotel Booking i
 AMENITIES_ID="$(create_page "Amenities" "amenities" "<!-- wp:pattern {\"slug\":\"hotel-booking/amenities\"} /-->")"
 CONTACT_ID="$(create_page "Contact" "contact" "<!-- wp:paragraph --><p>The desk is open from seven until late. This page is sample content for theme development — edit it in the Site Editor or Pages screen.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Email: desk@hotel-booking.ddev.site<br>Phone: (555) 010-1947</p><!-- /wp:paragraph -->")"
 BOOKING_ID="$(create_page "Booking" "booking" "<!-- wp:pattern {\"slug\":\"hotel-booking/inquiry-form\"} /-->")"
+DESK_ID="$(create_page "Desk" "desk" "<!-- wp:heading {\"level\":1} --><h1 class=\"wp-block-heading\">Desk book</h1><!-- /wp:heading --><!-- wp:paragraph --><p>Inquiries are stored in the custom <code>wp_hb_inquiries</code> table. Log in as admin to update status or delete rows. This page is rendered by theme PHP.</p><!-- /wp:paragraph --><!-- wp:shortcode -->[hotel_inquiry_list]<!-- /wp:shortcode -->")"
 
 wp option update show_on_front page
 wp option update page_on_front "${HOME_ID}"
@@ -108,6 +109,7 @@ NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Amenities\",\"url\":\"/amenit
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"About\",\"url\":\"/about/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Contact\",\"url\":\"/contact/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Book\",\"url\":\"/booking/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Desk\",\"url\":\"/desk/\",\"kind\":\"custom\"} /-->"
 
 NAV_ID="$(wp post list --post_type=wp_navigation --name=primary --field=ID --format=ids)"
 if [[ -n "${NAV_ID}" ]]; then
@@ -136,5 +138,6 @@ echo
 echo "Seeded hotel demo content."
 echo "Front page: Home (#${HOME_ID})"
 echo "Booking page: /booking/ (#${BOOKING_ID})"
+echo "Desk (inquiries): /desk/ (#${DESK_ID})"
 echo "Rooms archive: /rooms/"
 echo "Primary navigation ID: ${NAV_ID}"
