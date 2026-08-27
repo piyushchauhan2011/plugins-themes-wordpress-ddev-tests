@@ -57,3 +57,11 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
+
+Bundled fonts (SIL Open Font License 1.1):
+
+* Playfair Display (latin 600), Copyright 2012 The Playfair Display Project Authors,
+  https://github.com/clauseggers/Playfair-Display
+* Source Sans 3 (latin 400 and 600), Copyright 2010–2024 Adobe,
+  https://github.com/adobe-fonts/source-sans
+

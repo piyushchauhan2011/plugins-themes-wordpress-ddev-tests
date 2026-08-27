@@ -49,3 +49,16 @@ function hotel_booking_core_load_textdomain() {
 	}
 }
 add_action( 'plugins_loaded', 'hotel_booking_core_load_textdomain' );
+
+/**
+ * Generate WebP derivatives for JPEG uploads (GD / Imagick).
+ *
+ * @param array<string, string> $formats Mime map of input to output.
+ * @return array<string, string>
+ */
+function hotel_booking_image_editor_output_format( $formats ) {
+	$formats['image/jpeg'] = 'image/webp';
+
+	return $formats;
+}
+add_filter( 'image_editor_output_format', 'hotel_booking_image_editor_output_format' );

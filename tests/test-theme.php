@@ -113,4 +113,33 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'lang=es_ES', $html );
 		$this->assertStringContainsString( 'Español', $html );
 	}
+
+	public function test_heading_and_body_fonts_are_self_hosted() {
+		$dir = get_template_directory() . '/assets/fonts';
+
+		$this->assertFileExists( $dir . '/playfair-display-latin-600.woff2' );
+		$this->assertFileExists( $dir . '/source-sans-3-latin-400.woff2' );
+		$this->assertFileExists( $dir . '/source-sans-3-latin-600.woff2' );
+
+		$json = json_decode( file_get_contents( get_template_directory() . '/theme.json' ), true );
+		$this->assertSame( 'swap', $json['settings']['typography']['fontFamilies'][0]['fontFace'][0]['fontDisplay'] );
+		$this->assertSame( '600', $json['settings']['typography']['fontFamilies'][0]['fontFace'][0]['fontWeight'] );
+	}
+
+	public function test_front_end_style_does_not_depend_on_google_fonts() {
+		do_action( 'wp_enqueue_scripts' );
+
+		$this->assertTrue( wp_style_is( 'hotel-booking-style', 'enqueued' ) );
+		$this->assertFalse( wp_style_is( 'hotel-booking-fonts', 'registered' ) );
+		$this->assertSame( array(), wp_styles()->registered['hotel-booking-style']->deps );
+	}
+
+	public function test_core_block_assets_load_separately() {
+		$this->assertTrue( apply_filters( 'should_load_separate_core_block_assets', false ) );
+	}
+
+	public function test_front_emoji_assets_are_removed() {
+		$this->assertFalse( has_action( 'wp_head', 'print_emoji_detection_script' ) );
+		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'wp_enqueue_emoji_styles' ) );
+	}
 }

@@ -62,7 +62,17 @@ $wrapper = get_block_wrapper_attributes(
 		<template data-wp-each--room="state.rooms" data-wp-each-key="context.room.id">
 			<article class="hb-room-card">
 				<a class="hb-room-card__media" data-wp-bind--href="context.room.permalink" data-wp-bind--hidden="state.imageHidden">
-					<img alt="" data-wp-bind--src="context.room.featured_image" />
+					<img
+						alt=""
+						width="300"
+						height="188"
+						loading="lazy"
+						decoding="async"
+						data-wp-bind--src="context.room.featured_image"
+						data-wp-bind--alt="context.room.image_alt"
+						data-wp-bind--width="context.room.image_width"
+						data-wp-bind--height="context.room.image_height"
+					/>
 				</a>
 				<div class="hb-room-card__body">
 					<h3 class="hb-room-card__title">

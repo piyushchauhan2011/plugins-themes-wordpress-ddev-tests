@@ -87,8 +87,14 @@ class Test_Hotel_Booking_Rest_Rooms extends WP_UnitTestCase {
 		$this->assertNotEmpty( $data[0]['permalink'] );
 		$this->assertNotEmpty( $data[0]['slug'] );
 		$this->assertArrayHasKey( 'featured_image', $data[0] );
+		$this->assertArrayHasKey( 'featured_image_id', $data[0] );
+		$this->assertArrayHasKey( 'image_width', $data[0] );
+		$this->assertArrayHasKey( 'image_height', $data[0] );
+		$this->assertArrayHasKey( 'image_alt', $data[0] );
 		$this->assertArrayHasKey( 'has_image', $data[0] );
 		$this->assertFalse( $data[0]['has_image'] );
+		$this->assertSame( 0, $data[0]['image_width'] );
+		$this->assertSame( 0, $data[0]['image_height'] );
 	}
 
 	public function test_list_rooms_filters_by_minimum_guests() {

@@ -25,12 +25,37 @@
 				{
 					"slug": "heading",
 					"name": "Heading serif",
-					"fontFamily": "\"Playfair Display\", \"Iowan Old Style\", Palatino, Georgia, serif"
+					"fontFamily": "\"Playfair Display\", \"Iowan Old Style\", Palatino, Georgia, serif",
+					"fontFace": [
+						{
+							"fontFamily": "Playfair Display",
+							"fontWeight": "600",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [ "file:./assets/fonts/playfair-display-latin-600.woff2" ]
+						}
+					]
 				},
 				{
 					"slug": "body",
 					"name": "Body sans",
-					"fontFamily": "\"Source Sans 3\", \"Helvetica Neue\", Helvetica, Arial, sans-serif"
+					"fontFamily": "\"Source Sans 3\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Source Sans 3",
+							"fontWeight": "400",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [ "file:./assets/fonts/source-sans-3-latin-400.woff2" ]
+						},
+						{
+							"fontFamily": "Source Sans 3",
+							"fontWeight": "600",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [ "file:./assets/fonts/source-sans-3-latin-600.woff2" ]
+						}
+					]
 				}
 			],
 			"fontSizes": [

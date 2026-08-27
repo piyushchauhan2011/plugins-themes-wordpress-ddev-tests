@@ -90,23 +90,44 @@ function hotel_booking_render_room_meta( $post_id ) {
  * @return array<string, mixed>
  */
 function hotel_booking_prepare_room_for_rest( WP_Post $post ) {
-	$meta  = hotel_booking_get_room_meta( $post->ID );
-	$thumb = get_post_thumbnail_id( $post );
-	$image = $thumb ? (string) wp_get_attachment_image_url( $thumb, 'medium' ) : '';
+	$meta   = hotel_booking_get_room_meta( $post->ID );
+	$thumb  = (int) get_post_thumbnail_id( $post );
+	$image  = '';
+	$width  = 0;
+	$height = 0;
+	$alt    = '';
+
+	if ( $thumb ) {
+		$src = wp_get_attachment_image_src( $thumb, 'medium' );
+		if ( is_array( $src ) ) {
+			$image  = (string) $src[0];
+			$width  = (int) $src[1];
+			$height = (int) $src[2];
+		}
+
+		$alt = (string) get_post_meta( $thumb, '_wp_attachment_image_alt', true );
+		if ( '' === $alt ) {
+			$alt = $post->post_title;
+		}
+	}
 
 	return array(
-		'id'              => (int) $post->ID,
-		'title'           => $post->post_title,
-		'slug'            => $post->post_name,
-		'excerpt'         => wp_strip_all_tags( (string) $post->post_excerpt ),
-		'permalink'       => get_permalink( $post ),
-		'price'           => $meta['price'],
-		'price_formatted' => hotel_booking_format_price( $meta['price'] ),
-		'guests'          => $meta['guests'],
-		'beds'            => $meta['beds'],
-		'size'            => $meta['size'],
-		'featured_image'  => $image,
-		'has_image'       => '' !== $image,
+		'id'                => (int) $post->ID,
+		'title'             => $post->post_title,
+		'slug'              => $post->post_name,
+		'excerpt'           => wp_strip_all_tags( (string) $post->post_excerpt ),
+		'permalink'         => get_permalink( $post ),
+		'price'             => $meta['price'],
+		'price_formatted'   => hotel_booking_format_price( $meta['price'] ),
+		'guests'            => $meta['guests'],
+		'beds'              => $meta['beds'],
+		'size'              => $meta['size'],
+		'featured_image'    => $image,
+		'featured_image_id' => $thumb,
+		'image_width'       => $width,
+		'image_height'      => $height,
+		'image_alt'         => $alt,
+		'has_image'         => '' !== $image,
 	);
 }
 
@@ -123,14 +144,42 @@ function hotel_booking_render_room_card_html( $room ) {
 	$price     = isset( $room['price_formatted'] ) ? (string) $room['price_formatted'] : '';
 	$guests    = isset( $room['guests'] ) ? (string) $room['guests'] : '';
 	$image     = isset( $room['featured_image'] ) ? (string) $room['featured_image'] : '';
+	$thumb_id  = isset( $room['featured_image_id'] ) ? (int) $room['featured_image_id'] : 0;
+	$width     = isset( $room['image_width'] ) ? (int) $room['image_width'] : 0;
+	$height    = isset( $room['image_height'] ) ? (int) $room['image_height'] : 0;
+	$alt       = isset( $room['image_alt'] ) ? (string) $room['image_alt'] : $title;
 	$has_image = ! empty( $room['has_image'] );
+
+	$image_html = '';
+	if ( $thumb_id ) {
+		$image_html = wp_get_attachment_image(
+			$thumb_id,
+			'medium',
+			false,
+			array(
+				'alt'      => $alt,
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+			)
+		);
+	}
+
+	if ( '' === $image_html && '' !== $image ) {
+		$image_html = sprintf(
+			'<img src="%1$s" alt="%2$s"%3$s%4$s loading="lazy" decoding="async" />',
+			esc_url( $image ),
+			esc_attr( $alt ),
+			$width > 0 ? ' width="' . esc_attr( (string) $width ) . '"' : '',
+			$height > 0 ? ' height="' . esc_attr( (string) $height ) . '"' : ''
+		);
+	}
 
 	ob_start();
 	?>
 	<article class="hb-room-card">
-		<?php if ( $has_image ) : ?>
+		<?php if ( $has_image && '' !== $image_html ) : ?>
 			<a class="hb-room-card__media" href="<?php echo esc_url( $permalink ); ?>">
-				<img src="<?php echo esc_url( $image ); ?>" alt="" />
+				<?php echo $image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() / escaped fallback. ?>
 			</a>
 		<?php endif; ?>
 		<div class="hb-room-card__body">
