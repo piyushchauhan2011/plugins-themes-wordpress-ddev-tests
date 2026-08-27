@@ -18,6 +18,8 @@ web_environment:
 nodejs_version: "24"
 corepack_enable: true
 hooks:
+    pre-start:
+        - exec-host: mkdir -p wp-content && touch wp-content/debug.log
     post-start:
         - exec: mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test; GRANT ALL PRIVILEGES ON wordpress_test.* TO 'db'@'%'; FLUSH PRIVILEGES;"
           service: db
@@ -39,6 +41,13 @@ hooks:
               wp config set WP_AMQP_PASS rabbitmq --type=constant --quiet
               wp config set WP_AMQP_VHOST '/' --type=constant --quiet
               wp config set DISABLE_WP_CRON true --raw --type=constant --quiet
+              wp config set WP_DEBUG_LOG /var/log/hotel-booking/debug.log --type=constant --quiet
+              wp config set WP_DEBUG_DISPLAY false --raw --type=constant --quiet
+              sudo mkdir -p /var/log/hotel-booking
+              sudo touch /var/log/hotel-booking/debug.log
+              sudo chmod 777 /var/log/hotel-booking
+              sudo chmod 666 /var/log/hotel-booking/debug.log
+              ln -sfn /var/log/hotel-booking/debug.log /var/www/html/wp-content/debug.log
             fi
 
 web_extra_daemons:

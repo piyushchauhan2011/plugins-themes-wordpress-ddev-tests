@@ -53,6 +53,8 @@ Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (us
 
 Observability: `ddev describe` lists **prometheus** and **grafana**. Metrics: `ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics`. Grafana `ddev launch :3001` (anonymous or `admin` / `admin`); Prometheus `ddev launch :9091`. PHPUnit never starts those containers. See [OBSERVABILITY.md](OBSERVABILITY.md).
 
+PHP errors: `ddev describe` lists **loki**. File log: `ddev exec tail -n 80 wp-content/debug.log`. Container stderr: `ddev logs`. After seed, Query Monitor is in the wp-admin bar as `admin`. Grafana **Hotel Booking logs** dashboard (`ddev launch :3001`). Loki has no UI; `ddev launch :3101/ready` should print `ready`. See [DEBUG.md](DEBUG.md).
+
 ## What seed gives you
 
 - Home (static front page), About, Amenities, Contact, Booking, Desk, Staff login, Search
@@ -65,6 +67,8 @@ Observability: `ddev describe` lists **prometheus** and **grafana**. Metrics: `d
 - OpenSearch rooms index (`hotel-booking-rooms`; plugin HTTP client, not a WordPress plugin)
 - RabbitMQ (`hotel-booking` topic exchange) plus WP-Cron daily stale-pending and desk digest
 - Prometheus + Grafana (inquiry counts; not in PHPUnit or the theme/plugin zip)
+- Query Monitor (wp-admin bar as `admin`; not in the zip)
+- Loki + Promtail (tails `wp-content/debug.log`; not in PHPUnit or the zip)
 - About six rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`); Priya Shah is backdated ~50 hours for the reminder job
 - Primary navigation
 
@@ -125,6 +129,12 @@ ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics
 # Grafana: ddev launch :3001
 # Prometheus: ddev launch :9091
 
+# PHP errors
+ddev logs
+ddev exec tail -n 80 wp-content/debug.log
+# Loki: ddev launch :3101/ready
+# Query Monitor: wp-admin as admin
+
 # Rebuild plugin and theme blocks/CSS after clone, or leave watchers running while you edit
 ddev build-blocks
 # ddev watch-plugin    # plugin src/ → build/
@@ -155,6 +165,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [SCALING.md](SCALING.md) — primary/replica routing and sharding (documentation only; DDEV still has one database)
 - [JOBS.md](JOBS.md) — WP-Cron tick, RabbitMQ worker, desk email / digest / stale reminders, async OpenSearch
 - [OBSERVABILITY.md](OBSERVABILITY.md) — Prometheus scrape of `/metrics`, Grafana dashboard (DDEV only; not in the zip)
+- [DEBUG.md](DEBUG.md) — `debug.log`, Query Monitor, Loki, `ddev logs`, Xdebug
 - [WORKFLOW.md](WORKFLOW.md) — inquiry state machine (Symfony Workflow + MariaDB runs; not Temporal)
 - [PHPSTAN.md](PHPSTAN.md) — PHPDoc `@template` helpers (`hotel_booking_array_map` / `array_find`); `ddev phpstan` is the checker
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows

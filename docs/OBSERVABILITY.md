@@ -38,3 +38,5 @@ PHPUnit calls `rest_do_request( '/hotel-booking/v1/metrics' )` and asserts the t
 Run Prometheus and Grafana on the host (or a vendor). Point a scrape job at the WordPress metrics URL on the private network. Do not copy [`.ddev/docker-compose.observability.yaml`](../.ddev/docker-compose.observability.yaml) onto the server. Protect the endpoint before it is reachable from the public internet.
 
 This pass does not add nginx `stub_status`, `mysqld_exporter`, or OpenTelemetry.
+
+PHP errors, `wp-content/debug.log`, Query Monitor, and Loki (same Grafana, different dashboard) are documented in [DEBUG.md](DEBUG.md).

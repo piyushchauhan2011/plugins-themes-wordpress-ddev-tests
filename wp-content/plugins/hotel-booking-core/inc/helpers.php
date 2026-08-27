@@ -26,6 +26,17 @@ function hotel_booking_format_price( $amount ) {
 }
 
 /**
+ * Prefix a line for wp-content/debug.log and Loki (`|= "[hotel-booking]"`).
+ *
+ * @param string $message Message.
+ * @return void
+ */
+function hotel_booking_log( $message ) {
+	// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- local/ops log; not displayed.
+	error_log( '[hotel-booking] ' . $message );
+}
+
+/**
  * Map a list, preserving PHPStan's TIn → TOut (PHP has no runtime generics).
  *
  * @template TIn

@@ -50,12 +50,57 @@ services:
       - ".:/mnt/ddev_config"
     depends_on:
       - prometheus
+      - loki
     x-ddev:
       describe-info: |
         User: admin
         Pass: admin
         UI: ddev launch :3001
 
+  web:
+    volumes:
+      - php-logs:/var/log/hotel-booking
+
+  loki:
+    container_name: ddev-${DDEV_SITENAME}-loki
+    image: grafana/loki:3.4.2
+    expose:
+      - 3100
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTP_EXPOSE=3100:3100
+      - HTTPS_EXPOSE=3101:3100
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - ./loki/loki.yml:/etc/loki/loki.yml:ro
+      - loki:/loki
+      - ".:/mnt/ddev_config"
+    command:
+      - -config.file=/etc/loki/loki.yml
+    x-ddev:
+      describe-info: |
+        API only (no UI). Ready: ddev launch :3101/ready
+        Logs: ddev launch :3001
+
+  promtail:
+    container_name: ddev-${DDEV_SITENAME}-promtail
+    image: grafana/promtail:3.4.2
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - ./loki/promtail.yml:/etc/promtail/config.yml:ro
+      - php-logs:/var/log/wordpress:ro
+      - ".:/mnt/ddev_config"
+    command:
+      - -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+
 volumes:
   prometheus:
   grafana:
+  loki:
+  php-logs:

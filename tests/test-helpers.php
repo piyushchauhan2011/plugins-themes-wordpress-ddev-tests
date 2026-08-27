@@ -95,4 +95,19 @@ class Test_Hotel_Booking_Helpers extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'decoding="async"', $html );
 		$this->assertStringContainsString( 'Garden view', $html );
 	}
+
+	public function test_log_writes_hotel_booking_prefix() {
+		$file = wp_tempnam( 'hb-log' );
+		$prev = ini_get( 'error_log' );
+		ini_set( 'error_log', $file );
+
+		hotel_booking_log( 'amqp down' );
+
+		ini_set( 'error_log', $prev );
+		$written = file_get_contents( $file );
+		unlink( $file );
+
+		$this->assertIsString( $written );
+		$this->assertStringContainsString( '[hotel-booking] amqp down', $written );
+	}
 }

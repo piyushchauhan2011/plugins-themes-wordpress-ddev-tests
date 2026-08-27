@@ -142,7 +142,19 @@ On a real host:
 2. Scrape the WordPress metrics URL. The route is unauthenticated in this plugin so a local scraper can hit it — **do not leave that public**. Restrict it to the scrape network, or put a reverse-proxy token in front.
 3. Do not copy the DDEV Prometheus/Grafana compose files onto the server.
 
-See [OBSERVABILITY.md](OBSERVABILITY.md).
+See [OBSERVABILITY.md](OBSERVABILITY.md). PHP errors and `debug.log` are [DEBUG.md](DEBUG.md).
+
+## Query Monitor and Loki (not in this zip)
+
+Local DDEV installs [Query Monitor](https://wordpress.org/plugins/query-monitor/) via seed and runs Loki/Promtail so `wp-content/debug.log` appears in Grafana. The zip does **not** include that plugin or compose file. PHPUnit never starts Loki.
+
+On a real host:
+
+1. Keep `WP_DEBUG` false. Do not display errors to visitors.
+2. Read PHP-FPM and nginx logs on the host (or a vendor). Do not copy the DDEV Loki compose file onto the server.
+3. Query Monitor is a local admin tool; do not ship it in the theme/plugin zip.
+
+See [DEBUG.md](DEBUG.md).
 
 ## Database scale (not in this zip)
 

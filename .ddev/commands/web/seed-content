@@ -20,6 +20,12 @@ else
 fi
 wp redis enable >/dev/null
 
+if wp plugin is-installed query-monitor >/dev/null 2>&1; then
+	wp plugin activate query-monitor >/dev/null
+else
+	wp plugin install query-monitor --activate >/dev/null
+fi
+
 if wp option get hotel_booking_seeded >/dev/null 2>&1 && [[ "${FORCE}" != "--force" ]]; then
 	echo "Hotel demo content already exists. Re-run with: ddev seed-content --force"
 	if wp hotel-booking reindex; then

@@ -104,8 +104,7 @@ function hotel_booking_amqp_connect() {
 	try {
 		return new \PhpAmqpLib\Connection\AMQPStreamConnection( $host, $port, $user, $pass, $vhost, false, 'AMQPLAIN', null, 'en_US', 2.0, 3.0 );
 	} catch ( Exception $e ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- broker is optional; log and fall back.
-		error_log( 'Hotel Booking AMQP connect failed: ' . $e->getMessage() );
+		hotel_booking_log( 'AMQP connect failed: ' . $e->getMessage() );
 		return null;
 	}
 }
@@ -164,8 +163,7 @@ function hotel_booking_amqp_publish( $routing_key, $payload ) {
 		$channel->close();
 		$connection->close();
 	} catch ( Exception $e ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- fire-and-forget publish.
-		error_log( 'Hotel Booking AMQP publish failed: ' . $e->getMessage() );
+		hotel_booking_log( 'AMQP publish failed: ' . $e->getMessage() );
 		return false;
 	}
 
