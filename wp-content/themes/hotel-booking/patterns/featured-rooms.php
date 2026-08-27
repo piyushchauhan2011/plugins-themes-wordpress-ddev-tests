@@ -21,7 +21,7 @@
 
 	<!-- wp:query {"query":{"perPage":4,"pages":0,"offset":0,"postType":"hb_room","order":"asc","orderBy":"title","author":"","search":"","exclude":[],"sticky":"","inherit":false},"align":"wide"} -->
 	<div class="wp-block-query alignwide">
-		<!-- wp:post-template {"layout":{"type":"grid","columnCount":2}} -->
+		<!-- wp:post-template {"layout":{"type":"grid","minimumColumnWidth":"18rem"}} -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"0.75rem","padding":{"bottom":"var:preset|spacing|md"}}}} -->
 			<div class="wp-block-group" style="padding-bottom:var(--wp--preset--spacing--md)">
 				<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"4/3"} /-->

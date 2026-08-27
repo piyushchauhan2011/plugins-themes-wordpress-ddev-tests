@@ -36,4 +36,40 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 	public function test_front_page_template_exists() {
 		$this->assertFileExists( get_template_directory() . '/templates/front-page.html' );
 	}
+
+	public function test_xx_large_font_size_is_fluid() {
+		$json     = json_decode( file_get_contents( get_template_directory() . '/theme.json' ), true );
+		$xx_large = null;
+
+		foreach ( $json['settings']['typography']['fontSizes'] as $size ) {
+			if ( 'xx-large' === $size['slug'] ) {
+				$xx_large = $size;
+				break;
+			}
+		}
+
+		$this->assertIsArray( $xx_large );
+		$this->assertSame( '2.25rem', $xx_large['fluid']['min'] );
+		$this->assertSame( '4rem', $xx_large['fluid']['max'] );
+	}
+
+	public function test_dusk_style_variation_is_registered() {
+		$titles = wp_list_pluck( WP_Theme_JSON_Resolver::get_style_variations(), 'title' );
+
+		$this->assertContains( 'Dusk', $titles );
+	}
+
+	public function test_style_css_has_media_queries() {
+		$css = file_get_contents( get_template_directory() . '/style.css' );
+
+		$this->assertNotFalse( strpos( $css, '@media' ) );
+		$this->assertNotFalse( strpos( $css, 'max-width: 600px' ) );
+		$this->assertNotFalse( strpos( $css, 'is-menu-open' ) );
+	}
+
+	public function test_featured_rooms_pattern_uses_minimum_column_width() {
+		$pattern = file_get_contents( get_template_directory() . '/patterns/featured-rooms.php' );
+
+		$this->assertNotFalse( strpos( $pattern, 'minimumColumnWidth' ) );
+	}
 }

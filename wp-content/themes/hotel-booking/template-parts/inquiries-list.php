@@ -40,6 +40,7 @@ $deleted = isset( $_GET['hb_deleted'] );
 	<?php if ( ! $inquiries ) : ?>
 		<p><?php esc_html_e( 'No inquiries yet. Submit the booking form to insert a row.', 'hotel-booking' ); ?></p>
 	<?php else : ?>
+		<div class="hb-desk__table-wrap">
 		<table class="hb-desk__table">
 			<thead>
 				<tr>
@@ -88,5 +89,6 @@ $deleted = isset( $_GET['hb_deleted'] );
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		</div>
 	<?php endif; ?>
 </div>

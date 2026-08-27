@@ -50,7 +50,8 @@ ddev seed-content
 wp-content/themes/hotel-booking/
   style.css              Theme header, GPL copyright notice, booking-form CSS
   readme.txt             WordPress.org-style readme
-  theme.json             Palette, fonts, spacing (Site Editor → Styles)
+  theme.json             Palette, fonts, fluid type, spacing (Site Editor → Styles)
+  styles/dusk.json       Style variation (Appearance → Editor → Styles)
   functions.php          Setup, fonts, pattern category
   templates/             Block templates (front-page, single, archives, 404)
   parts/                 header.html, footer.html
@@ -60,6 +61,16 @@ wp-content/themes/hotel-booking/
 ```
 
 The booking form **POSTs** into a custom MySQL table (`wp_hb_inquiries`). It is not a payment or reservation engine. Staff can read/update/delete rows on `/desk/` (log in as admin).
+
+## Theme styles (fluid type, Dusk, responsive CSS)
+
+Headings use fluid font sizes in `theme.json` (`clamp()` via `fluid.min` / `fluid.max`). Room Query loops use `minimumColumnWidth` so the grid wraps on small screens. `style.css` adds `@media` rules for the booking form and desk table.
+
+A **Dusk** style variation lives in `styles/dusk.json` (Appearance → Editor → Styles).
+
+```bash
+ddev phpunit --filter Test_Hotel_Booking_Theme
+```
 
 ## PHPUnit (`WP_UnitTestCase`)
 
@@ -84,6 +95,7 @@ ddev phpunit --filter test_theme_is_block_theme
 Tests cover:
 
 - Theme is active and `wp_is_block_theme()` is true
+- Fluid `theme.json` font sizes, Dusk style variation, and `@media` in `style.css`
 - `hb_room` is registered by the plugin
 - `hotel_booking_format_price()`
 - `$this->factory()->post->create()` plus meta and `WP_Query`
@@ -166,6 +178,8 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 ## What to read next
 
 - [Block themes](https://developer.wordpress.org/themes/block-themes/) vs [classic template hierarchy](https://developer.wordpress.org/themes/templates/template-hierarchy/)
+- [Fluid typography](https://developer.wordpress.org/news/2023/03/fluid-typography-wordpress-6-1/)
+- [Style variations](https://developer.wordpress.org/themes/global-settings-and-styles/style-variations/)
 - [Theme Unit Test](https://codex.wordpress.org/Theme_Unit_Test)
 - [Plugin / theme unit tests](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) and `WP_UnitTestCase` factories
 - [Settings API](https://developer.wordpress.org/plugins/settings/settings-api/) (`register_setting`, `add_menu_page`)

@@ -138,3 +138,84 @@ Hotel Booking is distributed under the terms of the GNU GPL.
 .hb-desk__delete {
 	color: var(--wp--preset--color--terracotta, #a65d3f);
 }
+
+.hb-desk__table-wrap {
+	overflow-x: auto;
+}
+
+@media (max-width: 600px) {
+	.hb-booking-form label {
+		grid-column: 1 / -1;
+	}
+
+	.hb-booking-form input,
+	.hb-booking-form select,
+	.hb-booking-form textarea {
+		font-size: 1rem;
+		padding: 0.75rem 0.85rem;
+	}
+
+	.hb-booking-form button {
+		grid-column: 1 / -1;
+		width: 100%;
+	}
+}
+
+@media (max-width: 781px) {
+	.hb-desk__table-wrap {
+		margin-inline: -0.25rem;
+	}
+}
+
+/*
+ * Overlay inherits desktop justify-right (flex-end), which pins links to the
+ * viewport edge. Restack as a full-screen, left-aligned menu.
+ */
+.wp-block-navigation__responsive-container.is-menu-open {
+	background-color: var(--wp--preset--color--linen, #fffbf5);
+	color: var(--wp--preset--color--espresso, #2c2118);
+}
+
+.wp-block-navigation__responsive-container.is-menu-open:not(.disable-default-overlay) {
+	padding: 4rem 1.5rem 2rem;
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-close {
+	top: 0.85rem;
+	right: 0.85rem;
+	padding: 0.6rem;
+	background: transparent;
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content,
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation__container,
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item,
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-page-list {
+	align-items: stretch;
+	width: 100%;
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item {
+	border-bottom: 1px solid #e4d6c5;
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item__content {
+	display: block;
+	padding: 1rem 0;
+	font-family: var(--wp--preset--font-family--heading, Georgia, serif);
+	font-size: 1.75rem;
+	font-weight: 600;
+	line-height: 1.3;
+	color: var(--wp--preset--color--espresso, #2c2118);
+	text-align: left;
+	text-decoration: none;
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item__content:hover,
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item__content:focus {
+	color: var(--wp--preset--color--terracotta, #a65d3f);
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .current-menu-item .wp-block-navigation-item__content {
+	color: var(--wp--preset--color--terracotta, #a65d3f);
+}
