@@ -17,7 +17,7 @@ A DDEV WordPress site with a custom **block theme**, a companion **plugin** for 
 | Demo hotel content | `ddev seed-content` |
 | Theme review content + Theme Check | `ddev import-theme-unit-test` |
 | PHPUnit + `WP_UnitTestCase` | `ddev phpunit` (lives **outside** the theme) |
-| PHPCS, PHPStan, TypeScript, Plugin Check, dependency audits | `ddev phpcs`, `ddev phpstan` ([generics PHPDoc](docs/PHPSTAN.md)), `ddev typecheck`, `ddev plugin-check`, `ddev pnpm-audit` |
+| PHPCS, PHPStan, PHPMD, TypeScript, Plugin Check, dependency audits | `ddev phpcs`, `ddev phpstan` ([generics PHPDoc](docs/PHPSTAN.md)), `ddev phpmd` ([PR coverage and complexity](docs/QUALITY.md)), `ddev typecheck`, `ddev plugin-check`, `ddev pnpm-audit` |
 
 Block themes use `templates/*.html` instead of the classic PHP template hierarchy (`front-page.php`, `single.php`, …). WordPress still picks a template by the same *names*: `front-page.html` for the home page, `single-hb_room.html` for a room, `archive-hb_room.html` for `/rooms/`.
 
@@ -253,11 +253,12 @@ Do not pass `--watch` to `ddev build-blocks`: that command builds the plugin, th
 
 ## Static analysis and security
 
-PHPCS uses WordPress Extra (escaping, nonces, prepared SQL) plus PHPCompatibility for PHP 8.2+. PHPStan runs at level 5 with WordPress stubs ([PHPDoc `@template` helpers](docs/PHPSTAN.md)). TypeScript is `tsc --noEmit` on plugin and theme `src/` (`ddev typecheck`). Plugin Check is the WordPress.org PCP tool. Audits cover Composer and pnpm (`--audit-level=high`).
+PHPCS uses WordPress Extra (escaping, nonces, prepared SQL) plus PHPCompatibility for PHP 8.2+. PHPStan runs at level 5 with WordPress stubs ([PHPDoc `@template` helpers](docs/PHPSTAN.md)). PHPMD codesize (cyclomatic / NPath / method length) and PHPUnit line coverage fail CI below floors in [`.github/quality-thresholds.json`](.github/quality-thresholds.json) ([QUALITY.md](docs/QUALITY.md)). TypeScript is `tsc --noEmit` on plugin and theme `src/` (`ddev typecheck`). Plugin Check is the WordPress.org PCP tool. Audits cover Composer and pnpm (`--audit-level=high`).
 
 ```bash
 ddev phpcs
 ddev phpstan
+ddev phpmd
 ddev typecheck
 ddev plugin-check
 ddev composer audit
@@ -305,6 +306,7 @@ CI runs the same suite on push and pull request.
 | `ddev watch-theme` | Rebuild theme CSS and blocks into `build/` on each save |
 | `ddev phpcs` | WordPress Extra + PHPCompatibility on theme and plugin |
 | `ddev phpstan` | PHPStan level 5 with WordPress stubs ([docs/PHPSTAN.md](docs/PHPSTAN.md)) |
+| `ddev phpmd` | PHPMD codesize (cyclomatic / NPath) on theme and plugin ([docs/QUALITY.md](docs/QUALITY.md)) |
 | `ddev typecheck` | TypeScript `tsc --noEmit` on plugin and theme `src/` |
 | `ddev plugin-check` | WordPress Plugin Check on hotel-booking-core |
 | `ddev make-pot` | Regenerate theme and plugin `.pot` catalogs (does not overwrite `.po`) |

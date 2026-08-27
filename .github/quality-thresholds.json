@@ -1,0 +1,7 @@
+{
+	"coverage_min_percent": 55,
+	"cyclomatic_complexity_max": 22,
+	"npath_complexity_max": 120000,
+	"excessive_method_length": 150,
+	"excessive_class_complexity": 50
+}

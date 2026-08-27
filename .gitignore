@@ -47,6 +47,10 @@
 *.log
 .phpunit.result.cache
 
+# PHPUnit coverage (CI artifact; optional locally)
+/coverage/
+/phpmd-report.xml
+
 # pnpm installs (Playwright, plugin, theme, or any nested package)
 node_modules/
 .pnpm-store/
