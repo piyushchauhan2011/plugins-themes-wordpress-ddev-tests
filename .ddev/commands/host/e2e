@@ -14,6 +14,9 @@ fi
 
 npx playwright install chromium
 
+# Match CI: compiled .mo files are gitignored.
+ddev compile-i18n
+
 export PLAYWRIGHT_BASE_URL="${PLAYWRIGHT_BASE_URL:-${DDEV_PRIMARY_URL}}"
 export WP_USERNAME="${WP_USERNAME:-admin}"
 export WP_PASSWORD="${WP_PASSWORD:-admin}"

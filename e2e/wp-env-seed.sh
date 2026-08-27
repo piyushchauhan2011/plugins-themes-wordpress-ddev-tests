@@ -11,6 +11,12 @@ wp theme activate hotel-booking
 wp rewrite structure '/%postname%/' --hard
 wp option update blogdescription "A quiet night, well kept"
 
+# Compiled catalogs are gitignored; the Español e2e spec needs .mo / .l10n.php.
+wp i18n make-mo wp-content/themes/hotel-booking/languages
+wp i18n make-php wp-content/themes/hotel-booking/languages
+wp i18n make-mo wp-content/plugins/hotel-booking-core/languages
+wp i18n make-php wp-content/plugins/hotel-booking-core/languages
+
 create_page() {
 	local title="$1"
 	local slug="$2"

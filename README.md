@@ -117,7 +117,7 @@ ddev e2e
 # or: npm run e2e
 ```
 
-CI boots the same specs with `@wordpress/env` (`npx wp-env start` + `e2e/wp-env-seed.sh`) at `http://localhost:8888`.
+CI boots the same specs with `@wordpress/env` (`npx wp-env start` + `e2e/wp-env-seed.sh`) at `http://localhost:8888`. The seed script compiles Spanish `.po` files to `.mo` / `.l10n.php` because those binaries are gitignored.
 
 ## wp-admin (plugin)
 
