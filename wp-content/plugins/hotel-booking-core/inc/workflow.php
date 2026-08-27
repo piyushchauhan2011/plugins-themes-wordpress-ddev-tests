@@ -139,15 +139,17 @@ function hotel_booking_inquiry_enabled_transitions( $inquiry ) {
 		return array();
 	}
 
-	$items = array();
-	foreach ( $workflow->getEnabledTransitions( $inquiry ) as $transition ) {
-		$items[] = array(
-			'name'  => $transition->getName(),
-			'label' => hotel_booking_workflow_transition_label( $transition->getName() ),
-		);
-	}
+	$transitions = array_values( $workflow->getEnabledTransitions( $inquiry ) );
 
-	return $items;
+	return hotel_booking_array_map(
+		$transitions,
+		static function ( $transition ) {
+			return array(
+				'name'  => $transition->getName(),
+				'label' => hotel_booking_workflow_transition_label( $transition->getName() ),
+			);
+		}
+	);
 }
 
 /**
@@ -254,18 +256,47 @@ function hotel_booking_inquiry_workflow_notes( $row ) {
 		return '';
 	}
 
-	$labels = array();
-	foreach ( $events as $event ) {
-		if ( 'transition' === $event->type && '' !== $event->name ) {
-			$labels[] = hotel_booking_workflow_transition_label( $event->name );
-		} elseif ( 'timer_fired' === $event->type ) {
-			$labels[] = __( 'Timer fired', 'hotel-booking-core' );
-		} elseif ( 'timer_skipped' === $event->type ) {
-			$labels[] = __( 'Timer skipped', 'hotel-booking-core' );
+	if ( null === hotel_booking_array_find(
+		$events,
+		static function ( $event ) {
+			return '' !== hotel_booking_workflow_event_note( $event );
 		}
+	) ) {
+		return '';
 	}
 
+	$labels = array_values(
+		array_filter(
+			hotel_booking_array_map(
+				$events,
+				static function ( $event ) {
+					return hotel_booking_workflow_event_note( $event );
+				}
+			)
+		)
+	);
+
 	return implode( ' · ', array_slice( $labels, 0, 3 ) );
+}
+
+/**
+ * Desk-table label for one workflow event, or empty if it is hidden.
+ *
+ * @param object $event Event row.
+ * @return string
+ */
+function hotel_booking_workflow_event_note( $event ) {
+	if ( 'transition' === $event->type && '' !== $event->name ) {
+		return hotel_booking_workflow_transition_label( $event->name );
+	}
+	if ( 'timer_fired' === $event->type ) {
+		return __( 'Timer fired', 'hotel-booking-core' );
+	}
+	if ( 'timer_skipped' === $event->type ) {
+		return __( 'Timer skipped', 'hotel-booking-core' );
+	}
+
+	return '';
 }
 
 /**

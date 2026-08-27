@@ -18,6 +18,39 @@ class Test_Hotel_Booking_Helpers extends WP_UnitTestCase {
 		$this->assertSame( '$0 / night', hotel_booking_format_price( 'free' ) );
 	}
 
+	public function test_array_map_maps_ints_to_strings() {
+		$out = hotel_booking_array_map(
+			array( 1, 2, 3 ),
+			static function ( $n ) {
+				return (string) $n;
+			}
+		);
+
+		$this->assertSame( array( '1', '2', '3' ), $out );
+	}
+
+	public function test_array_find_returns_first_even_int() {
+		$found = hotel_booking_array_find(
+			array( 1, 3, 4, 6 ),
+			static function ( $n ) {
+				return 0 === $n % 2;
+			}
+		);
+
+		$this->assertSame( 4, $found );
+	}
+
+	public function test_array_find_returns_null_when_none_match() {
+		$found = hotel_booking_array_find(
+			array( 1, 3, 5 ),
+			static function ( $n ) {
+				return 0 === $n % 2;
+			}
+		);
+
+		$this->assertNull( $found );
+	}
+
 	public function test_jpeg_uploads_output_webp() {
 		$formats = apply_filters( 'image_editor_output_format', array() );
 		$this->assertSame( 'image/webp', $formats['image/jpeg'] );

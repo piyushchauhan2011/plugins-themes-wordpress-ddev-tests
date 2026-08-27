@@ -95,7 +95,7 @@ ddev phpunit
 
 # Static analysis and security
 ddev phpcs
-ddev phpstan
+ddev phpstan # PHPDoc @template helpers: docs/PHPSTAN.md
 ddev typecheck
 ddev plugin-check
 ddev composer audit
@@ -147,6 +147,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [SCALING.md](SCALING.md) — primary/replica routing and sharding (documentation only; DDEV still has one database)
 - [JOBS.md](JOBS.md) — WP-Cron tick, RabbitMQ worker, desk email / digest / stale reminders, async OpenSearch
 - [WORKFLOW.md](WORKFLOW.md) — inquiry state machine (Symfony Workflow + MariaDB runs; not Temporal)
+- [PHPSTAN.md](PHPSTAN.md) — PHPDoc `@template` helpers (`hotel_booking_array_map` / `array_find`); `ddev phpstan` is the checker
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows
 
 ## Next

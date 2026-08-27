@@ -1,6 +1,6 @@
 <?php
 /**
- * Room helpers used by the shortcode and by WP_UnitTestCase.
+ * Room helpers, generic list helpers, used by the shortcode and by WP_UnitTestCase.
  *
  * @package Hotel_Booking_Core
  */
@@ -23,6 +23,42 @@ function hotel_booking_format_price( $amount ) {
 		__( '$%s / night', 'hotel-booking-core' ),
 		number_format_i18n( $amount, 0 )
 	);
+}
+
+/**
+ * Map a list, preserving PHPStan's TIn → TOut (PHP has no runtime generics).
+ *
+ * @template TIn
+ * @template TOut
+ * @param array<int, TIn>     $items  Input items.
+ * @param callable(TIn): TOut $mapper Mapper.
+ * @return list<TOut>
+ */
+function hotel_booking_array_map( array $items, callable $mapper ): array {
+	$out = array();
+	foreach ( $items as $item ) {
+		$out[] = $mapper( $item );
+	}
+
+	return $out;
+}
+
+/**
+ * First item that matches, or null.
+ *
+ * @template T
+ * @param array<int, T>     $items     Input items.
+ * @param callable(T): bool $predicate Predicate.
+ * @return T|null
+ */
+function hotel_booking_array_find( array $items, callable $predicate ) {
+	foreach ( $items as $item ) {
+		if ( $predicate( $item ) ) {
+			return $item;
+		}
+	}
+
+	return null;
 }
 
 /**
