@@ -6,7 +6,9 @@
 		"build:css": "sass src/scss/screen.scss build/screen.css --no-source-map --style=expanded",
 		"build:blocks": "wp-scripts build --webpack-copy-php --blocks-manifest --experimental-modules",
 		"build": "npm run build:css && npm run build:blocks",
-		"start": "wp-scripts start --webpack-copy-php --blocks-manifest --experimental-modules"
+		"start:css": "sass --watch src/scss/screen.scss build/screen.css --no-source-map --style=expanded",
+		"start:blocks": "wp-scripts start --webpack-copy-php --blocks-manifest --experimental-modules",
+		"start": "npm run start:blocks"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^30.13.0",

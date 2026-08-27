@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+## Description: Watch plugin Gutenberg blocks and rewrite build/ on change
+## Usage: watch-plugin
+## Example: ddev watch-plugin
+
+set -euo pipefail
+
+PLUGIN_DIR="${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core"
+
+cd "${PLUGIN_DIR}"
+if [[ ! -d node_modules/@wordpress/scripts ]]; then
+	npm install
+fi
+
+echo "Watching plugin blocks → ${PLUGIN_DIR}/build/"
+echo "Edit src/, wait for webpack, then refresh the site or block editor."
+npm start

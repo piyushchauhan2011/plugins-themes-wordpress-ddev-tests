@@ -198,11 +198,7 @@ Hotel Booking Core registers six Gutenberg blocks (category **Hotel Booking** in
 - Inquiry form, Inquiry list (same POST/admin-post as the shortcodes)
 - Amenities accordion (Interactivity API)
 
-Source is `wp-content/plugins/hotel-booking-core/src/` (TypeScript and SCSS). Compiled files in `build/` are gitignored — compile after clone or after editing block sources:
-
-```bash
-ddev build-blocks
-```
+Source is `wp-content/plugins/hotel-booking-core/src/` (TypeScript and SCSS). Compiled files in `build/` are gitignored — compile after clone with `ddev build-blocks`. While you work, leave a watcher running instead of rebuilding by hand (see [Live development](#live-development)).
 
 Demo composition: https://hotel-booking.ddev.site/stay/
 
@@ -211,12 +207,47 @@ ddev phpunit --filter Test_Hotel_Booking_Blocks
 ddev e2e e2e/stay.spec.ts
 ```
 
-The **theme** also registers Stay FAQ, color-scheme toggle, and language switcher (`hotel-booking-theme/*`) under the core **Theme** category. They use the same Interactivity API (`data-wp-interactive`, `store`) and compile with `ddev build-blocks` (theme `src/` → `build/`). Home (`front-page.html`) includes the `hotel-booking/stay-faq` pattern.
+The **theme** also registers Stay FAQ, color-scheme toggle, and language switcher (`hotel-booking-theme/*`) under the core **Theme** category. They use the same Interactivity API (`data-wp-interactive`, `store`) and compile from theme `src/` into `build/`. Home (`front-page.html`) includes the `hotel-booking/stay-faq` pattern.
 
 ```bash
 ddev phpunit --filter Test_Hotel_Booking_Theme
 ddev e2e e2e/home.spec.ts
 ```
+
+## Live development
+
+WordPress loads compiled files from `build/`, not the TypeScript or SCSS sources. `ddev build-blocks` is a one-shot compile (clone, CI, zip). For day-to-day work, leave webpack and Sass watching `src/` so each save rewrites `build/`. Then refresh the page.
+
+PHP, HTML templates, patterns, and `theme.json` are not compiled. Edit them and refresh.
+
+| You change | Watcher | Check it on |
+| --- | --- | --- |
+| Plugin `src/` (`.ts`, `.tsx`, `.scss`) | `ddev watch-plugin` | `/stay/`, block editor (Hotel Booking category) |
+| Theme blocks `src/stay-faq/`, `color-scheme-toggle/`, `language-switcher/` | `ddev watch-theme` | Home FAQ, header Dark/Light, English/Español |
+| Theme `src/scss/screen.scss` | included in `ddev watch-theme` | Booking form, desk table, overlay nav |
+| `functions.php`, `render.php`, templates, patterns, `theme.json` | none | Refresh the site or Site Editor |
+
+Run the plugin and theme watchers in **two terminals** if you are touching both:
+
+```bash
+ddev watch-plugin
+```
+
+```bash
+ddev watch-theme
+```
+
+Wait until the terminal prints a webpack/Sass compile, then reload https://hotel-booking.ddev.site (hard refresh if CSS looks stale). The block editor needs the same reload after a plugin or theme block change. Front-end Interactivity (FAQ accordion, rooms-grid `4+` filter, color scheme) is not hot-reloaded — a normal refresh is enough.
+
+Equivalent without DDEV wrappers (from the project root):
+
+```bash
+( cd wp-content/plugins/hotel-booking-core && npm start )
+( cd wp-content/themes/hotel-booking && npm run start:css )
+( cd wp-content/themes/hotel-booking && npm start )
+```
+
+Do not pass `--watch` to `ddev build-blocks`: that command builds the plugin, then the theme, so a watch on the plugin would never reach the theme. Stop the watchers with Ctrl+C. Ship a zip with `ddev build-blocks`, not a watch compile.
 
 ## Static analysis and security
 
@@ -256,6 +287,8 @@ CI runs the same suite on push and pull request.
 | `ddev setup-tests` | Composer + WordPress PHPUnit library |
 | `ddev phpunit` | Run `WP_UnitTestCase` tests |
 | `ddev build-blocks` | Compile plugin and theme blocks plus theme CSS (`@wordpress/scripts`) |
+| `ddev watch-plugin` | Rebuild plugin blocks into `build/` on each save |
+| `ddev watch-theme` | Rebuild theme CSS and blocks into `build/` on each save |
 | `ddev phpcs` | WordPress Extra + PHPCompatibility on theme and plugin |
 | `ddev phpstan` | PHPStan level 5 with WordPress stubs |
 | `ddev plugin-check` | WordPress Plugin Check on hotel-booking-core |

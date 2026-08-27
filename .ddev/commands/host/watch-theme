@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+## Description: Watch theme SCSS and Gutenberg blocks and rewrite build/ on change
+## Usage: watch-theme
+## Example: ddev watch-theme
+
+set -euo pipefail
+
+THEME_DIR="${DDEV_APPROOT}/wp-content/themes/hotel-booking"
+
+cd "${THEME_DIR}"
+if [[ ! -d node_modules/@wordpress/scripts ]]; then
+	npm install
+fi
+
+echo "Watching theme CSS and blocks → ${THEME_DIR}/build/"
+echo "Edit src/scss/screen.scss or src/*/ , wait for compile, then refresh the site."
+
+npm run start:css &
+css_pid=$!
+cleanup() {
+	kill "${css_pid}" 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
+
+npm start

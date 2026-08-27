@@ -2,7 +2,6 @@
 ## Description: Build Hotel Booking Gutenberg blocks and theme CSS (@wordpress/scripts)
 ## Usage: build-blocks [npm-args...]
 ## Example: ddev build-blocks
-## Example: ddev build-blocks -- --watch
 
 set -euo pipefail
 

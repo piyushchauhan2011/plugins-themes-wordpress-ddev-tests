@@ -87,8 +87,10 @@ ddev plugin-check
 ddev composer audit
 ddev npm-audit
 
-# Rebuild plugin and theme blocks/CSS after editing src/
+# Rebuild plugin and theme blocks/CSS after clone, or leave watchers running while you edit
 ddev build-blocks
+# ddev watch-plugin    # plugin src/ → build/
+# ddev watch-theme     # theme src/ + screen.scss → build/
 
 # Optional browser e2e (needs npm + Chromium on the host)
 npm install
@@ -119,5 +121,6 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 ## Next
 
 - Theme Check and Theme Unit Test: [README](../README.md#content)
+- Watch plugin/theme `src/` instead of rebuilding: [README](../README.md#live-development)
 - Settings API, REST, Playwright details: [README](../README.md)
 - What `ddev seed-content` creates: [content/README.md](../content/README.md)
