@@ -52,6 +52,7 @@ add_action( 'init', 'hotel_booking_schedule_cron_events' );
 function hotel_booking_clear_cron_events() {
 	wp_clear_scheduled_hook( 'hotel_booking_stale_pending' );
 	wp_clear_scheduled_hook( 'hotel_booking_desk_digest' );
+	wp_clear_scheduled_hook( 'hotel_booking_workflow_tick' );
 }
 
 /**
@@ -79,28 +80,12 @@ function hotel_booking_on_inquiry_created( $inquiry_id ) {
 add_action( 'hotel_booking_inquiry_created', 'hotel_booking_on_inquiry_created' );
 
 /**
- * Daily: enqueue reminders for pending inquiries older than 48 hours.
+ * Resume due remind timers (durable workflow tick).
  *
- * @return int Number of inquiries queued or mailed.
+ * @return int Number of runs processed.
  */
 function hotel_booking_run_stale_pending() {
-	$ids   = hotel_booking_get_stale_pending_inquiry_ids();
-	$count = 0;
-
-	foreach ( $ids as $id ) {
-		$published = hotel_booking_amqp_publish(
-			'inquiry.remind',
-			array(
-				'inquiry_id' => $id,
-			)
-		);
-		if ( ! $published ) {
-			hotel_booking_send_stale_reminder_email( $id );
-		}
-		++$count;
-	}
-
-	return $count;
+	return hotel_booking_workflow_tick();
 }
 add_action( 'hotel_booking_stale_pending', 'hotel_booking_cron_stale_pending' );
 
@@ -233,6 +218,10 @@ function hotel_booking_send_desk_inquiry_email( $inquiry_id ) {
 	$sent = wp_mail( $to, $subject, $body );
 	if ( $sent ) {
 		hotel_booking_mark_inquiry_timestamp( $inquiry_id, 'desk_mailed_at' );
+		$run = hotel_booking_get_workflow_run( $inquiry_id );
+		if ( $run ) {
+			hotel_booking_workflow_append_event( (int) $run->id, 'activity_completed', 'inquiry.created' );
+		}
 	}
 
 	return (bool) $sent;
@@ -351,4 +340,21 @@ function hotel_booking_inquiry_job_notes( $row ) {
 	}
 
 	return implode( ' · ', $notes );
+}
+
+/**
+ * Job notes plus recent workflow events.
+ *
+ * @param object $row Inquiry row.
+ * @return string
+ */
+function hotel_booking_inquiry_desk_notes( $row ) {
+	$parts = array_filter(
+		array(
+			hotel_booking_inquiry_job_notes( $row ),
+			function_exists( 'hotel_booking_inquiry_workflow_notes' ) ? hotel_booking_inquiry_workflow_notes( $row ) : '',
+		)
+	);
+
+	return implode( ' · ', $parts );
 }

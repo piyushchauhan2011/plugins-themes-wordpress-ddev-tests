@@ -111,7 +111,7 @@ Local DDEV runs RabbitMQ as a Docker service and ticks WP-Cron from a web daemon
 
 On a real host:
 
-1. Run RabbitMQ (or another AMQP broker) on the private network. Install [`php-amqplib/php-amqplib`](https://github.com/php-amqplib/php-amqplib) next to WordPress (`composer require` at the project root, or another autoload WordPress can see).
+1. Run RabbitMQ (or another AMQP broker) on the private network. Install [`php-amqplib/php-amqplib`](https://github.com/php-amqplib/php-amqplib) and [`symfony/workflow`](https://github.com/symfony/workflow) next to WordPress (`composer require` at the project root, or another autoload WordPress can see).
 2. In `wp-config.php` (before `require wp-settings.php`):
 
 ```php
@@ -130,7 +130,7 @@ define( 'DISABLE_WP_CRON', true );
 wp hotel-booking worker
 ```
 
-Do not copy the DDEV RabbitMQ compose file onto the server.
+Do not copy the DDEV RabbitMQ compose file onto the server. Inquiry workflow tables are created by the plugin (`dbDelta`); the Symfony component is not in the zip. See [WORKFLOW.md](WORKFLOW.md).
 
 ## Database scale (not in this zip)
 

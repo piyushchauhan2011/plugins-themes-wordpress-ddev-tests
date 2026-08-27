@@ -25,7 +25,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache and nginx FastCGI page cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). WP-Cron, RabbitMQ jobs, and OpenSearch room search on DDEV: [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache and nginx FastCGI page cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). WP-Cron, RabbitMQ jobs, and OpenSearch room search on DDEV: [docs/JOBS.md](docs/JOBS.md). Inquiry desk state machine (not Temporal): [docs/WORKFLOW.md](docs/WORKFLOW.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
 
 ```bash
 ddev start
@@ -285,7 +285,7 @@ CI runs the same suite on push and pull request.
 | `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings, Redis Object Cache, OpenSearch reindex |
 | `ddev wp hotel-booking reindex` | Rebuild the OpenSearch rooms index |
 | `ddev wp hotel-booking worker` | Consume RabbitMQ email and search queues (also a DDEV daemon) |
-| `ddev wp hotel-booking remind-stale` / `digest` | Run the daily inquiry jobs now |
+| `ddev wp hotel-booking remind-stale` / `digest` / `workflow tick` | Run inquiry jobs and due workflow timers now |
 | `ddev rabbitmq launch` | RabbitMQ management UI |
 | `ddev snapshot` / `ddev snapshot restore` | Named DB (+ files) snapshot; see [BACKUP.md](docs/BACKUP.md) |
 | `ddev export-db` / `ddev import-db` | SQL-only dump and restore |

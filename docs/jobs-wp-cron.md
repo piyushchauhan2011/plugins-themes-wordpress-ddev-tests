@@ -2,16 +2,18 @@
 
 WordPress “cron” is **not** the Unix daemon. It is a list of timestamps in `wp_options` (`cron`). By default, a front-end or admin hit may spawn `wp-cron.php` in the background. If nobody visits, jobs **do not run**.
 
-Hotel Booking Core schedules two **daily** events on `init` if they are missing, and clears them on plugin deactivation:
+Hotel Booking Core schedules these events on `init` if they are missing, and clears them on plugin deactivation:
 
-| Hook | Job |
-| --- | --- |
-| `hotel_booking_stale_pending` | Pending inquiries older than 48 hours with empty `reminded_at` → `inquiry.remind` (or in-request mail) |
-| `hotel_booking_desk_digest` | Count pending rows → `desk.digest` (or in-request mail) |
+| Hook | Schedule | Job |
+| --- | --- | --- |
+| `hotel_booking_workflow_tick` | every minute | Due `wait_until` remind timers |
+| `hotel_booking_stale_pending` | daily | Same tick (`remind-stale` CLI) |
+| `hotel_booking_desk_digest` | daily | Count pending rows → `desk.digest` |
 
-Run them now without waiting for midnight:
+Run them now without waiting:
 
 ```bash
+ddev wp hotel-booking workflow tick
 ddev wp hotel-booking remind-stale
 ddev wp hotel-booking digest
 ddev wp cron event run --due-now
@@ -79,8 +81,8 @@ Sketch: [`snippets/action-scheduler-enqueue.php.example`](snippets/action-schedu
 
 **In the plugin** ([`inc/jobs.php`](../wp-content/plugins/hotel-booking-core/inc/jobs.php)):
 
-- After `hotel_booking_insert_inquiry()`: `inquiry.created` → desk `wp_mail` (idempotent via `desk_mailed_at`)
-- Recurring daily: remind `pending` inquiries older than 48 hours (`reminded_at`)
+- After `hotel_booking_insert_inquiry()`: `inquiry.created` → desk `wp_mail` (idempotent via `desk_mailed_at`); durable run + 48h remind `wait_until`
+- Minute tick: due remind timers ([WORKFLOW.md](WORKFLOW.md))
 - Recurring daily: desk digest of pending count
 
 **Still a sketch:** Action Scheduler instead of RabbitMQ; huge CSV exports in a cron hook.

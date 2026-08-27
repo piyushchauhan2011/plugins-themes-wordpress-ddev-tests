@@ -121,6 +121,8 @@ function hotel_booking_insert_inquiry( $input, $already_sanitized = false ) {
 		'updated_at'  => $now,
 	);
 
+	$wpdb->query( 'START TRANSACTION' );
+
 	$inserted = $wpdb->insert(
 		hotel_booking_inquiries_table_name(),
 		$row,
@@ -128,10 +130,18 @@ function hotel_booking_insert_inquiry( $input, $already_sanitized = false ) {
 	);
 
 	if ( ! $inserted ) {
+		$wpdb->query( 'ROLLBACK' );
 		return new WP_Error( 'hotel_booking_insert_failed', __( 'Could not save the inquiry.', 'hotel-booking-core' ) );
 	}
 
-	$id = (int) $wpdb->insert_id;
+	$id      = (int) $wpdb->insert_id;
+	$started = hotel_booking_workflow_start_inquiry( $id, $data['status'] );
+	if ( is_wp_error( $started ) ) {
+		$wpdb->query( 'ROLLBACK' );
+		return $started;
+	}
+
+	$wpdb->query( 'COMMIT' );
 	do_action( 'hotel_booking_inquiry_created', $id );
 
 	return $id;
@@ -250,6 +260,20 @@ function hotel_booking_update_inquiry( $id, $input ) {
 		return new WP_Error( 'hotel_booking_inquiry_missing', __( 'Inquiry not found.', 'hotel-booking-core' ) );
 	}
 
+	if ( isset( $input['transition'] ) && is_string( $input['transition'] ) && '' !== $input['transition'] ) {
+		return hotel_booking_apply_inquiry_transition( $id, $input['transition'] );
+	}
+
+	if ( isset( $input['status'] ) && (string) $input['status'] !== (string) $existing->status ) {
+		$transition = hotel_booking_workflow_transition_for_statuses( (string) $existing->status, (string) $input['status'] );
+		if ( null === $transition ) {
+			return new WP_Error( 'hotel_booking_workflow_blocked', __( 'That status change is not allowed.', 'hotel-booking-core' ) );
+		}
+		if ( '' !== $transition ) {
+			return hotel_booking_apply_inquiry_transition( $id, $transition );
+		}
+	}
+
 	$merged = array(
 		'guest_name'  => isset( $input['guest_name'] ) ? $input['guest_name'] : $existing->guest_name,
 		'guest_email' => isset( $input['guest_email'] ) ? $input['guest_email'] : $existing->guest_email,
@@ -295,6 +319,24 @@ function hotel_booking_delete_inquiry( $id ) {
 	$id = absint( $id );
 	if ( ! $id ) {
 		return false;
+	}
+
+	$run = hotel_booking_get_workflow_run( $id );
+	if ( $run ) {
+		$wpdb->delete(
+			hotel_booking_workflow_events_table_name(),
+			array(
+				'run_id' => (int) $run->id,
+			),
+			array( '%d' )
+		);
+		$wpdb->delete(
+			hotel_booking_workflow_runs_table_name(),
+			array(
+				'id' => (int) $run->id,
+			),
+			array( '%d' )
+		);
 	}
 
 	$deleted = $wpdb->delete(

@@ -22,7 +22,7 @@ hooks:
         - exec: mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test; GRANT ALL PRIVILEGES ON wordpress_test.* TO 'db'@'%'; FLUSH PRIVILEGES;"
           service: db
         - exec: |
-            if [ ! -d vendor/php-amqplib ]; then
+            if [ ! -d vendor/php-amqplib ] || [ ! -d vendor/symfony/workflow ]; then
               composer install --no-interaction
             fi
         - exec: |

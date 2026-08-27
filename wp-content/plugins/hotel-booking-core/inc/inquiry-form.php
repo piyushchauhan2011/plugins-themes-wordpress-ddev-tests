@@ -64,9 +64,11 @@ function hotel_booking_handle_update_inquiry() {
 		wp_die( esc_html__( 'The update form expired. Please try again.', 'hotel-booking-core' ), '', array( 'response' => 403 ) );
 	}
 
-	$id     = isset( $_POST['inquiry_id'] ) ? absint( $_POST['inquiry_id'] ) : 0;
-	$status = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : 'pending';
-	hotel_booking_update_inquiry( $id, array( 'status' => $status ) );
+	$id         = isset( $_POST['inquiry_id'] ) ? absint( $_POST['inquiry_id'] ) : 0;
+	$transition = isset( $_POST['transition'] ) ? sanitize_key( wp_unslash( $_POST['transition'] ) ) : '';
+	if ( '' !== $transition ) {
+		hotel_booking_apply_inquiry_transition( $id, $transition );
+	}
 
 	$dest = wp_get_referer() ? wp_get_referer() : home_url( '/desk/' );
 	wp_safe_redirect( remove_query_arg( array( 'hb_deleted', 'hb_error' ), $dest ) );
@@ -346,15 +348,16 @@ function hotel_booking_render_inquiry_list() {
 									<input type="hidden" name="action" value="hb_update_inquiry">
 									<input type="hidden" name="inquiry_id" value="<?php echo esc_attr( (string) $row->id ); ?>">
 									<?php wp_nonce_field( 'hb_update_inquiry', 'hb_update_nonce' ); ?>
-									<select name="status">
-										<?php foreach ( hotel_booking_inquiry_statuses() as $inquiry_status ) : ?>
-											<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( hotel_booking_inquiry_status_label( $inquiry_status ) ); ?></option>
+									<select name="transition">
+										<option value=""><?php echo esc_html( hotel_booking_inquiry_status_label( $row->status ) ); ?></option>
+										<?php foreach ( hotel_booking_inquiry_enabled_transitions( $row ) as $transition ) : ?>
+											<option value="<?php echo esc_attr( $transition['name'] ); ?>"><?php echo esc_html( $transition['label'] ); ?></option>
 										<?php endforeach; ?>
 									</select>
 									<button type="submit"><?php esc_html_e( 'Save', 'hotel-booking-core' ); ?></button>
 								</form>
 								<?php
-								$job_notes = hotel_booking_inquiry_job_notes( $row );
+								$job_notes = hotel_booking_inquiry_desk_notes( $row );
 								if ( $job_notes ) :
 									?>
 									<br><small><?php echo esc_html( $job_notes ); ?></small>

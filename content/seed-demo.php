@@ -171,5 +171,19 @@ foreach ( $samples as $row ) {
 			)
 		);
 		WP_CLI::log( 'Backdated inquiry #' . $result . ' for stale-pending cron.' );
+		$run = hotel_booking_get_workflow_run( (int) $result );
+		if ( $run ) {
+			$wpdb->query(
+				$wpdb->prepare(
+					'UPDATE %i SET wait_until = DATE_SUB(%s, INTERVAL 50 HOUR), run_status = %s, wait_name = %s WHERE id = %d',
+					hotel_booking_workflow_runs_table_name(),
+					current_time( 'mysql' ),
+					'waiting',
+					'remind',
+					(int) $run->id
+				)
+			);
+			WP_CLI::log( 'Set remind wait_until in the past for inquiry #' . $result . '.' );
+		}
 	}
 }

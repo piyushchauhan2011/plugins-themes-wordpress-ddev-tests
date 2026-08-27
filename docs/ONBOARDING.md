@@ -49,7 +49,7 @@ Page cache: anonymous Home is nginx FastCGI. `curl -sI https://hotel-booking.dde
 
 Room search: `ddev describe` lists **opensearch**. After seed, `ddev exec curl -s http://opensearch:9200/_cluster/health` should show `green` or `yellow`. Rebuild the index with `ddev wp hotel-booking reindex`. Dashboards: `ddev launch :5602`. The Search page is `/search/` (Spanish `/es/buscar/`).
 
-Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (user `rabbitmq` / `rabbitmq`). Desk mail lands in Mailpit (`ddev launch :8026`). After seed, Priya Shah is a pending inquiry ~50 hours old so `ddev wp hotel-booking remind-stale` has a row. Daily digest: `ddev wp hotel-booking digest`. WP-Cron is disabled for visitors; a web daemon ticks `wp cron event run --due-now`.
+Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (user `rabbitmq` / `rabbitmq`). Desk mail lands in Mailpit (`ddev launch :8026`). After seed, Priya Shah is a pending inquiry with `wait_until` in the past so `ddev wp hotel-booking remind-stale` (workflow tick) has a due timer. Daily digest: `ddev wp hotel-booking digest`. Desk status uses Contact / Close / Reopen, not a free-form status list. WP-Cron is disabled for visitors; a web daemon ticks `wp cron event run --due-now`.
 
 ## What seed gives you
 
@@ -111,6 +111,7 @@ ddev nginx-cache-flush
 
 # Room search, jobs, Mailpit
 ddev wp hotel-booking reindex
+ddev wp hotel-booking workflow tick
 ddev wp hotel-booking remind-stale
 ddev wp hotel-booking digest
 ddev rabbitmq launch
@@ -145,6 +146,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [DEPLOYMENT.md](DEPLOYMENT.md) — zip/SFTP or git onto a real WordPress install
 - [SCALING.md](SCALING.md) — primary/replica routing and sharding (documentation only; DDEV still has one database)
 - [JOBS.md](JOBS.md) — WP-Cron tick, RabbitMQ worker, desk email / digest / stale reminders, async OpenSearch
+- [WORKFLOW.md](WORKFLOW.md) — inquiry state machine (Symfony Workflow + MariaDB runs; not Temporal)
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows
 
 ## Next

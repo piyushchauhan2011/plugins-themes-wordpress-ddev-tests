@@ -50,15 +50,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<input type="hidden" name="action" value="hb_update_inquiry">
 								<input type="hidden" name="inquiry_id" value="<?php echo esc_attr( (string) $row->id ); ?>">
 								<?php wp_nonce_field( 'hb_update_inquiry', 'hb_update_nonce' ); ?>
-								<select name="status">
-									<?php foreach ( hotel_booking_inquiry_statuses() as $inquiry_status ) : ?>
-										<option value="<?php echo esc_attr( $inquiry_status ); ?>" <?php selected( $row->status, $inquiry_status ); ?>><?php echo esc_html( hotel_booking_inquiry_status_label( $inquiry_status ) ); ?></option>
+								<select name="transition">
+									<option value=""><?php echo esc_html( hotel_booking_inquiry_status_label( $row->status ) ); ?></option>
+									<?php foreach ( hotel_booking_inquiry_enabled_transitions( $row ) as $transition ) : ?>
+										<option value="<?php echo esc_attr( $transition['name'] ); ?>"><?php echo esc_html( $transition['label'] ); ?></option>
 									<?php endforeach; ?>
 								</select>
 								<?php submit_button( __( 'Save', 'hotel-booking-core' ), 'secondary', 'submit', false ); ?>
 							</form>
 							<?php
-							$job_notes = hotel_booking_inquiry_job_notes( $row );
+							$job_notes = hotel_booking_inquiry_desk_notes( $row );
 							if ( $job_notes ) :
 								?>
 								<p><small><?php echo esc_html( $job_notes ); ?></small></p>

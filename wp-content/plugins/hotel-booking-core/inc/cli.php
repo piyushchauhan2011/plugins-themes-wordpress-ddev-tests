@@ -97,7 +97,26 @@ function hotel_booking_cli_remind_stale( $args = array(), $assoc_args = array() 
 	);
 }
 
+/**
+ * Resume due workflow timers now.
+ *
+ * @param array<int, string>    $args       Positional args.
+ * @param array<string, string> $assoc_args Assoc args.
+ * @return void
+ */
+function hotel_booking_cli_workflow_tick( $args = array(), $assoc_args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	$count = hotel_booking_workflow_tick();
+	WP_CLI::success(
+		sprintf(
+			/* translators: %d: due runs processed */
+			__( 'Workflow tick processed %d due run(s).', 'hotel-booking-core' ),
+			$count
+		)
+	);
+}
+
 WP_CLI::add_command( 'hotel-booking reindex', 'hotel_booking_cli_reindex' );
 WP_CLI::add_command( 'hotel-booking worker', 'hotel_booking_cli_worker' );
 WP_CLI::add_command( 'hotel-booking digest', 'hotel_booking_cli_digest' );
 WP_CLI::add_command( 'hotel-booking remind-stale', 'hotel_booking_cli_remind_stale' );
+WP_CLI::add_command( 'hotel-booking workflow tick', 'hotel_booking_cli_workflow_tick' );

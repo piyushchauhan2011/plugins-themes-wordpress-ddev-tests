@@ -26,8 +26,7 @@ class Test_Hotel_Booking_Jobs extends WP_UnitTestCase {
 	}
 
 	public function tear_down() {
-		global $wpdb;
-		$wpdb->query( 'TRUNCATE TABLE ' . hotel_booking_inquiries_table_name() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		hotel_booking_truncate_custom_tables();
 		parent::tear_down();
 	}
 
@@ -85,18 +84,26 @@ class Test_Hotel_Booking_Jobs extends WP_UnitTestCase {
 		$wpdb->update(
 			hotel_booking_inquiries_table_name(),
 			array(
-				'created_at'     => gmdate( 'Y-m-d H:i:s', current_time( 'timestamp' ) - ( 50 * HOUR_IN_SECONDS ) ),
 				'desk_mailed_at' => current_time( 'mysql' ),
 			),
 			array(
 				'id' => $id,
 			),
-			array( '%s', '%s' ),
+			array( '%s' ),
 			array( '%d' )
 		);
-
-		$ids = hotel_booking_get_stale_pending_inquiry_ids();
-		$this->assertContains( $id, $ids );
+		$run = hotel_booking_get_workflow_run( $id );
+		$this->assertNotNull( $run );
+		$wpdb->query(
+			$wpdb->prepare(
+				'UPDATE %i SET wait_until = DATE_SUB(%s, INTERVAL 1 HOUR), run_status = %s, wait_name = %s WHERE id = %d',
+				hotel_booking_workflow_runs_table_name(),
+				current_time( 'mysql' ),
+				'waiting',
+				'remind',
+				(int) $run->id
+			)
+		);
 
 		reset_phpmailer_instance();
 		$this->assertSame( 1, hotel_booking_run_stale_pending() );
@@ -107,7 +114,7 @@ class Test_Hotel_Booking_Jobs extends WP_UnitTestCase {
 		$row = hotel_booking_get_inquiry( $id );
 		$this->assertNotEmpty( $row->reminded_at );
 		$this->assertStringContainsString( 'Reminded', hotel_booking_inquiry_job_notes( $row ) );
-		$this->assertSame( array(), hotel_booking_get_stale_pending_inquiry_ids() );
+		$this->assertSame( 0, hotel_booking_workflow_tick() );
 	}
 
 	public function test_digest_counts_pending() {
@@ -134,5 +141,6 @@ class Test_Hotel_Booking_Jobs extends WP_UnitTestCase {
 	public function test_cron_hooks_are_registered() {
 		$this->assertNotFalse( has_action( 'hotel_booking_stale_pending', 'hotel_booking_cron_stale_pending' ) );
 		$this->assertNotFalse( has_action( 'hotel_booking_desk_digest', 'hotel_booking_cron_desk_digest' ) );
+		$this->assertNotFalse( has_action( 'hotel_booking_workflow_tick', 'hotel_booking_cron_workflow_tick' ) );
 	}
 }

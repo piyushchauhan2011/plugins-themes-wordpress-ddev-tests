@@ -16,8 +16,7 @@ class Test_Hotel_Booking_Admin extends WP_UnitTestCase {
 	}
 
 	public function tear_down() {
-		global $wpdb;
-		$wpdb->query( 'TRUNCATE TABLE ' . hotel_booking_inquiries_table_name() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		hotel_booking_truncate_custom_tables();
 		delete_option( 'hotel_booking_settings' );
 		parent::tear_down();
 	}
