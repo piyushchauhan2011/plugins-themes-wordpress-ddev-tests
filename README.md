@@ -24,7 +24,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md).
 
 ```bash
 ddev start
@@ -200,6 +200,8 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 | --- | --- |
 | `ddev start` / `ddev launch` | Run the site |
 | `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings |
+| `ddev snapshot` / `ddev snapshot restore` | Named DB (+ files) snapshot; see [BACKUP.md](docs/BACKUP.md) |
+| `ddev export-db` / `ddev import-db` | SQL-only dump and restore |
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
 | `ddev setup-tests` | Composer + WordPress PHPUnit library |
 | `ddev phpunit` | Run `WP_UnitTestCase` tests |

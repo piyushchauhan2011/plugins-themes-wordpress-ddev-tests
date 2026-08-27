@@ -20,6 +20,7 @@
 # DDEV-generated WordPress config
 /wp-config.php
 /wp-config-ddev.php
+/.ddev/db_snapshots/
 
 # Composer and WordPress test suite (persisted outside /tmp)
 /vendor/

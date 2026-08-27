@@ -90,6 +90,13 @@ ddev e2e
 | `e2e/` | Playwright specs |
 | `content/` | Seed script and content notes |
 
+## After the first hour
+
+Seed is demo data, not a backup. Before you experiment with `--force` or a copied host, snapshot locally and read how to ship only the theme and plugin.
+
+- [BACKUP.md](BACKUP.md) — `ddev snapshot`, SQL dumps, uploads, recovery drill
+- [DEPLOYMENT.md](DEPLOYMENT.md) — zip/SFTP or git onto a real WordPress install
+
 ## Next
 
 - Theme Check and Theme Unit Test: [README](../README.md#content)
