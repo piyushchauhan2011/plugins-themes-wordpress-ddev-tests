@@ -1,0 +1,15 @@
+{
+	"name": "hotel-booking-theme",
+	"private": true,
+	"description": "Gutenberg blocks and compiled CSS for the Hotel Booking theme",
+	"scripts": {
+		"build:css": "sass src/scss/screen.scss build/screen.css --no-source-map --style=expanded",
+		"build:blocks": "wp-scripts build --webpack-copy-php --blocks-manifest --experimental-modules",
+		"build": "npm run build:css && npm run build:blocks",
+		"start": "wp-scripts start --webpack-copy-php --blocks-manifest --experimental-modules"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.13.0",
+		"sass": "^1.77.0"
+	}
+}

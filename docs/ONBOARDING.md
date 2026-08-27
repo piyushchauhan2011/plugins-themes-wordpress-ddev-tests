@@ -87,7 +87,7 @@ ddev plugin-check
 ddev composer audit
 ddev npm-audit
 
-# Rebuild Gutenberg blocks after editing src/
+# Rebuild plugin and theme blocks/CSS after editing src/
 ddev build-blocks
 
 # Optional browser e2e (needs npm + Chromium on the host)

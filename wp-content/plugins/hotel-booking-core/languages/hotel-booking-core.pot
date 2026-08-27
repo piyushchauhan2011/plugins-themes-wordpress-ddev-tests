@@ -252,7 +252,7 @@ msgstr ""
 
 #: inc/inquiry-form.php:243
 #: inc/post-types.php:21
-#: src/room-card/edit.js:30
+#: src/room-card/edit.tsx:30
 msgid "Room"
 msgstr ""
 
@@ -421,43 +421,43 @@ msgstr ""
 msgid "Limits the guest dropdown on the public booking form (1–8)."
 msgstr ""
 
-#: src/amenities/edit.js:29
+#: src/amenities/edit.tsx:29
 msgid "Items"
 msgstr ""
 
-#: src/amenities/edit.js:33
+#: src/amenities/edit.tsx:33
 msgid "Title"
 msgstr ""
 
-#: src/amenities/edit.js:38
+#: src/amenities/edit.tsx:38
 msgid "Text"
 msgstr ""
 
-#: src/amenities/edit.js:47
+#: src/amenities/edit.tsx:47
 msgid "Remove"
 msgstr ""
 
-#: src/amenities/edit.js:52
+#: src/amenities/edit.tsx:52
 msgid "Add amenity"
 msgstr ""
 
-#: src/amenities/edit.js:59
+#: src/amenities/edit.tsx:59
 msgid "Untitled"
 msgstr ""
 
-#: src/booking-cta/edit.js:11
+#: src/booking-cta/edit.tsx:11
 msgid "Link"
 msgstr ""
 
-#: src/booking-cta/edit.js:13
+#: src/booking-cta/edit.tsx:13
 msgid "URL"
 msgstr ""
 
-#: src/booking-cta/edit.js:25
+#: src/booking-cta/edit.tsx:25
 msgid "Heading"
 msgstr ""
 
-#: src/booking-cta/edit.js:32
+#: src/booking-cta/edit.tsx:32
 msgid "Button"
 msgstr ""
 
@@ -469,19 +469,19 @@ msgstr ""
 msgid "Inquiry list — visible to editors on the front. Status chips filter rows with the Interactivity API; saves and deletes still use admin-post."
 msgstr ""
 
-#: src/room-card/edit.js:19
+#: src/room-card/edit.tsx:19
 msgid "Latest room"
 msgstr ""
 
-#: src/room-card/edit.js:35
+#: src/room-card/edit.tsx:35
 msgid "Show"
 msgstr ""
 
-#: src/rooms-grid/edit.js:12
+#: src/rooms-grid/edit.tsx:12
 msgid "Filter"
 msgstr ""
 
-#: src/rooms-grid/edit.js:14
+#: src/rooms-grid/edit.tsx:14
 msgid "Minimum guests (0 = all)"
 msgstr ""
 

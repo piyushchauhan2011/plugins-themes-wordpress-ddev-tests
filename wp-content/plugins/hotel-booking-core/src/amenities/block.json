@@ -31,8 +31,8 @@
 		"align": [ "wide" ],
 		"interactivity": true
 	},
-	"editorScript": "file:./index.js",
+	"editorScript": "file:./index.ts",
 	"style": "file:./style-index.css",
-	"viewScriptModule": "file:./view.js",
+	"viewScriptModule": "file:./view.ts",
 	"render": "file:./render.php"
 }

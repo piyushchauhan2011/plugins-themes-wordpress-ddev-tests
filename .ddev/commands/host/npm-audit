@@ -5,15 +5,25 @@
 
 set -euo pipefail
 
-cd "${DDEV_APPROOT}"
+audit_one() {
+	local dir="$1"
+	shift
+	cd "${dir}"
+	if [[ ! -f package-lock.json ]]; then
+		echo "Missing package-lock.json in ${dir}"
+		exit 1
+	fi
+	if [[ ! -d node_modules ]]; then
+		npm ci
+	fi
+	echo "npm audit (${dir})"
+	npm audit --audit-level=high "$@"
+}
 
-if [[ ! -f package-lock.json ]]; then
-	echo "Missing package-lock.json"
-	exit 1
-fi
+# Playwright lockfile at the repo root (runtime for e2e).
+audit_one "${DDEV_APPROOT}" "$@"
 
-if [[ ! -d node_modules ]]; then
-	npm ci
-fi
-
-npm audit --audit-level=high "$@"
+# Plugin and theme lockfiles are compile-only (@wordpress/scripts). Omit dev so
+# webpack-dev-server advisories do not fail the same check as shipped code.
+audit_one "${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core" --omit=dev "$@"
+audit_one "${DDEV_APPROOT}/wp-content/themes/hotel-booking" --omit=dev "$@"

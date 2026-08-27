@@ -36,10 +36,16 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: wp-content/plugins/hotel-booking-core/package-lock.json
+          cache-dependency-path: |
+            wp-content/plugins/hotel-booking-core/package-lock.json
+            wp-content/themes/hotel-booking/package-lock.json
 
       - name: Build Gutenberg blocks
         working-directory: wp-content/plugins/hotel-booking-core
+        run: npm ci && npm run build
+
+      - name: Build theme CSS and blocks
+        working-directory: wp-content/themes/hotel-booking
         run: npm ci && npm run build
 
       - name: Install Subversion
@@ -73,6 +79,10 @@ jobs:
 
       - name: Build Gutenberg blocks
         working-directory: wp-content/plugins/hotel-booking-core
+        run: npm ci && npm run build
+
+      - name: Build theme CSS and blocks
+        working-directory: wp-content/themes/hotel-booking
         run: npm ci && npm run build
 
       - name: Install Playwright browser
@@ -130,8 +140,16 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
-      - name: Audit high and critical
+      - name: Audit Playwright lockfile
         run: npm audit --audit-level=high
+
+      - name: Audit plugin lockfile
+        working-directory: wp-content/plugins/hotel-booking-core
+        run: npm audit --audit-level=high --omit=dev
+
+      - name: Audit theme lockfile
+        working-directory: wp-content/themes/hotel-booking
+        run: npm audit --audit-level=high --omit=dev
 
   plugin-check:
     name: Plugin Check
@@ -149,6 +167,10 @@ jobs:
 
       - name: Build Gutenberg blocks
         working-directory: wp-content/plugins/hotel-booking-core
+        run: npm ci && npm run build
+
+      - name: Build theme CSS and blocks
+        working-directory: wp-content/themes/hotel-booking
         run: npm ci && npm run build
 
       - name: Start wp-env

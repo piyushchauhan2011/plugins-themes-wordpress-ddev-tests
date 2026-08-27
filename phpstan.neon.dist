@@ -10,5 +10,7 @@ parameters:
 		- wp-content/themes/hotel-booking/assets/images/generate-placeholders.php
 		- wp-content/plugins/hotel-booking-core/node_modules (?)
 		- wp-content/plugins/hotel-booking-core/build (?)
+		- wp-content/themes/hotel-booking/node_modules (?)
+		- wp-content/themes/hotel-booking/build (?)
 	bootstrapFiles:
 		- phpstan-bootstrap.php

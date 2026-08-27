@@ -9,7 +9,20 @@ Ship these two folders:
 
 Do **not** deploy `.ddev/`, `tests/`, `e2e/`, `content/`, or `wp-config.php`. Do not reuse local accounts (`admin` / `admin`, `desk` / `desk`) on a real host.
 
-Plugin activation creates the custom table `{$wpdb->prefix}hb_inquiries` (`wp_hb_inquiries` with the default prefix). Activate the plugin **before** the theme so shortcodes and the room CPT exist when templates load.
+Plugin and theme `build/` folders are gitignored. Before a zip, compile both the same way local DDEV does:
+
+```bash
+ddev build-blocks
+```
+
+Or without DDEV:
+
+```bash
+( cd wp-content/plugins/hotel-booking-core && npm ci && npm run build )
+( cd wp-content/themes/hotel-booking && npm ci && npm run build )
+```
+
+The zip must include those `build/` directories. Plugin activation creates the custom table `{$wpdb->prefix}hb_inquiries` (`wp_hb_inquiries` with the default prefix). Activate the plugin **before** the theme so shortcodes and the room CPT exist when templates load.
 
 ## SFTP / zip
 

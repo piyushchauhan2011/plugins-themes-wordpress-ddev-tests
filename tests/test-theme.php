@@ -61,7 +61,12 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 	}
 
 	public function test_style_css_has_media_queries() {
-		$css = file_get_contents( get_template_directory() . '/style.css' );
+		$css_file = get_template_directory() . '/build/screen.css';
+		if ( ! is_readable( $css_file ) ) {
+			$this->markTestSkipped( 'Theme CSS build is missing. Run ddev build-blocks.' );
+		}
+
+		$css = file_get_contents( $css_file );
 
 		$this->assertNotFalse( strpos( $css, '@media' ) );
 		$this->assertNotFalse( strpos( $css, 'max-width: 600px' ) );
@@ -127,6 +132,10 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 	}
 
 	public function test_front_end_style_does_not_depend_on_google_fonts() {
+		if ( ! is_readable( get_template_directory() . '/build/screen.css' ) ) {
+			$this->markTestSkipped( 'Theme CSS build is missing. Run ddev build-blocks.' );
+		}
+
 		do_action( 'wp_enqueue_scripts' );
 
 		$this->assertTrue( wp_style_is( 'hotel-booking-style', 'enqueued' ) );

@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking-theme/language-switcher",
+	"title": "Language switcher",
+	"category": "theme",
+	"icon": "translation",
+	"description": "Visitor English / Spanish toggle.",
+	"textdomain": "hotel-booking",
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.ts",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

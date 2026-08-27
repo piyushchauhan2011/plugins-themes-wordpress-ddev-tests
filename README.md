@@ -37,7 +37,10 @@ ddev launch
 
 ```
 wp-content/themes/hotel-booking/
-  style.css              Theme header, GPL copyright notice, booking-form CSS
+  style.css              Theme headers only (WordPress requires this file)
+  src/scss/screen.scss   Front-end CSS (compiled to build/screen.css)
+  src/                   Theme Gutenberg blocks (Stay FAQ, language switcher, color scheme toggle)
+  package.json           @wordpress/scripts + sass (ddev build-blocks)
   readme.txt             WordPress.org-style readme
   theme.json             Palette, fonts, fluid type, spacing (Site Editor → Styles)
   styles/dusk.json       Dark style variation (Appearance → Editor → Styles)
@@ -46,7 +49,6 @@ wp-content/themes/hotel-booking/
   templates/             Block templates (front-page, single, archives, 404)
   parts/                 header.html (language switcher, color scheme toggle), footer.html
   patterns/              Landing-page sections (hero, rooms, amenities, stay FAQ, CTA)
-  blocks/                Theme Gutenberg blocks (Stay FAQ, language switcher, color scheme toggle)
   template-parts/        PHP: inquiry-form.php, inquiries-list.php (`$wpdb` data)
   inc/patterns.php       Pattern category
   languages/             gettext POT, es_ES.po, es_ES.mo
@@ -56,9 +58,9 @@ The booking form **POSTs** into a custom MySQL table (`wp_hb_inquiries`). It is 
 
 ## Theme styles (fluid type, Dawn/Dusk, light/dark toggle)
 
-Headings use fluid font sizes in `theme.json` (`clamp()` via `fluid.min` / `fluid.max`). Room Query loops use `minimumColumnWidth` so the grid wraps on small screens. `style.css` adds `@media` rules for the booking form and desk table.
+Headings use fluid font sizes in `theme.json` (`clamp()` via `fluid.min` / `fluid.max`). Room Query loops use `minimumColumnWidth` so the grid wraps on small screens. `src/scss/screen.scss` compiles to `build/screen.css` with `@media` rules for the booking form, desk table, and overlay nav.
 
-**Dawn** (light) and **Dusk** (dark) style variations live in `styles/` (Appearance → Editor → Styles). Visitors can also switch the same palettes from the header **Dark** / **Light** toggle (`hotel-booking-theme/color-scheme-toggle`, Interactivity API, no `ddev build-blocks`). The choice is stored in `localStorage` and follows `prefers-color-scheme` until they click.
+**Dawn** (light) and **Dusk** (dark) style variations live in `styles/` (Appearance → Editor → Styles). Visitors can also switch the same palettes from the header **Dark** / **Light** toggle (`hotel-booking-theme/color-scheme-toggle`, Interactivity API). The choice is stored in `localStorage` and follows `prefers-color-scheme` until they click.
 
 ```bash
 ddev phpunit --filter Test_Hotel_Booking_Theme
@@ -88,7 +90,7 @@ ddev phpunit --filter test_theme_is_block_theme
 Tests cover:
 
 - Theme is active and `wp_is_block_theme()` is true
-- Fluid `theme.json` font sizes, Dawn/Dusk style variations, and `@media` in `style.css`
+- Fluid `theme.json` font sizes, Dawn/Dusk style variations, and `@media` in `build/screen.css`
 - `hb_room` is registered by the plugin
 - `hotel_booking_format_price()`
 - `$this->factory()->post->create()` plus meta and `WP_Query`
@@ -196,7 +198,7 @@ Hotel Booking Core registers six Gutenberg blocks (category **Hotel Booking** in
 - Inquiry form, Inquiry list (same POST/admin-post as the shortcodes)
 - Amenities accordion (Interactivity API)
 
-Source is `wp-content/plugins/hotel-booking-core/src/`. Compiled files in `build/` are gitignored — compile after clone or after editing block JS/CSS:
+Source is `wp-content/plugins/hotel-booking-core/src/` (TypeScript and SCSS). Compiled files in `build/` are gitignored — compile after clone or after editing block sources:
 
 ```bash
 ddev build-blocks
@@ -209,7 +211,7 @@ ddev phpunit --filter Test_Hotel_Booking_Blocks
 ddev e2e e2e/stay.spec.ts
 ```
 
-The **theme** also registers a Stay FAQ accordion (`hotel-booking-theme/stay-faq`) under the core **Theme** category. It uses the same Interactivity API (`data-wp-interactive`, `store`) with an unbundled `view.js` — no theme webpack, no `ddev build-blocks`. Home (`front-page.html`) includes the `hotel-booking/stay-faq` pattern.
+The **theme** also registers Stay FAQ, color-scheme toggle, and language switcher (`hotel-booking-theme/*`) under the core **Theme** category. They use the same Interactivity API (`data-wp-interactive`, `store`) and compile with `ddev build-blocks` (theme `src/` → `build/`). Home (`front-page.html`) includes the `hotel-booking/stay-faq` pattern.
 
 ```bash
 ddev phpunit --filter Test_Hotel_Booking_Theme
@@ -253,7 +255,7 @@ CI runs the same suite on push and pull request.
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
 | `ddev setup-tests` | Composer + WordPress PHPUnit library |
 | `ddev phpunit` | Run `WP_UnitTestCase` tests |
-| `ddev build-blocks` | Compile plugin Gutenberg blocks (`@wordpress/scripts`) |
+| `ddev build-blocks` | Compile plugin and theme blocks plus theme CSS (`@wordpress/scripts`) |
 | `ddev phpcs` | WordPress Extra + PHPCompatibility on theme and plugin |
 | `ddev phpstan` | PHPStan level 5 with WordPress stubs |
 | `ddev plugin-check` | WordPress Plugin Check on hotel-booking-core |

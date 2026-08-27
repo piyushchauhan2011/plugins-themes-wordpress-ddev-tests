@@ -1,0 +1,35 @@
+.hb-language {
+	display: flex;
+	align-items: center;
+	gap: 0.15rem;
+
+	&__link {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.5rem;
+		padding: 0.35rem 0.65rem;
+		border: 1px solid transparent;
+		border-radius: 2px;
+		color: inherit;
+		font-size: 0.8rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-decoration: none;
+		text-transform: uppercase;
+
+		&:hover,
+		&:focus-visible {
+			border-color: var(--hb-border, #e4d6c5);
+		}
+
+		&.is-active {
+			border-color: currentColor;
+		}
+	}
+
+	@media (max-width: 600px) {
+		&__link {
+			min-height: 2.75rem;
+		}
+	}
+}

@@ -18,6 +18,8 @@
 # These must come after !** or Git will track generated plugin files.
 /wp-content/plugins/hotel-booking-core/node_modules/
 /wp-content/plugins/hotel-booking-core/build/
+/wp-content/themes/hotel-booking/node_modules/
+/wp-content/themes/hotel-booking/build/
 /wp-content/plugins/hotel-booking-core/languages/*.mo
 /wp-content/plugins/hotel-booking-core/languages/*.l10n.php
 /wp-content/plugins/hotel-booking-core/languages/*.json
@@ -44,8 +46,8 @@
 *.log
 .phpunit.result.cache
 
-# Playwright (repo-root install). Plugin node_modules is ignored above.
-/node_modules/
+# npm installs (Playwright, plugin, theme, or any nested package)
+node_modules/
 /test-results/
 /playwright-report/
 /playwright/.cache/

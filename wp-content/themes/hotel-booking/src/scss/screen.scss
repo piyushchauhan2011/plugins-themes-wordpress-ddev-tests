@@ -1,0 +1,295 @@
+:root {
+	--hb-border: #e4d6c5;
+	color-scheme: light;
+}
+
+html[data-color-scheme="light"] {
+	color-scheme: light;
+
+	body {
+		background-color: var(--wp--preset--color--cream, #f7f1e8);
+		color: var(--wp--preset--color--espresso, #2c2118);
+	}
+}
+
+html[data-color-scheme="dark"] {
+	color-scheme: dark;
+	--wp--preset--color--cream: #1a1410;
+	--wp--preset--color--linen: #241c16;
+	--wp--preset--color--espresso: #f7f1e8;
+	--wp--preset--color--terracotta: #c4785c;
+	--wp--preset--color--gold: #d4bc94;
+	--wp--preset--color--white: #241c16;
+	--hb-border: #4a3b30;
+
+	&,
+	body {
+		color-scheme: dark;
+	}
+
+	body {
+		background-color: var(--wp--preset--color--cream, #1a1410);
+		color: var(--wp--preset--color--espresso, #f7f1e8);
+	}
+
+	.hb-hero .hb-booking-form {
+		box-shadow: 0 0 0 1px var(--hb-border);
+	}
+}
+
+.hb-site-header {
+	border-bottom-color: var(--hb-border);
+}
+
+.hb-booking-form {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 0.75rem;
+	margin-top: 2rem;
+	padding: 1.25rem;
+	background: var(--wp--preset--color--linen, #fffbf5);
+	color: var(--wp--preset--color--espresso, #2c2118);
+	border-radius: 4px;
+
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	input,
+	select,
+	textarea {
+		font: inherit;
+		padding: 0.6rem 0.7rem;
+		border: 1px solid var(--hb-border, #d7c7b3);
+		border-radius: 2px;
+		background: var(--wp--preset--color--white, #fff);
+		color: inherit;
+	}
+
+	button {
+		align-self: end;
+		padding: 0.75rem 1rem;
+		border: 0;
+		border-radius: 2px;
+		background: var(--wp--preset--color--terracotta, #9a5539);
+		color: var(--wp--preset--color--linen, #fffbf5);
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+
+	&__wide {
+		grid-column: 1 / -1;
+	}
+}
+
+.hb-room-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.25rem;
+	margin: 1.5rem 0;
+	padding: 1rem 0;
+	border-top: 1px solid var(--hb-border, #e4d6c5);
+	border-bottom: 1px solid var(--hb-border, #e4d6c5);
+	font-size: 0.95rem;
+
+	dt {
+		font-size: 0.75rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		opacity: 0.7;
+	}
+
+	dd {
+		margin: 0.15rem 0 0;
+		font-family: var(--wp--preset--font-family--heading, Georgia, serif);
+		font-size: 1.15rem;
+	}
+}
+
+.hb-hero {
+	background:
+		linear-gradient(180deg, rgba(44, 33, 24, 0.35), rgba(44, 33, 24, 0.55)),
+		linear-gradient(120deg, #3d2b22 0%, #6b4a38 45%, #a65d3f 100%);
+	color: var(--wp--preset--color--linen, #fffbf5);
+}
+
+.hb-inquiry__notice {
+	padding: 1rem 1.25rem;
+	margin-bottom: 1.5rem;
+	border-radius: 2px;
+
+	&--ok {
+		background: #e8f0e6;
+	}
+
+	&--error {
+		background: #f8e4dc;
+	}
+}
+
+.hb-desk {
+	&__table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.95rem;
+
+		th,
+		td {
+			text-align: left;
+			padding: 0.75rem 0.5rem;
+			border-bottom: 1px solid var(--hb-border, #e4d6c5);
+			vertical-align: top;
+		}
+	}
+
+	&__status {
+		display: flex;
+		gap: 0.35rem;
+		align-items: center;
+	}
+
+	&__delete {
+		color: var(--wp--preset--color--terracotta, #9a5539);
+	}
+
+	&__table-wrap {
+		overflow-x: auto;
+	}
+
+	&__filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+
+	&__chip {
+		padding: 0.4rem 0.8rem;
+		border: 1px solid var(--wp--preset--color--espresso, #2c2118);
+		background: transparent;
+		cursor: pointer;
+		min-height: 2.5rem;
+
+		&.is-active {
+			background: var(--wp--preset--color--espresso, #2c2118);
+			color: var(--wp--preset--color--cream, #f7f1e8);
+		}
+	}
+}
+
+.hb-guest-stepper {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+
+	select {
+		flex: 1;
+	}
+
+	&__btn {
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 1px solid var(--wp--preset--color--espresso, #2c2118);
+		background: var(--wp--preset--color--linen, #fffbf5);
+		cursor: pointer;
+	}
+}
+
+@media (max-width: 600px) {
+	.hb-booking-form {
+		label {
+			grid-column: 1 / -1;
+		}
+
+		input,
+		select,
+		textarea {
+			font-size: 1rem;
+			padding: 0.75rem 0.85rem;
+		}
+
+		button {
+			grid-column: 1 / -1;
+			width: 100%;
+		}
+	}
+
+	.hb-desk__chip {
+		flex: 1 1 calc(50% - 0.5rem);
+	}
+}
+
+@media (max-width: 781px) {
+	.hb-desk__table-wrap {
+		margin-inline: -0.25rem;
+	}
+}
+
+/*
+ * Overlay inherits desktop justify-right (flex-end), which pins links to the
+ * viewport edge. Restack as a full-screen, left-aligned menu.
+ */
+.wp-block-navigation__responsive-container.is-menu-open {
+	background-color: var(--wp--preset--color--linen, #fffbf5);
+	color: var(--wp--preset--color--espresso, #2c2118);
+
+	&:not(.disable-default-overlay) {
+		padding: 4rem 1.5rem 2rem;
+	}
+
+	.wp-block-navigation__responsive-container-close {
+		top: 0.85rem;
+		right: 0.85rem;
+		padding: 0.6rem;
+		background: transparent;
+	}
+
+	.wp-block-navigation__responsive-container-content,
+	.wp-block-navigation__responsive-container-content .wp-block-navigation__container,
+	.wp-block-navigation__responsive-container-content .wp-block-navigation-item,
+	.wp-block-navigation__responsive-container-content .wp-block-page-list {
+		align-items: stretch;
+		width: 100%;
+	}
+
+	.wp-block-navigation__responsive-container-content .wp-block-navigation-item {
+		border-bottom: 1px solid var(--hb-border, #e4d6c5);
+	}
+
+	.wp-block-navigation__responsive-container-content .wp-block-navigation-item__content {
+		display: block;
+		padding: 1rem 0;
+		font-family: var(--wp--preset--font-family--heading, Georgia, serif);
+		font-size: 1.75rem;
+		font-weight: 600;
+		line-height: 1.3;
+		color: var(--wp--preset--color--espresso, #2c2118);
+		text-align: left;
+		text-decoration: none;
+
+		&:hover,
+		&:focus {
+			color: var(--wp--preset--color--terracotta, #9a5539);
+		}
+	}
+
+	.current-menu-item .wp-block-navigation-item__content {
+		color: var(--wp--preset--color--terracotta, #9a5539);
+	}
+}
+
+.has-espresso-background-color a {
+	color: var(--wp--preset--color--gold, #c4a574);
+
+	&:hover,
+	&:focus {
+		color: var(--wp--preset--color--cream, #f7f1e8);
+	}
+}

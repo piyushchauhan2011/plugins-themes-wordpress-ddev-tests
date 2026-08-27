@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking-theme/color-scheme-toggle",
+	"title": "Color scheme toggle",
+	"category": "theme",
+	"icon": "admin-appearance",
+	"description": "Visitor light/dark appearance toggle (Interactivity API).",
+	"textdomain": "hotel-booking",
+	"supports": {
+		"html": false,
+		"interactivity": true
+	},
+	"editorScript": "file:./index.ts",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.ts",
+	"render": "file:./render.php"
+}

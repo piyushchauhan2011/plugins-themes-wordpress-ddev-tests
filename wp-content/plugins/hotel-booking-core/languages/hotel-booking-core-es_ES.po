@@ -254,7 +254,7 @@ msgstr "Más huéspedes"
 
 #: inc/inquiry-form.php:243
 #: inc/post-types.php:21
-#: src/room-card/edit.js:30
+#: src/room-card/edit.tsx:30
 msgid "Room"
 msgstr "Habitación"
 
@@ -423,43 +423,43 @@ msgstr "Huéspedes máximos por consulta"
 msgid "Limits the guest dropdown on the public booking form (1–8)."
 msgstr "Limita el desplegable de huéspedes del formulario público (1–8)."
 
-#: src/amenities/edit.js:29
+#: src/amenities/edit.tsx:29
 msgid "Items"
 msgstr "Elementos"
 
-#: src/amenities/edit.js:33
+#: src/amenities/edit.tsx:33
 msgid "Title"
 msgstr "Título"
 
-#: src/amenities/edit.js:38
+#: src/amenities/edit.tsx:38
 msgid "Text"
 msgstr "Texto"
 
-#: src/amenities/edit.js:47
+#: src/amenities/edit.tsx:47
 msgid "Remove"
 msgstr "Quitar"
 
-#: src/amenities/edit.js:52
+#: src/amenities/edit.tsx:52
 msgid "Add amenity"
 msgstr "Añadir servicio"
 
-#: src/amenities/edit.js:59
+#: src/amenities/edit.tsx:59
 msgid "Untitled"
 msgstr "Sin título"
 
-#: src/booking-cta/edit.js:11
+#: src/booking-cta/edit.tsx:11
 msgid "Link"
 msgstr "Enlace"
 
-#: src/booking-cta/edit.js:13
+#: src/booking-cta/edit.tsx:13
 msgid "URL"
 msgstr "URL"
 
-#: src/booking-cta/edit.js:25
+#: src/booking-cta/edit.tsx:25
 msgid "Heading"
 msgstr "Encabezado"
 
-#: src/booking-cta/edit.js:32
+#: src/booking-cta/edit.tsx:32
 msgid "Button"
 msgstr "Botón"
 
@@ -471,19 +471,19 @@ msgstr "Formulario de consulta: los huéspedes envían a la tabla personalizada.
 msgid "Inquiry list — visible to editors on the front. Status chips filter rows with the Interactivity API; saves and deletes still use admin-post."
 msgstr "Lista de consultas: visible para editores en el frente. Los chips de estado filtran filas con la API de Interactividad; guardar y eliminar siguen usando admin-post."
 
-#: src/room-card/edit.js:19
+#: src/room-card/edit.tsx:19
 msgid "Latest room"
 msgstr "Última habitación"
 
-#: src/room-card/edit.js:35
+#: src/room-card/edit.tsx:35
 msgid "Show"
 msgstr "Mostrar"
 
-#: src/rooms-grid/edit.js:12
+#: src/rooms-grid/edit.tsx:12
 msgid "Filter"
 msgstr "Filtro"
 
-#: src/rooms-grid/edit.js:14
+#: src/rooms-grid/edit.tsx:14
 msgid "Minimum guests (0 = all)"
 msgstr "Huéspedes mínimos (0 = todas)"
 

@@ -22,7 +22,7 @@ require_once get_template_directory() . '/inc/patterns.php';
 function hotel_booking_setup() {
 	add_theme_support( 'wp-block-styles' );
 	add_theme_support( 'editor-styles' );
-	add_editor_style( 'style.css' );
+	add_editor_style( 'build/screen.css' );
 	hotel_booking_load_textdomain();
 }
 add_action( 'after_setup_theme', 'hotel_booking_setup' );
@@ -41,10 +41,10 @@ function hotel_booking_load_textdomain() {
 }
 
 /**
- * Register theme Gutenberg blocks (unbundled view modules, no webpack).
+ * Register theme Gutenberg blocks from the compiled build/.
  */
 function hotel_booking_register_theme_blocks() {
-	$blocks = glob( get_template_directory() . '/blocks/*/block.json' );
+	$blocks = glob( get_template_directory() . '/build/*/block.json' );
 
 	if ( ! $blocks ) {
 		return;
@@ -158,11 +158,16 @@ add_action( 'wp_head', 'hotel_booking_favicon', 2 );
  * Front-end styles (fonts are self-hosted via theme.json fontFace).
  */
 function hotel_booking_enqueue_assets() {
+	$screen = get_template_directory() . '/build/screen.css';
+	if ( ! is_readable( $screen ) ) {
+		return;
+	}
+
 	wp_enqueue_style(
 		'hotel-booking-style',
-		get_stylesheet_uri(),
+		get_template_directory_uri() . '/build/screen.css',
 		array(),
-		HOTEL_BOOKING_VERSION
+		(string) filemtime( $screen )
 	);
 }
 add_action( 'wp_enqueue_scripts', 'hotel_booking_enqueue_assets' );

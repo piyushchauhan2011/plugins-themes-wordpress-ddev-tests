@@ -1,0 +1,45 @@
+.hb-desk {
+	&__filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+
+	&__chip {
+		padding: 0.4rem 0.8rem;
+		border: 1px solid var(--wp--preset--color--espresso, #2c2118);
+		background: transparent;
+		cursor: pointer;
+		min-height: 2.5rem;
+
+		&.is-active {
+			background: var(--wp--preset--color--espresso, #2c2118);
+			color: var(--wp--preset--color--cream, #f7f1e8);
+		}
+	}
+}
+
+.hb-guest-stepper {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+
+	select {
+		flex: 1;
+	}
+
+	&__btn {
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 1px solid var(--wp--preset--color--espresso, #2c2118);
+		background: var(--wp--preset--color--linen, #fffbf5);
+		cursor: pointer;
+	}
+}
+
+@media (max-width: 600px) {
+	.hb-desk__chip {
+		flex: 1 1 calc(50% - 0.5rem);
+	}
+}
