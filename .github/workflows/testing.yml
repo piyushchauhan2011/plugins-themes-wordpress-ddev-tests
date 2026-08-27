@@ -1,4 +1,4 @@
-name: PHPUnit
+name: Tests
 
 on:
   pull_request:
@@ -43,3 +43,33 @@ jobs:
           WP_TESTS_DIR: /tmp/wordpress-tests-lib
           WP_CORE_DIR: /tmp/wordpress
         run: vendor/bin/phpunit
+
+  playwright:
+    name: Playwright
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Start wp-env
+        run: npx wp-env start
+
+      - name: Seed hotel pages and a room
+        run: bash e2e/wp-env-seed.sh
+
+      - name: Run Playwright
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:8888
+          WP_USERNAME: admin
+          WP_PASSWORD: password
+        run: npm run e2e

@@ -102,9 +102,29 @@ Tests cover:
 - `[hotel_room_meta]` shortcode
 - `GET /wp-json/hotel-booking/v1/rooms` REST catalog
 - Custom table CRUD (`hotel_booking_insert_inquiry`, get, update, delete)
+- Inquiry `admin-post` save + `go_to()` booking/desk HTML
 - wp-admin inquiries list and Settings API
 - Block patterns / pattern category
 - `set_up()` / `tear_down()` calling `parent::`
+
+## Integration and e2e
+
+PHPUnit **integration** tests post the inquiry form through `hotel_booking_handle_save_inquiry()` (redirect + custom table) and render booking/desk pages with `go_to()`.
+
+```bash
+ddev phpunit --filter Test_Hotel_Booking_Integration
+```
+
+Playwright **e2e** runs on the host against the DDEV site (Chromium). Needs `ddev start` and `ddev seed-content`.
+
+```bash
+npm install
+npx playwright install chromium
+ddev e2e
+# or: npm run e2e
+```
+
+CI boots the same specs with `@wordpress/env` (`npx wp-env start` + `e2e/wp-env-seed.sh`) at `http://localhost:8888`.
 
 ## wp-admin (plugin)
 
@@ -181,7 +201,8 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 - [Fluid typography](https://developer.wordpress.org/news/2023/03/fluid-typography-wordpress-6-1/)
 - [Style variations](https://developer.wordpress.org/themes/global-settings-and-styles/style-variations/)
 - [Theme Unit Test](https://codex.wordpress.org/Theme_Unit_Test)
-- [Plugin / theme unit tests](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) and `WP_UnitTestCase` factories
+- [Plugin / theme unit tests](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) and `WP_UnitTestCase` factories (`go_to()`, `the_content()`)
+- [Playwright](https://playwright.dev/docs/intro)
 - [Settings API](https://developer.wordpress.org/plugins/settings/settings-api/) (`register_setting`, `add_menu_page`)
 - [REST API Handbook](https://developer.wordpress.org/rest-api/) (`register_rest_route`, `rest_do_request`)
 
@@ -194,4 +215,5 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
 | `ddev setup-tests` | Composer + WordPress PHPUnit library |
 | `ddev phpunit` | Run `WP_UnitTestCase` tests |
+| `ddev e2e` | Playwright against the DDEV site |
 | `ddev wp …` | Any WP-CLI command |

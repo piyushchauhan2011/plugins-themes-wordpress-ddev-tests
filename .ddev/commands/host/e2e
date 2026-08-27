@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+## Description: Run Playwright e2e tests against the DDEV site (host Node)
+## Usage: e2e [playwright-args...]
+## Example: ddev e2e
+## Example: ddev e2e e2e/booking.spec.ts
+
+set -euo pipefail
+
+cd "${DDEV_APPROOT}"
+
+if [[ ! -d node_modules/@playwright/test ]]; then
+	npm install
+fi
+
+npx playwright install chromium
+
+export PLAYWRIGHT_BASE_URL="${PLAYWRIGHT_BASE_URL:-${DDEV_PRIMARY_URL}}"
+export WP_USERNAME="${WP_USERNAME:-admin}"
+export WP_PASSWORD="${WP_PASSWORD:-admin}"
+
+npm run e2e -- "$@"

@@ -1,0 +1,11 @@
+{
+	"$schema": "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/wp-env.json",
+	"core": null,
+	"phpVersion": "8.2",
+	"plugins": ["./wp-content/plugins/hotel-booking-core"],
+	"themes": ["./wp-content/themes/hotel-booking"],
+	"config": {
+		"WP_DEBUG": true,
+		"SCRIPT_DEBUG": false
+	}
+}
