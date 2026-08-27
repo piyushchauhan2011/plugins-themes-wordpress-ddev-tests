@@ -13,4 +13,29 @@
 			<directory prefix="test-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<coverage processUncoveredFiles="true">
+		<include>
+			<directory suffix=".php">wp-content/plugins/hotel-booking-core</directory>
+			<directory suffix=".php">wp-content/themes/hotel-booking</directory>
+		</include>
+		<exclude>
+			<directory>wp-content/plugins/hotel-booking-core/build</directory>
+			<directory>wp-content/plugins/hotel-booking-core/node_modules</directory>
+			<directory>wp-content/plugins/hotel-booking-core/languages</directory>
+			<!-- Gutenberg render.php echoes HTML if PHPUnit includes uncovered files. -->
+			<directory>wp-content/plugins/hotel-booking-core/src</directory>
+			<directory>wp-content/plugins/hotel-booking-core/views</directory>
+			<directory>wp-content/themes/hotel-booking/build</directory>
+			<directory>wp-content/themes/hotel-booking/node_modules</directory>
+			<directory>wp-content/themes/hotel-booking/languages</directory>
+			<directory>wp-content/themes/hotel-booking/patterns</directory>
+			<directory>wp-content/themes/hotel-booking/src</directory>
+			<directory>wp-content/themes/hotel-booking/template-parts</directory>
+			<file>wp-content/themes/hotel-booking/assets/images/generate-placeholders.php</file>
+		</exclude>
+		<report>
+			<clover outputFile="coverage/clover.xml"/>
+			<html outputDirectory="coverage/html"/>
+		</report>
+	</coverage>
 </phpunit>

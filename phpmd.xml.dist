@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ruleset name="Hotel Booking complexity">
+	<description>PHPMD codesize only. Style and types stay in PHPCS and PHPStan.</description>
+	<rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+		<properties>
+			<property name="reportLevel" value="22"/>
+			<property name="showClassesComplexity" value="true"/>
+			<property name="showMethodsComplexity" value="true"/>
+		</properties>
+	</rule>
+	<rule ref="rulesets/codesize.xml/NPathComplexity">
+		<properties>
+			<property name="minimum" value="120000"/>
+		</properties>
+	</rule>
+	<rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
+		<properties>
+			<property name="minimum" value="150"/>
+		</properties>
+	</rule>
+	<rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
+		<properties>
+			<property name="maximum" value="50"/>
+		</properties>
+	</rule>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/languages/*</exclude-pattern>
+	<exclude-pattern>*/assets/images/generate-placeholders.php</exclude-pattern>
+</ruleset>

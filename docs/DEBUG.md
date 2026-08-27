@@ -91,6 +91,7 @@ A 500 on `/booking/` or `/wp-json/` is often a PHP parse error or a missing func
 ```bash
 ddev phpcs
 ddev phpstan
+ddev phpmd
 ddev phpunit --filter Test_Hotel_Booking
 ```
 

@@ -27,7 +27,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
-          coverage: none
+          coverage: pcov
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
@@ -62,6 +62,25 @@ jobs:
           WP_TESTS_DIR: /tmp/wordpress-tests-lib
           WP_CORE_DIR: /tmp/wordpress
         run: vendor/bin/phpunit
+
+      - name: Upload Clover coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-clover
+          path: coverage/clover.xml
+          if-no-files-found: ignore
+
+      - name: Upload HTML coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage/html
+          if-no-files-found: ignore
+
+      - name: Check coverage floor
+        run: php bin/check-coverage.php
 
   playwright:
     name: Playwright
@@ -102,7 +121,7 @@ jobs:
         run: pnpm run e2e
 
   php-analysis:
-    name: PHPCS, PHPStan, composer audit
+    name: PHPCS, PHPStan, PHPMD, composer audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -112,19 +131,73 @@ jobs:
         with:
           php-version: "8.2"
           coverage: none
-          tools: composer
+          tools: composer, cs2pr
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: PHPCS
-        run: composer phpcs
-
-      - name: PHPStan
-        run: composer phpstan
-
       - name: Composer audit
         run: composer audit
+
+      - name: PHPCS
+        run: |
+          set -o pipefail
+          vendor/bin/phpcs -q --report=checkstyle | cs2pr
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=2G --error-format=github
+
+      - name: PHPMD
+        run: vendor/bin/phpmd wp-content/plugins/hotel-booking-core,wp-content/themes/hotel-booking github phpmd.xml.dist
+
+      - name: PHPMD XML report
+        if: always()
+        run: vendor/bin/phpmd wp-content/plugins/hotel-booking-core,wp-content/themes/hotel-booking xml phpmd.xml.dist --reportfile phpmd-report.xml --ignore-violations-on-exit
+
+      - name: Upload PHPMD report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpmd-report
+          path: phpmd-report.xml
+          if-no-files-found: ignore
+
+  pr-quality-comment:
+    name: PR quality comment
+    if: always() && github.event_name == 'pull_request'
+    needs:
+      - phpunit
+      - php-analysis
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Clover coverage
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-clover
+          path: coverage
+
+      - name: Download PHPMD report
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: phpmd-report
+          path: .
+
+      - name: Build comment
+        continue-on-error: true
+        run: php bin/pr-quality-comment.php > pr-quality.md
+
+      - name: Post sticky comment
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: hotel-booking-pr-quality
+          path: pr-quality.md
 
   typecheck:
     name: TypeScript

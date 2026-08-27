@@ -106,6 +106,7 @@ ddev phpunit
 # Static analysis and security
 ddev phpcs
 ddev phpstan # PHPDoc @template helpers: docs/PHPSTAN.md
+ddev phpmd  # cyclomatic / NPath floors: docs/QUALITY.md
 ddev typecheck
 ddev plugin-check
 ddev composer audit
@@ -173,6 +174,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [DEBUG.md](DEBUG.md) — `debug.log`, Query Monitor, Loki, Tempo, `ddev logs`, Xdebug
 - [WORKFLOW.md](WORKFLOW.md) — inquiry state machine (Symfony Workflow + MariaDB runs; not Temporal)
 - [PHPSTAN.md](PHPSTAN.md) — PHPDoc `@template` helpers (`hotel_booking_array_map` / `array_find`); `ddev phpstan` is the checker
+- [QUALITY.md](QUALITY.md) — PHPUnit coverage floor, PHPMD complexity, PR comment (CI; optional locally)
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows
 - [AUTH.md](AUTH.md) — front-end `/staff-login/`, `hotel_manager` role, desk policies (not wp-admin)
 - [CAPACITOR.md](CAPACITOR.md) — Capacitor iOS/Android shell (documentation only; no native app in this repo)

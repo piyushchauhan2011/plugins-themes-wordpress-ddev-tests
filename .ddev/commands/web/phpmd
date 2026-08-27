@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+## Description: Run PHPMD codesize (cyclomatic / NPath / method length) on the theme and plugin
+## Usage: phpmd [phpmd-args...]
+## Example: ddev phpmd
+## Example: ddev phpmd --ignore-violations-on-exit
+
+set -euo pipefail
+
+PROJECT_DIR="/var/www/html"
+cd "${PROJECT_DIR}"
+
+if [[ ! -x vendor/bin/phpmd ]]; then
+	composer install
+fi
+
+./vendor/bin/phpmd wp-content/plugins/hotel-booking-core,wp-content/themes/hotel-booking text phpmd.xml.dist "$@"
