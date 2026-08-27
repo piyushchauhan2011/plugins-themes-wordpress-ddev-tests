@@ -7,19 +7,19 @@ set -euo pipefail
 
 THEME_DIR="${DDEV_APPROOT}/wp-content/themes/hotel-booking"
 
-cd "${THEME_DIR}"
-if [[ ! -d node_modules/@wordpress/scripts ]]; then
-	npm install
+cd "${DDEV_APPROOT}"
+if [[ ! -d "${THEME_DIR}/node_modules/@wordpress/scripts" ]]; then
+	pnpm install
 fi
 
 echo "Watching theme CSS and blocks → ${THEME_DIR}/build/"
 echo "Edit src/scss/screen.scss or src/*/ , wait for compile, then refresh the site."
 
-npm run start:css &
+pnpm --dir "${THEME_DIR}" run start:css &
 css_pid=$!
 cleanup() {
 	kill "${css_pid}" 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
 
-npm start
+pnpm --dir "${THEME_DIR}" start

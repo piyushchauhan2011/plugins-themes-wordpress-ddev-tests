@@ -1,0 +1,19 @@
+packages:
+  - wp-content/plugins/hotel-booking-core
+  - wp-content/themes/hotel-booking
+
+# Flatten node_modules enough for @wordpress/scripts webpack.
+shamefullyHoist: true
+strictPeerDependencies: false
+
+# Match npm: install the lockfile as-is. pnpm 11's 24h gate would fail CI
+# whenever @wordpress/* ships a release less than a day old.
+minimumReleaseAge: 0
+confirmModulesPurge: false
+
+allowBuilds:
+  "@parcel/watcher": true
+  core-js: true
+  core-js-pure: true
+  fs-ext-extra-prebuilt: true
+  unrs-resolver: true

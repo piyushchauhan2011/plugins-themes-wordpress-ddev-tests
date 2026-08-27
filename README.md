@@ -17,7 +17,7 @@ A DDEV WordPress site with a custom **block theme**, a companion **plugin** for 
 | Demo hotel content | `ddev seed-content` |
 | Theme review content + Theme Check | `ddev import-theme-unit-test` |
 | PHPUnit + `WP_UnitTestCase` | `ddev phpunit` (lives **outside** the theme) |
-| PHPCS, PHPStan, TypeScript, Plugin Check, dependency audits | `ddev phpcs`, `ddev phpstan`, `ddev typecheck`, `ddev plugin-check`, `ddev npm-audit` |
+| PHPCS, PHPStan, TypeScript, Plugin Check, dependency audits | `ddev phpcs`, `ddev phpstan`, `ddev typecheck`, `ddev plugin-check`, `ddev pnpm-audit` |
 
 Block themes use `templates/*.html` instead of the classic PHP template hierarchy (`front-page.php`, `single.php`, …). WordPress still picks a template by the same *names*: `front-page.html` for the home page, `single-hb_room.html` for a room, `archive-hb_room.html` for `/rooms/`.
 
@@ -113,13 +113,13 @@ ddev phpunit --filter Test_Hotel_Booking_Integration
 Playwright **e2e** runs on the host against the DDEV site (Chromium). Needs `ddev start` and `ddev seed-content`.
 
 ```bash
-npm install
-npx playwright install chromium
+pnpm install
+pnpm exec playwright install chromium
 ddev e2e
-# or: npm run e2e
+# or: pnpm run e2e
 ```
 
-CI boots the same specs with `@wordpress/env` (`npx wp-env start` + `e2e/wp-env-seed.sh`) at `http://localhost:8888`. The seed script compiles Spanish `.po` files to `.mo` / `.l10n.php` because those binaries are gitignored.
+CI boots the same specs with `@wordpress/env` (`pnpm exec wp-env start` + `e2e/wp-env-seed.sh`) at `http://localhost:8888`. The seed script compiles Spanish `.po` files to `.mo` / `.l10n.php` because those binaries are gitignored.
 
 ## wp-admin (plugin)
 
@@ -242,16 +242,16 @@ Wait until the terminal prints a webpack/Sass compile, then reload https://hotel
 Equivalent without DDEV wrappers (from the project root):
 
 ```bash
-( cd wp-content/plugins/hotel-booking-core && npm start )
-( cd wp-content/themes/hotel-booking && npm run start:css )
-( cd wp-content/themes/hotel-booking && npm start )
+( cd wp-content/plugins/hotel-booking-core && pnpm start )
+( cd wp-content/themes/hotel-booking && pnpm run start:css )
+( cd wp-content/themes/hotel-booking && pnpm start )
 ```
 
 Do not pass `--watch` to `ddev build-blocks`: that command builds the plugin, then the theme, so a watch on the plugin would never reach the theme. Stop the watchers with Ctrl+C. Ship a zip with `ddev build-blocks`, not a watch compile.
 
 ## Static analysis and security
 
-PHPCS uses WordPress Extra (escaping, nonces, prepared SQL) plus PHPCompatibility for PHP 8.2+. PHPStan runs at level 5 with WordPress stubs. TypeScript is `tsc --noEmit` on plugin and theme `src/` (`ddev typecheck`). Plugin Check is the WordPress.org PCP tool. Audits cover Composer and npm (`--audit-level=high`).
+PHPCS uses WordPress Extra (escaping, nonces, prepared SQL) plus PHPCompatibility for PHP 8.2+. PHPStan runs at level 5 with WordPress stubs. TypeScript is `tsc --noEmit` on plugin and theme `src/` (`ddev typecheck`). Plugin Check is the WordPress.org PCP tool. Audits cover Composer and pnpm (`--audit-level=high`).
 
 ```bash
 ddev phpcs
@@ -259,7 +259,7 @@ ddev phpstan
 ddev typecheck
 ddev plugin-check
 ddev composer audit
-ddev npm-audit
+ddev pnpm-audit
 ```
 
 CI runs the same suite on push and pull request.
@@ -296,7 +296,7 @@ CI runs the same suite on push and pull request.
 | `ddev plugin-check` | WordPress Plugin Check on hotel-booking-core |
 | `ddev make-pot` | Regenerate theme and plugin `.pot` catalogs (does not overwrite `.po`) |
 | `ddev compile-i18n` | Compile `.po` to `.mo`, `.l10n.php`, and plugin editor JSON |
-| `ddev npm-audit` | npm audit (high and critical) |
+| `ddev pnpm-audit` | pnpm audit (high and critical) |
 | `ddev e2e` | Playwright against the DDEV site |
 | `ddev redis-cli` / `ddev redis-flush` | Redis CLI and flush object cache |
 | `ddev wp …` | Any WP-CLI command |

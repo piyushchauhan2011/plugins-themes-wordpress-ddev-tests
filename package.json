@@ -2,6 +2,7 @@
   "name": "hotel-booking",
   "private": true,
   "description": "Playwright e2e tests for the Hotel Booking DDEV site",
+  "packageManager": "pnpm@11.13.0",
   "scripts": {
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui"
@@ -9,9 +10,5 @@
   "devDependencies": {
     "@playwright/test": "^1.55.0",
     "@wordpress/env": "^11.14.0"
-  },
-  "allowScripts": {
-    "fs-ext-extra-prebuilt@2.2.7": true,
-    "fsevents@2.3.2": true
   }
 }

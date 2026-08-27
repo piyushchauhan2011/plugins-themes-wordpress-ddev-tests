@@ -32,21 +32,21 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: |
-            wp-content/plugins/hotel-booking-core/package-lock.json
-            wp-content/themes/hotel-booking/package-lock.json
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build Gutenberg blocks
-        working-directory: wp-content/plugins/hotel-booking-core
-        run: npm ci && npm run build
+        run: pnpm --dir wp-content/plugins/hotel-booking-core run build
 
       - name: Build theme CSS and blocks
-        working-directory: wp-content/themes/hotel-booking
-        run: npm ci && npm run build
+        run: pnpm --dir wp-content/themes/hotel-booking run build
 
       - name: Install Subversion
         run: sudo apt-get update && sudo apt-get install -y subversion
@@ -69,27 +69,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
+          cache: pnpm
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build Gutenberg blocks
-        working-directory: wp-content/plugins/hotel-booking-core
-        run: npm ci && npm run build
+        run: pnpm --dir wp-content/plugins/hotel-booking-core run build
 
       - name: Build theme CSS and blocks
-        working-directory: wp-content/themes/hotel-booking
-        run: npm ci && npm run build
+        run: pnpm --dir wp-content/themes/hotel-booking run build
 
       - name: Install Playwright browser
-        run: npx playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Start wp-env
-        run: npx wp-env start
+        run: pnpm exec wp-env start
 
       - name: Seed hotel pages and a room
         run: bash e2e/wp-env-seed.sh
@@ -99,7 +99,7 @@ jobs:
           PLAYWRIGHT_BASE_URL: http://localhost:8888
           WP_USERNAME: admin
           WP_PASSWORD: password
-        run: npm run e2e
+        run: pnpm run e2e
 
   php-analysis:
     name: PHPCS, PHPStan, composer audit
@@ -132,46 +132,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: |
-            wp-content/plugins/hotel-booking-core/package-lock.json
-            wp-content/themes/hotel-booking/package-lock.json
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Typecheck plugin
-        working-directory: wp-content/plugins/hotel-booking-core
-        run: npm ci && npm run typecheck
+        run: pnpm --dir wp-content/plugins/hotel-booking-core run typecheck
 
       - name: Typecheck theme
-        working-directory: wp-content/themes/hotel-booking
-        run: npm ci && npm run typecheck
+        run: pnpm --dir wp-content/themes/hotel-booking run typecheck
 
-  npm-audit:
-    name: npm audit
+  pnpm-audit:
+    name: pnpm audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
+          cache: pnpm
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Audit Playwright lockfile
-        run: npm audit --audit-level=high
+        run: pnpm --filter hotel-booking audit --audit-level=high --prod
 
       - name: Audit plugin lockfile
-        working-directory: wp-content/plugins/hotel-booking-core
-        run: npm audit --audit-level=high --omit=dev
+        run: pnpm --filter hotel-booking-core audit --audit-level=high --prod
 
       - name: Audit theme lockfile
-        working-directory: wp-content/themes/hotel-booking
-        run: npm audit --audit-level=high --omit=dev
+        run: pnpm --filter hotel-booking-theme audit --audit-level=high --prod
 
   plugin-check:
     name: Plugin Check
@@ -179,27 +179,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
+          cache: pnpm
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build Gutenberg blocks
-        working-directory: wp-content/plugins/hotel-booking-core
-        run: npm ci && npm run build
+        run: pnpm --dir wp-content/plugins/hotel-booking-core run build
 
       - name: Build theme CSS and blocks
-        working-directory: wp-content/themes/hotel-booking
-        run: npm ci && npm run build
+        run: pnpm --dir wp-content/themes/hotel-booking run build
 
       - name: Start wp-env
-        run: npx wp-env start
+        run: pnpm exec wp-env start
 
       - name: Install Plugin Check
-        run: npx wp-env run cli -- wp plugin install plugin-check --activate
+        run: pnpm exec wp-env run cli -- wp plugin install plugin-check --activate
 
       - name: Run Plugin Check
-        run: npx wp-env run cli -- wp plugin check hotel-booking-core --require=./wp-content/plugins/plugin-check/cli.php --format=table
+        run: pnpm exec wp-env run cli -- wp plugin check hotel-booking-core --require=./wp-content/plugins/plugin-check/cli.php --format=table

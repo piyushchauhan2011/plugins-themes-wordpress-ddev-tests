@@ -3,7 +3,7 @@
 set -euo pipefail
 
 wp() {
-	npx wp-env run cli -- wp "$@"
+	pnpm exec wp-env run cli -- wp "$@"
 }
 
 wp plugin activate hotel-booking-core

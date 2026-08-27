@@ -89,7 +89,7 @@ ddev phpstan
 ddev typecheck
 ddev plugin-check
 ddev composer audit
-ddev npm-audit
+ddev pnpm-audit
 
 # Object cache (after ddev start / seed)
 ddev redis-cli ping
@@ -100,9 +100,9 @@ ddev build-blocks
 # ddev watch-plugin    # plugin src/ → build/
 # ddev watch-theme     # theme src/ + screen.scss → build/
 
-# Optional browser e2e (needs npm + Chromium on the host)
-npm install
-npx playwright install chromium
+# Optional browser e2e (needs pnpm + Chromium on the host)
+pnpm install
+pnpm exec playwright install chromium
 ddev e2e
 ```
 

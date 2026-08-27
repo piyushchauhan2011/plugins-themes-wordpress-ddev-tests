@@ -18,8 +18,9 @@ ddev build-blocks
 Or without DDEV:
 
 ```bash
-( cd wp-content/plugins/hotel-booking-core && npm ci && npm run build )
-( cd wp-content/themes/hotel-booking && npm ci && npm run build )
+pnpm install --frozen-lockfile
+pnpm --dir wp-content/plugins/hotel-booking-core run build
+pnpm --dir wp-content/themes/hotel-booking run build
 ```
 
 The zip must include those `build/` directories. Plugin activation creates the custom table `{$wpdb->prefix}hb_inquiries` (`wp_hb_inquiries` with the default prefix). Activate the plugin **before** the theme so shortcodes and the room CPT exist when templates load.

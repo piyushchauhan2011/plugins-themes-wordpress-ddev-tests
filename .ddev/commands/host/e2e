@@ -9,10 +9,10 @@ set -euo pipefail
 cd "${DDEV_APPROOT}"
 
 if [[ ! -d node_modules/@playwright/test ]]; then
-	npm install
+	pnpm install
 fi
 
-npx playwright install chromium
+pnpm exec playwright install chromium
 
 # Match CI: compiled .mo files are gitignored.
 ddev compile-i18n
@@ -21,4 +21,4 @@ export PLAYWRIGHT_BASE_URL="${PLAYWRIGHT_BASE_URL:-${DDEV_PRIMARY_URL}}"
 export WP_USERNAME="${WP_USERNAME:-admin}"
 export WP_PASSWORD="${WP_PASSWORD:-admin}"
 
-npm run e2e -- "$@"
+pnpm run e2e -- "$@"

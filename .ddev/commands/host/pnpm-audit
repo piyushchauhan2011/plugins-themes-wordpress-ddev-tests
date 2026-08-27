@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+## Description: Audit pnpm dependencies (high and critical only)
+## Usage: pnpm-audit [pnpm-audit-args...]
+## Example: ddev pnpm-audit
+
+set -euo pipefail
+
+cd "${DDEV_APPROOT}"
+if [[ ! -f pnpm-lock.yaml ]]; then
+	echo "Missing pnpm-lock.yaml in ${DDEV_APPROOT}"
+	exit 1
+fi
+if [[ ! -d node_modules ]]; then
+	pnpm install --frozen-lockfile
+fi
+
+# Playwright lockfile at the repo root (runtime for e2e). Prod-only: the
+# workspace lockfile also lists plugin/theme @wordpress/scripts, which are
+# compile-only and must not fail the same check as shipped code.
+echo "pnpm audit (${DDEV_APPROOT})"
+pnpm --filter hotel-booking audit --audit-level=high --prod "$@"
+
+echo "pnpm audit (${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core)"
+pnpm --filter hotel-booking-core audit --audit-level=high --prod "$@"
+
+echo "pnpm audit (${DDEV_APPROOT}/wp-content/themes/hotel-booking)"
+pnpm --filter hotel-booking-theme audit --audit-level=high --prod "$@"

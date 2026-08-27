@@ -5,15 +5,16 @@
 
 set -euo pipefail
 
-check_one() {
-	local dir="$1"
-	cd "${dir}"
-	if [[ ! -d node_modules/typescript ]]; then
-		npm install
-	fi
-	echo "typecheck (${dir})"
-	npm run typecheck
-}
+PLUGIN_DIR="${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core"
+THEME_DIR="${DDEV_APPROOT}/wp-content/themes/hotel-booking"
 
-check_one "${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core"
-check_one "${DDEV_APPROOT}/wp-content/themes/hotel-booking"
+cd "${DDEV_APPROOT}"
+if [[ ! -d "${PLUGIN_DIR}/node_modules/typescript" ]] || [[ ! -d "${THEME_DIR}/node_modules/typescript" ]]; then
+	pnpm install
+fi
+
+echo "typecheck (${PLUGIN_DIR})"
+pnpm --dir "${PLUGIN_DIR}" run typecheck
+
+echo "typecheck (${THEME_DIR})"
+pnpm --dir "${THEME_DIR}" run typecheck

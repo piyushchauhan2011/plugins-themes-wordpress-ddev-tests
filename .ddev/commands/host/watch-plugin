@@ -7,11 +7,11 @@ set -euo pipefail
 
 PLUGIN_DIR="${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core"
 
-cd "${PLUGIN_DIR}"
-if [[ ! -d node_modules/@wordpress/scripts ]]; then
-	npm install
+cd "${DDEV_APPROOT}"
+if [[ ! -d "${PLUGIN_DIR}/node_modules/@wordpress/scripts" ]]; then
+	pnpm install
 fi
 
 echo "Watching plugin blocks → ${PLUGIN_DIR}/build/"
 echo "Edit src/, wait for webpack, then refresh the site or block editor."
-npm start
+pnpm --dir "${PLUGIN_DIR}" start

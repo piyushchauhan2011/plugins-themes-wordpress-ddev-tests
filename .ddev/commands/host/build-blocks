@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ## Description: Build Hotel Booking Gutenberg blocks and theme CSS (@wordpress/scripts)
-## Usage: build-blocks [npm-args...]
+## Usage: build-blocks [pnpm-args...]
 ## Example: ddev build-blocks
 
 set -euo pipefail
@@ -8,14 +8,10 @@ set -euo pipefail
 PLUGIN_DIR="${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core"
 THEME_DIR="${DDEV_APPROOT}/wp-content/themes/hotel-booking"
 
-cd "${PLUGIN_DIR}"
-if [[ ! -d node_modules/@wordpress/scripts ]]; then
-	npm install
+cd "${DDEV_APPROOT}"
+if [[ ! -d "${PLUGIN_DIR}/node_modules/@wordpress/scripts" ]] || [[ ! -d "${THEME_DIR}/node_modules/@wordpress/scripts" ]]; then
+	pnpm install
 fi
-npm run build -- "$@"
 
-cd "${THEME_DIR}"
-if [[ ! -d node_modules/@wordpress/scripts ]]; then
-	npm install
-fi
-npm run build -- "$@"
+pnpm --dir "${PLUGIN_DIR}" run build -- "$@"
+pnpm --dir "${THEME_DIR}" run build -- "$@"

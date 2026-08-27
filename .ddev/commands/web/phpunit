@@ -22,15 +22,16 @@ if [[ ! -x vendor/bin/phpunit ]]; then
 fi
 
 PLUGIN_DIR="${PROJECT_DIR}/wp-content/plugins/hotel-booking-core"
-if [[ ! -f "${PLUGIN_DIR}/build/blocks-manifest.php" ]]; then
-	echo "Plugin Gutenberg build is missing. Compiling…"
-	( cd "${PLUGIN_DIR}" && npm install && npm run build )
-fi
-
 THEME_DIR="${PROJECT_DIR}/wp-content/themes/hotel-booking"
+if [[ ! -f "${PLUGIN_DIR}/build/blocks-manifest.php" ]] || [[ ! -f "${THEME_DIR}/build/screen.css" ]]; then
+	echo "Gutenberg build is missing. Compiling…"
+	pnpm install
+fi
+if [[ ! -f "${PLUGIN_DIR}/build/blocks-manifest.php" ]]; then
+	pnpm --dir "${PLUGIN_DIR}" run build
+fi
 if [[ ! -f "${THEME_DIR}/build/screen.css" ]]; then
-	echo "Theme CSS/block build is missing. Compiling…"
-	( cd "${THEME_DIR}" && npm install && npm run build )
+	pnpm --dir "${THEME_DIR}" run build
 fi
 
 ./vendor/bin/phpunit "$@"
