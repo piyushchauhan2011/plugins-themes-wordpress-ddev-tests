@@ -2,7 +2,7 @@
 /**
  * Hotel Booking theme bootstrap.
  *
- * Presentation only: setup, assets, and pattern category.
+ * Presentation plus a theme-native Stay FAQ block (Interactivity API).
  * Rooms CPT and shortcodes live in the Hotel Booking Core plugin.
  *
  * @package Hotel_Booking
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HOTEL_BOOKING_VERSION', '1.0.0' );
+define( 'HOTEL_BOOKING_VERSION', '1.1.0' );
 
 require_once get_template_directory() . '/inc/patterns.php';
 
@@ -26,6 +26,18 @@ function hotel_booking_setup() {
 	load_theme_textdomain( 'hotel-booking', get_template_directory() . '/languages' );
 }
 add_action( 'after_setup_theme', 'hotel_booking_setup' );
+
+/**
+ * Register theme Gutenberg blocks (unbundled view modules, no webpack).
+ */
+function hotel_booking_register_theme_blocks() {
+	$block_dir = get_template_directory() . '/blocks/stay-faq';
+
+	if ( file_exists( $block_dir . '/block.json' ) ) {
+		register_block_type( $block_dir );
+	}
+}
+add_action( 'init', 'hotel_booking_register_theme_blocks' );
 
 /**
  * Front-end styles and fonts.

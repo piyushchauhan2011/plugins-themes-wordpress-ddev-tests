@@ -3,7 +3,7 @@ Contributors: hotelbookinglearners
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ Custom post types and shortcodes are not allowed in WordPress.org themes. Hotel 
 No. It is a GET inquiry form for learning templates and forms.
 
 == Changelog ==
+
+= 1.1.0 =
+* Stay FAQ accordion block (Interactivity API) on the home template.
 
 = 1.0.0 =
 * Initial release.

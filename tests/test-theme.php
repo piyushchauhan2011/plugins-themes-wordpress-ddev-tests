@@ -72,4 +72,17 @@ class Test_Hotel_Booking_Theme extends WP_UnitTestCase {
 
 		$this->assertNotFalse( strpos( $pattern, 'minimumColumnWidth' ) );
 	}
+
+	public function test_stay_faq_block_is_registered() {
+		$registry = WP_Block_Type_Registry::get_instance();
+		$this->assertTrue( $registry->is_registered( 'hotel-booking-theme/stay-faq' ) );
+	}
+
+	public function test_stay_faq_block_renders_interactivity_root() {
+		$html = do_blocks( '<!-- wp:hotel-booking-theme/stay-faq /-->' );
+
+		$this->assertStringContainsString( 'data-wp-interactive="hotel-booking-theme/stay-faq"', $html );
+		$this->assertStringContainsString( 'hb-stay-faq', $html );
+		$this->assertStringContainsString( 'Check-in', $html );
+	}
 }

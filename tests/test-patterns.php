@@ -24,4 +24,9 @@ class Test_Hotel_Booking_Patterns extends WP_UnitTestCase {
 		$patterns = WP_Block_Patterns_Registry::get_instance();
 		$this->assertTrue( $patterns->is_registered( 'hotel-booking/featured-rooms' ) );
 	}
+
+	public function test_stay_faq_pattern_is_registered() {
+		$patterns = WP_Block_Patterns_Registry::get_instance();
+		$this->assertTrue( $patterns->is_registered( 'hotel-booking/stay-faq' ) );
+	}
 }

@@ -41,10 +41,11 @@ wp-content/themes/hotel-booking/
   readme.txt             WordPress.org-style readme
   theme.json             Palette, fonts, fluid type, spacing (Site Editor → Styles)
   styles/dusk.json       Style variation (Appearance → Editor → Styles)
-  functions.php          Setup, fonts, pattern category
+  functions.php          Setup, fonts, pattern category, theme Stay FAQ block
   templates/             Block templates (front-page, single, archives, 404)
   parts/                 header.html, footer.html
-  patterns/              Landing-page sections (hero, rooms, amenities, CTA)
+  patterns/              Landing-page sections (hero, rooms, amenities, stay FAQ, CTA)
+  blocks/                Theme Gutenberg block (Stay FAQ, Interactivity API, no webpack)
   template-parts/        PHP: inquiry-form.php, inquiries-list.php (`$wpdb` data)
   inc/patterns.php       Pattern category
 ```
@@ -198,11 +199,18 @@ Source is `wp-content/plugins/hotel-booking-core/src/`. Compiled files in `build
 ddev build-blocks
 ```
 
-Demo composition (Home stays on FSE patterns): https://hotel-booking.ddev.site/stay/
+Demo composition: https://hotel-booking.ddev.site/stay/
 
 ```bash
 ddev phpunit --filter Test_Hotel_Booking_Blocks
 ddev e2e e2e/stay.spec.ts
+```
+
+The **theme** also registers a Stay FAQ accordion (`hotel-booking-theme/stay-faq`) under the core **Theme** category. It uses the same Interactivity API (`data-wp-interactive`, `store`) with an unbundled `view.js` — no theme webpack, no `ddev build-blocks`. Home (`front-page.html`) includes the `hotel-booking/stay-faq` pattern.
+
+```bash
+ddev phpunit --filter Test_Hotel_Booking_Theme
+ddev e2e e2e/home.spec.ts
 ```
 
 ## Static analysis and security

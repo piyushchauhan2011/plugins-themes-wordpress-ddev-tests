@@ -54,9 +54,9 @@ Rebuild demo data: `ddev seed-content --force`.
 
 ## Click through
 
-1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings
+1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings; click **Quiet hours** on the Stay FAQ (theme Interactivity, no `ddev build-blocks`)
 2. https://hotel-booking.ddev.site/rooms/ — archive grid; open **Courtyard Twin**
-3. https://hotel-booking.ddev.site/stay/ — custom blocks; click **4+** on the rooms grid (Interactivity + REST)
+3. https://hotel-booking.ddev.site/stay/ — plugin custom blocks; click **4+** on the rooms grid (Interactivity + REST)
 4. https://hotel-booking.ddev.site/booking/ — guest stepper; submit if you want another row
 5. https://hotel-booking.ddev.site/desk/ — logged out: staff-only note. Log in as `desk` / `desk`: named guests in the table
 6. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking — same inquiries
@@ -99,7 +99,7 @@ ddev e2e
 
 | Path | Role |
 | --- | --- |
-| `wp-content/themes/hotel-booking/` | Block theme: templates, patterns, `theme.json`, booking/desk PHP views |
+| `wp-content/themes/hotel-booking/` | Block theme: templates, patterns, `theme.json`, Stay FAQ block, booking/desk PHP views |
 | `wp-content/plugins/hotel-booking-core/` | CPT, custom table, REST, shortcodes, wp-admin, Gutenberg blocks |
 | `tests/` | `WP_UnitTestCase` (project root, not in the theme) |
 | `e2e/` | Playwright specs |
