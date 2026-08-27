@@ -28,6 +28,7 @@ require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiries.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/shortcodes.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/rest-api.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiry-form.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/admin.php';
 
 register_activation_hook( __FILE__, 'hotel_booking_install_inquiries_table' );
 

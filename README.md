@@ -11,7 +11,7 @@ A DDEV WordPress site with a custom **block theme**, a companion **plugin** for 
 | Piece | Where |
 | --- | --- |
 | Block theme files (`theme.json`, HTML templates, patterns) | `wp-content/themes/hotel-booking/` |
-| Plugin-territory PHP (CPT, custom table, REST, shortcodes) | `wp-content/plugins/hotel-booking-core/` |
+| Plugin-territory PHP (CPT, custom table, REST, shortcodes, wp-admin) | `wp-content/plugins/hotel-booking-core/` |
 | Demo hotel content | `ddev seed-content` |
 | Theme review content + Theme Check | `ddev import-theme-unit-test` |
 | PHPUnit + `WP_UnitTestCase` | `ddev phpunit` (lives **outside** the theme) |
@@ -90,8 +90,22 @@ Tests cover:
 - `[hotel_room_meta]` shortcode
 - `GET /wp-json/hotel-booking/v1/rooms` REST catalog
 - Custom table CRUD (`hotel_booking_insert_inquiry`, get, update, delete)
+- wp-admin inquiries list and Settings API
 - Block patterns / pattern category
 - `set_up()` / `tear_down()` calling `parent::`
+
+## wp-admin (plugin)
+
+Hotel Booking Core adds **Hotel Booking** in the dashboard (capability `edit_posts` for inquiries, `manage_options` for settings).
+
+```bash
+# Log in as admin / admin
+open https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking
+open https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking-settings
+ddev phpunit --filter Test_Hotel_Booking_Admin
+```
+
+Settings (`hotel_booking_settings`): hotel name, desk email, max guests (clamps the public booking form dropdown).
 
 ## Custom table (inquiries)
 
@@ -154,7 +168,7 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 - [Block themes](https://developer.wordpress.org/themes/block-themes/) vs [classic template hierarchy](https://developer.wordpress.org/themes/templates/template-hierarchy/)
 - [Theme Unit Test](https://codex.wordpress.org/Theme_Unit_Test)
 - [Plugin / theme unit tests](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) and `WP_UnitTestCase` factories
-- [wpdb](https://developer.wordpress.org/reference/classes/wpdb/) and [Creating tables with plugins](https://developer.wordpress.org/plugins/creating-tables-with-plugins/) (`dbDelta`, `$wpdb->prepare`)
+- [Settings API](https://developer.wordpress.org/plugins/settings/settings-api/) (`register_setting`, `add_menu_page`)
 - [REST API Handbook](https://developer.wordpress.org/rest-api/) (`register_rest_route`, `rest_do_request`)
 
 ## Commands

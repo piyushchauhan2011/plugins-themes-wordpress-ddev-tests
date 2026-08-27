@@ -21,6 +21,11 @@ $prefill_email  = isset( $_GET['guest_email'] ) ? sanitize_email( wp_unslash( $_
 $prefill_in     = isset( $_GET['check_in'] ) ? sanitize_text_field( wp_unslash( $_GET['check_in'] ) ) : '';
 $prefill_out    = isset( $_GET['check_out'] ) ? sanitize_text_field( wp_unslash( $_GET['check_out'] ) ) : '';
 $prefill_guests = isset( $_GET['guests'] ) ? absint( $_GET['guests'] ) : 2;
+$max_guests     = function_exists( 'hotel_booking_get_setting' ) ? (int) hotel_booking_get_setting( 'max_guests' ) : 8;
+$max_guests     = min( 8, max( 1, $max_guests ) );
+if ( $prefill_guests < 1 || $prefill_guests > $max_guests ) {
+	$prefill_guests = min( 2, $max_guests );
+}
 $saved_id       = isset( $_GET['inquiry'] ) ? absint( $_GET['inquiry'] ) : 0;
 $error          = isset( $_GET['hb_error'] ) ? sanitize_text_field( wp_unslash( $_GET['hb_error'] ) ) : '';
 $saved          = $saved_id ? hotel_booking_get_inquiry( $saved_id ) : null;
@@ -83,7 +88,7 @@ $rooms = get_posts(
 		</label>
 		<label><?php esc_html_e( 'Guests', 'hotel-booking' ); ?>
 			<select name="guests">
-				<?php for ( $n = 1; $n <= 8; $n++ ) : ?>
+				<?php for ( $n = 1; $n <= $max_guests; $n++ ) : ?>
 					<option value="<?php echo esc_attr( (string) $n ); ?>" <?php selected( $prefill_guests, $n ); ?>>
 						<?php echo esc_html( (string) $n ); ?>
 					</option>
