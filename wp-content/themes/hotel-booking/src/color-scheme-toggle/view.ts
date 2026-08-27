@@ -4,12 +4,20 @@ const STORAGE_KEY = 'hotel-booking-color-scheme';
 
 type ColorScheme = 'dark' | 'light';
 
-type ColorSchemeState = {
-	scheme: ColorScheme;
-	labelLight: string;
-	labelDark: string;
-	shortLight: string;
-	shortDark: string;
+type ColorSchemeStore = {
+	state: {
+		scheme: ColorScheme;
+		labelLight: string;
+		labelDark: string;
+		shortLight: string;
+		shortDark: string;
+		readonly isDark: boolean;
+		readonly label: string;
+		readonly shortLabel: string;
+	};
+	actions: {
+		toggle: () => void;
+	};
 };
 
 function readScheme(): ColorScheme {
@@ -41,16 +49,16 @@ function applyScheme( scheme: ColorScheme ) {
 	}
 }
 
-const { state } = store< ColorSchemeState >( 'hotel-booking-theme/color-scheme', {
+const { state } = store< ColorSchemeStore >( 'hotel-booking-theme/color-scheme', {
 	state: {
 		scheme: readScheme(),
-		get isDark() {
+		get isDark(): boolean {
 			return state.scheme === 'dark';
 		},
-		get label() {
+		get label(): string {
 			return state.scheme === 'dark' ? state.labelLight : state.labelDark;
 		},
-		get shortLabel() {
+		get shortLabel(): string {
 			return state.scheme === 'dark' ? state.shortLight : state.shortDark;
 		},
 	},

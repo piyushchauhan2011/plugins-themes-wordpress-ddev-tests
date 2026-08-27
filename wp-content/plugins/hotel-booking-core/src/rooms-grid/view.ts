@@ -11,39 +11,49 @@ type RoomsGridContext = {
 	room?: RoomPayload;
 };
 
-type RoomsGridState = {
-	rooms: unknown[];
-	guests: number;
-	lang: string;
-	restUrl: string;
+type RoomsGridStore = {
+	state: {
+		rooms: unknown[];
+		guests: number;
+		lang: string;
+		restUrl: string;
+		readonly hasRooms: boolean;
+		readonly isFilterActive: boolean;
+		readonly guestsLabel: string;
+		readonly imageHidden: boolean;
+		readonly excerptHidden: boolean;
+	};
+	actions: {
+		filterGuests: () => Promise< void >;
+	};
 };
 
-const { state } = store< RoomsGridState >( 'hotel-booking/rooms-grid', {
+const { state } = store< RoomsGridStore >( 'hotel-booking/rooms-grid', {
 	state: {
-		get hasRooms() {
+		get hasRooms(): boolean {
 			return Array.isArray( state.rooms ) && state.rooms.length > 0;
 		},
-		get isFilterActive() {
+		get isFilterActive(): boolean {
 			const ctx = getContext< RoomsGridContext >();
-			return ctx && ctx.guests === state.guests;
+			return Boolean( ctx && ctx.guests === state.guests );
 		},
-		get guestsLabel() {
+		get guestsLabel(): string {
 			const ctx = getContext< RoomsGridContext >();
 			const room = ctx && ctx.room ? ctx.room : {};
 			const n = room.guests ? String( room.guests ) : '';
 			return n ? n + ' guests' : '';
 		},
-		get imageHidden() {
+		get imageHidden(): boolean {
 			const ctx = getContext< RoomsGridContext >();
 			return ! ( ctx && ctx.room && ctx.room.has_image );
 		},
-		get excerptHidden() {
+		get excerptHidden(): boolean {
 			const ctx = getContext< RoomsGridContext >();
 			return ! ( ctx && ctx.room && ctx.room.excerpt );
 		},
 	},
 	actions: {
-		*filterGuests() {
+		async filterGuests() {
 			const ctx = getContext< RoomsGridContext >();
 			const guests = ctx && typeof ctx.guests === 'number' ? ctx.guests : 0;
 			state.guests = guests;
@@ -57,11 +67,11 @@ const { state } = store< RoomsGridState >( 'hotel-booking/rooms-grid', {
 			}
 
 			try {
-				const response: Response = yield fetch( url.href );
+				const response = await fetch( url.href );
 				if ( ! response.ok ) {
 					return;
 				}
-				state.rooms = yield response.json();
+				state.rooms = await response.json();
 			} catch ( err ) {
 				// Keep the last SSR list if the request fails.
 			}

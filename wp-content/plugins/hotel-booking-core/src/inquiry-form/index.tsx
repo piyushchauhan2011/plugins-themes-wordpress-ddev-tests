@@ -1,4 +1,4 @@
-import { registerBlockType } from '@wordpress/blocks';
+import { registerHotelBlock } from '../register-block';
 import { useBlockProps } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
@@ -13,7 +13,7 @@ function Edit() {
 	);
 }
 
-registerBlockType( metadata.name, {
+registerHotelBlock( metadata, {
 	edit: Edit,
 	save: () => null,
 } );

@@ -126,6 +126,28 @@ jobs:
       - name: Composer audit
         run: composer audit
 
+  typecheck:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            wp-content/plugins/hotel-booking-core/package-lock.json
+            wp-content/themes/hotel-booking/package-lock.json
+
+      - name: Typecheck plugin
+        working-directory: wp-content/plugins/hotel-booking-core
+        run: npm ci && npm run typecheck
+
+      - name: Typecheck theme
+        working-directory: wp-content/themes/hotel-booking
+        run: npm ci && npm run typecheck
+
   npm-audit:
     name: npm audit
     runs-on: ubuntu-latest

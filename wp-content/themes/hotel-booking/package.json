@@ -8,10 +8,15 @@
 		"build": "npm run build:css && npm run build:blocks",
 		"start:css": "sass --watch src/scss/screen.scss build/screen.css --no-source-map --style=expanded",
 		"start:blocks": "wp-scripts start --webpack-copy-php --blocks-manifest --experimental-modules",
-		"start": "npm run start:blocks"
+		"start": "npm run start:blocks",
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
+		"@types/react": "^18.3.31",
+		"@wordpress/blocks": "^15.27.0",
+		"@wordpress/interactivity": "^6.54.0",
 		"@wordpress/scripts": "^30.13.0",
-		"sass": "^1.77.0"
+		"sass": "^1.77.0",
+		"typescript": "^7.0.2"
 	}
 }

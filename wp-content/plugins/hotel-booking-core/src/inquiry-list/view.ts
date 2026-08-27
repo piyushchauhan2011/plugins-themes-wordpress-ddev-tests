@@ -5,20 +5,29 @@ type InquiryListContext = {
 	rowStatus?: string;
 };
 
-type InquiryListState = {
-	filter: string;
+type InquiryListStore = {
+	state: {
+		filter: string;
+		readonly isAll: boolean;
+		readonly isFilterActive: boolean;
+		readonly rowHidden: boolean;
+	};
+	actions: {
+		filterAll: () => void;
+		setFilter: () => void;
+	};
 };
 
-const { state } = store< InquiryListState >( 'hotel-booking/inquiry-list', {
+const { state } = store< InquiryListStore >( 'hotel-booking/inquiry-list', {
 	state: {
-		get isAll() {
+		get isAll(): boolean {
 			return state.filter === 'all';
 		},
-		get isFilterActive() {
+		get isFilterActive(): boolean {
 			const ctx = getContext< InquiryListContext >();
-			return ctx && ctx.status === state.filter;
+			return Boolean( ctx && ctx.status === state.filter );
 		},
-		get rowHidden() {
+		get rowHidden(): boolean {
 			const ctx = getContext< InquiryListContext >();
 			if ( ! ctx || state.filter === 'all' ) {
 				return false;

@@ -1,14 +1,23 @@
 import { store } from '@wordpress/interactivity';
 
-type InquiryFormState = {
-	checkIn: string;
-	guests: number;
-	maxGuests: number;
+type InquiryFormStore = {
+	state: {
+		checkIn: string;
+		guests: number;
+		maxGuests: number;
+		readonly minCheckOut: string;
+	};
+	actions: {
+		setCheckIn: ( event: Event ) => void;
+		setGuestsFromSelect: ( event: Event ) => void;
+		incrementGuests: () => void;
+		decrementGuests: () => void;
+	};
 };
 
-const { state } = store< InquiryFormState >( 'hotel-booking/inquiry-form', {
+const { state } = store< InquiryFormStore >( 'hotel-booking/inquiry-form', {
 	state: {
-		get minCheckOut() {
+		get minCheckOut(): string {
 			if ( ! state.checkIn ) {
 				return '';
 			}

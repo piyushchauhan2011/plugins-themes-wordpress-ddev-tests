@@ -4,13 +4,24 @@ type StayFaqContext = {
 	index: number;
 };
 
-const { state } = store( 'hotel-booking-theme/stay-faq', {
+type StayFaqStore = {
 	state: {
-		get isOpen() {
+		openIndex: number;
+		readonly isOpen: boolean;
+		readonly isHidden: boolean;
+	};
+	actions: {
+		toggle: () => void;
+	};
+};
+
+const { state } = store< StayFaqStore >( 'hotel-booking-theme/stay-faq', {
+	state: {
+		get isOpen(): boolean {
 			const ctx = getContext< StayFaqContext >();
-			return ctx && ctx.index === state.openIndex;
+			return Boolean( ctx && ctx.index === state.openIndex );
 		},
-		get isHidden() {
+		get isHidden(): boolean {
 			const ctx = getContext< StayFaqContext >();
 			return ! ( ctx && ctx.index === state.openIndex );
 		},

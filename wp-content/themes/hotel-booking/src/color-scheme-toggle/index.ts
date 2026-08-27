@@ -1,8 +1,8 @@
-import { registerBlockType } from '@wordpress/blocks';
+import { registerHotelBlock } from '../register-block';
 import metadata from './block.json';
 import './style.scss';
 
-registerBlockType( metadata.name, {
+registerHotelBlock( metadata, {
 	edit: () => null,
 	save: () => null,
 } );

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+## Description: Typecheck plugin and theme TypeScript (tsc --noEmit)
+## Usage: typecheck
+## Example: ddev typecheck
+
+set -euo pipefail
+
+check_one() {
+	local dir="$1"
+	cd "${dir}"
+	if [[ ! -d node_modules/typescript ]]; then
+		npm install
+	fi
+	echo "typecheck (${dir})"
+	npm run typecheck
+}
+
+check_one "${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core"
+check_one "${DDEV_APPROOT}/wp-content/themes/hotel-booking"

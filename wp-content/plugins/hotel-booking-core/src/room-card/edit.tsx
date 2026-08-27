@@ -33,8 +33,8 @@ export default function Edit( { attributes, setAttributes }: BlockEditProps< Roo
 		} );
 	}, [] );
 
-	const options = [
-		{ label: __( 'Latest room', 'hotel-booking-core' ), value: '0' },
+	const options: { label: string; value: string }[] = [
+		{ label: String( __( 'Latest room', 'hotel-booking-core' ) ), value: '0' },
 	];
 	if ( rooms ) {
 		rooms.forEach( ( room ) => {

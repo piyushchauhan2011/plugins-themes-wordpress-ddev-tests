@@ -83,6 +83,7 @@ ddev phpunit
 # Static analysis and security
 ddev phpcs
 ddev phpstan
+ddev typecheck
 ddev plugin-check
 ddev composer audit
 ddev npm-audit

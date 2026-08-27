@@ -4,9 +4,19 @@
 	"description": "Gutenberg blocks for Hotel Booking Core",
 	"scripts": {
 		"build": "wp-scripts build --webpack-copy-php --blocks-manifest --experimental-modules",
-		"start": "wp-scripts start --webpack-copy-php --blocks-manifest --experimental-modules"
+		"start": "wp-scripts start --webpack-copy-php --blocks-manifest --experimental-modules",
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^30.13.0"
+		"@types/react": "^18.3.31",
+		"@wordpress/block-editor": "^17.0.0",
+		"@wordpress/blocks": "^15.27.0",
+		"@wordpress/components": "^40.0.0",
+		"@wordpress/data": "^10.54.0",
+		"@wordpress/i18n": "^6.27.0",
+		"@wordpress/interactivity": "^6.54.0",
+		"@wordpress/scripts": "^30.13.0",
+		"@wordpress/server-side-render": "^6.30.0",
+		"typescript": "^7.0.2"
 	}
 }
