@@ -185,4 +185,20 @@ class Test_Hotel_Booking_Rest_Rooms extends WP_UnitTestCase {
 		$single = rest_do_request( new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms/' . $draft_id ) );
 		$this->assertSame( 404, $single->get_status() );
 	}
+
+	public function test_list_rooms_ignores_lang_without_polylang() {
+		$this->create_room(
+			array(
+				'post_title' => 'Garden Suite',
+			)
+		);
+
+		$request = new WP_REST_Request( 'GET', '/hotel-booking/v1/rooms' );
+		$request->set_param( 'lang', 'es' );
+		$response = rest_do_request( $request );
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertCount( 1, $response->get_data() );
+		$this->assertSame( 'Garden Suite', $response->get_data()[0]['title'] );
+	}
 }

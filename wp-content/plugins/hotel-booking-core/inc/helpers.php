@@ -208,10 +208,11 @@ function hotel_booking_render_room_card_html( $room ) {
 /**
  * Published rooms for the rooms-grid block, same filter as the REST list.
  *
- * @param int $guests Minimum guest capacity; 0 means all.
+ * @param int    $guests Minimum guest capacity; 0 means all.
+ * @param string $lang   Optional Polylang slug.
  * @return array<int, array<string, mixed>>
  */
-function hotel_booking_query_rooms_for_grid( $guests = 0 ) {
+function hotel_booking_query_rooms_for_grid( $guests = 0, $lang = '' ) {
 	$query_args = array(
 		'post_type'      => 'hb_room',
 		'post_status'    => 'publish',
@@ -220,6 +221,7 @@ function hotel_booking_query_rooms_for_grid( $guests = 0 ) {
 		'order'          => 'ASC',
 		'no_found_rows'  => true,
 	);
+	$query_args = hotel_booking_query_args_with_lang( $query_args, $lang );
 
 	$guests = absint( $guests );
 	if ( $guests > 0 ) {

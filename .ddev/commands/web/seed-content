@@ -18,6 +18,13 @@ if wp option get hotel_booking_seeded >/dev/null 2>&1 && [[ "${FORCE}" != "--for
 	exit 0
 fi
 
+wp language core install es_ES >/dev/null
+if wp plugin is-installed polylang >/dev/null 2>&1; then
+	wp plugin activate polylang >/dev/null
+else
+	wp plugin install polylang --activate >/dev/null
+fi
+
 if [[ "${FORCE}" == "--force" ]]; then
 	echo "Removing previously seeded rooms and demo pages…"
 	ROOM_IDS="$(wp post list --post_type=hb_room --format=ids)"
@@ -139,6 +146,8 @@ if [[ -n "${HELLO}" ]]; then
 	wp post delete "${HELLO}" --force >/dev/null
 fi
 
+wp eval 'hotel_booking_seed_polylang();'
+
 wp rewrite flush >/dev/null
 wp option update hotel_booking_seeded 1 >/dev/null
 
@@ -147,6 +156,7 @@ wp eval-file /var/www/html/content/seed-demo.php
 echo
 echo "Seeded hotel demo content."
 echo "Front page: Home (#${HOME_ID})"
+echo "Spanish front: /es/"
 echo "Booking page: /booking/ (#${BOOKING_ID})"
 echo "Stay (blocks): /stay/ (#${STAY_ID})"
 echo "Desk (inquiries): /desk/ (#${DESK_ID})"

@@ -18,8 +18,9 @@ What it creates:
 - Static front page (`Home`) that uses `templates/front-page.html` (includes the theme Stay FAQ accordion)
 - Pages: About, Amenities, Contact, Booking, Desk, Stay (Gutenberg blocks demo)
 - Five `hb_room` posts (Deluxe King, Garden Suite, Family Room, Penthouse, Courtyard Twin)
+- Spanish **Layer B** copies via free Polylang (not committed): King Deluxe, Suite Jardín, Habitación familiar, Ático, Twin del patio, plus Home/Stay/About/Booking pages and a Primary nav at `/es/…`. English URLs stay unprefixed (`/rooms/`).
 - Users: `desk` / `desk` (editor), `guest` / `guest` (subscriber); `admin` / `admin` from install
-- About six sample rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`)
+- About six sample rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`) — guest text is not translated
 - Settings: hotel name The Oak House, desk email, max guests 6
 - A Primary `wp_navigation` menu for the block header
 - Pretty permalinks (`/%postname%/`)

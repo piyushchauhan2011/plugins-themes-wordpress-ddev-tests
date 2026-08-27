@@ -25,7 +25,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Primary/replica routing and sharding (docs only, not deployed): [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus content vs custom-table locale (Spanish catalogs shipped; Polylang not installed): [docs/I18N.md](docs/I18N.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Primary/replica routing and sharding (docs only, not deployed): [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
 
 ```bash
 ddev start

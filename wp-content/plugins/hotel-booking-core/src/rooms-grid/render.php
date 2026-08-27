@@ -12,7 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $guests = isset( $attributes['guests'] ) ? absint( $attributes['guests'] ) : 0;
-$rooms  = hotel_booking_query_rooms_for_grid( $guests );
+$lang   = hotel_booking_query_lang();
+$rooms  = hotel_booking_query_rooms_for_grid( $guests, $lang );
 $rest   = rest_url( 'hotel-booking/v1/rooms' );
 
 wp_interactivity_state(
@@ -20,6 +21,7 @@ wp_interactivity_state(
 	array(
 		'rooms'   => $rooms,
 		'guests'  => $guests,
+		'lang'    => $lang,
 		'restUrl' => $rest,
 	)
 );

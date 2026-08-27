@@ -45,7 +45,8 @@ test( 'header language switcher translates chrome to Spanish', async ( { page } 
 
 	await expect( page.getByRole( 'heading', { name: /noche tranquila/i } ) ).toBeVisible();
 	await expect( page.getByRole( 'button', { name: 'Usar apariencia oscura' } ) ).toBeVisible();
-	await expect( page.getByRole( 'heading', { name: 'Deluxe King' } ) ).toBeVisible();
+	await expect( page.getByRole( 'heading', { name: 'King Deluxe' } ) ).toBeVisible();
+	await expect( page.getByRole( 'heading', { name: 'Deluxe King' } ) ).toHaveCount( 0 );
 
 	await page.getByRole( 'link', { name: 'English' } ).click();
 	await expect( page.getByRole( 'heading', { name: /quiet night/i } ) ).toBeVisible();

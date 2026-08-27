@@ -74,6 +74,10 @@ function hotel_booking_requested_visitor_locale() {
  * @return string
  */
 function hotel_booking_filter_determine_locale( $locale ) {
+	if ( function_exists( 'hotel_booking_polylang_is_active' ) && hotel_booking_polylang_is_active() ) {
+		return $locale;
+	}
+
 	if ( is_admin() && ! wp_doing_ajax() ) {
 		return $locale;
 	}
@@ -87,6 +91,10 @@ add_filter( 'determine_locale', 'hotel_booking_filter_determine_locale' );
  * Persist ?lang= in a cookie and drop the query arg.
  */
 function hotel_booking_maybe_persist_visitor_locale() {
+	if ( function_exists( 'hotel_booking_polylang_is_active' ) && hotel_booking_polylang_is_active() ) {
+		return;
+	}
+
 	if ( is_admin() && ! wp_doing_ajax() ) {
 		return;
 	}

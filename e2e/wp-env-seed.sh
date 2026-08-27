@@ -17,6 +17,13 @@ wp i18n make-php wp-content/themes/hotel-booking/languages
 wp i18n make-mo wp-content/plugins/hotel-booking-core/languages
 wp i18n make-php wp-content/plugins/hotel-booking-core/languages
 
+wp language core install es_ES
+if wp plugin is-installed polylang >/dev/null 2>&1; then
+	wp plugin activate polylang
+else
+	wp plugin install polylang --activate
+fi
+
 create_page() {
 	local title="$1"
 	local slug="$2"
@@ -72,5 +79,6 @@ else
 	wp post create --post_type=wp_navigation --post_title="Primary" --post_name=primary --post_status=publish --post_content="${NAV_CONTENT}" >/dev/null
 fi
 
+wp eval 'hotel_booking_seed_polylang();'
 wp rewrite flush --hard
 echo "wp-env content ready."

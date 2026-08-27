@@ -27,6 +27,11 @@ function hotel_booking_register_rest_routes() {
 					'minimum'           => 1,
 					'sanitize_callback' => 'absint',
 				),
+				'lang'   => array(
+					'description'       => __( 'Polylang language slug (en, es).', 'hotel-booking-core' ),
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_key',
+				),
 			),
 		)
 	);
@@ -67,7 +72,8 @@ function hotel_booking_rest_get_rooms( WP_REST_Request $request ) {
 		'no_found_rows'  => true,
 	);
 
-	$guests = (int) $request->get_param( 'guests' );
+	$guests     = (int) $request->get_param( 'guests' );
+	$query_args = hotel_booking_query_args_with_lang( $query_args, (string) $request->get_param( 'lang' ) );
 	if ( $guests > 0 ) {
 		$query_args['meta_query'] = array(
 			array(

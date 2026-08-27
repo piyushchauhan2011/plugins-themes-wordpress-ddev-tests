@@ -34,6 +34,9 @@ const { state } = store( 'hotel-booking/rooms-grid', {
 			if ( guests > 0 ) {
 				url.searchParams.set( 'guests', String( guests ) );
 			}
+			if ( state.lang ) {
+				url.searchParams.set( 'lang', String( state.lang ) );
+			}
 
 			try {
 				const response = yield fetch( url.href );

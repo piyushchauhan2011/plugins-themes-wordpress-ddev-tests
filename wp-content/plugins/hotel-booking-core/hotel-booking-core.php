@@ -25,6 +25,8 @@ define( 'HOTEL_BOOKING_CORE_URL', plugin_dir_url( __FILE__ ) );
 
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/helpers.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/locale.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/polylang.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/polylang-seed.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/database.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/post-types.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiries.php';

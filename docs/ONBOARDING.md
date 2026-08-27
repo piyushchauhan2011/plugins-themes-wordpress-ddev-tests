@@ -47,6 +47,7 @@ Rebuild demo data: `ddev seed-content --force`.
 
 - Home (static front page), About, Amenities, Contact, Booking, Desk
 - Five rooms on `/rooms/` (Deluxe King, Garden Suite, Family Room, Penthouse, Courtyard Twin)
+- Spanish copies at `/es/` (King Deluxe, …) via Polylang; header **English / Español** switches URL and content
 - Booking form guest dropdown **1–6** (`max_guests` in settings)
 - Settings: hotel name **The Oak House**, desk email `desk@hotel-booking.ddev.site`
 - About six rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`)
@@ -54,7 +55,7 @@ Rebuild demo data: `ddev seed-content --force`.
 
 ## Click through
 
-1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings; click **Dark** in the header (theme Interactivity); click **Quiet hours** on the Stay FAQ
+1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings; click **Dark** in the header (theme Interactivity); click **Quiet hours** on the Stay FAQ; click **Español** (Spanish rooms and `/es/`)
 2. https://hotel-booking.ddev.site/rooms/ — archive grid; open **Courtyard Twin**
 3. https://hotel-booking.ddev.site/stay/ — plugin custom blocks; click **4+** on the rooms grid (Interactivity + REST)
 4. https://hotel-booking.ddev.site/booking/ — guest stepper; submit if you want another row
