@@ -122,54 +122,64 @@ function hotel_booking_opensearch_rooms_mapping() {
  * @return array{status:int,body:array<string,mixed>,raw:string}|WP_Error
  */
 function hotel_booking_opensearch_request( $method, $path, $body = null, $timeout = 5, $headers = array() ) {
-	$base = hotel_booking_opensearch_base_url();
-	if ( '' === $base ) {
-		return new WP_Error(
-			'hotel_booking_opensearch_unconfigured',
-			__( 'OpenSearch is not configured.', 'hotel-booking-core' )
-		);
-	}
-
-	$args = array(
-		'method'      => strtoupper( (string) $method ),
-		'timeout'     => max( 1, (int) $timeout ),
-		'redirection' => 0,
-		'headers'     => array_merge(
-			array(
-				'Accept' => 'application/json',
-			),
-			$headers
-		),
-	);
-
-	if ( null !== $body ) {
-		if ( is_string( $body ) ) {
-			$args['body'] = $body;
-		} else {
-			$args['headers']['Content-Type'] = 'application/json';
-			$encoded                         = wp_json_encode( $body );
-			if ( false === $encoded ) {
+	return hotel_booking_trace(
+		'hotel_booking_opensearch_request',
+		static function () use ( $method, $path, $body, $timeout, $headers ) {
+			$base = hotel_booking_opensearch_base_url();
+			if ( '' === $base ) {
 				return new WP_Error(
-					'hotel_booking_opensearch_json',
-					__( 'Could not encode OpenSearch request.', 'hotel-booking-core' )
+					'hotel_booking_opensearch_unconfigured',
+					__( 'OpenSearch is not configured.', 'hotel-booking-core' )
 				);
 			}
-			$args['body'] = $encoded;
-		}
-	}
 
-	$response = wp_remote_request( $base . $path, $args );
-	if ( is_wp_error( $response ) ) {
-		return $response;
-	}
+			$args = array(
+				'method'      => strtoupper( (string) $method ),
+				'timeout'     => max( 1, (int) $timeout ),
+				'redirection' => 0,
+				'headers'     => array_merge(
+					array(
+						'Accept' => 'application/json',
+					),
+					$headers
+				),
+			);
 
-	$raw     = (string) wp_remote_retrieve_body( $response );
-	$decoded = json_decode( $raw, true );
+			if ( null !== $body ) {
+				if ( is_string( $body ) ) {
+					$args['body'] = $body;
+				} else {
+					$args['headers']['Content-Type'] = 'application/json';
+					$encoded                         = wp_json_encode( $body );
+					if ( false === $encoded ) {
+						return new WP_Error(
+							'hotel_booking_opensearch_json',
+							__( 'Could not encode OpenSearch request.', 'hotel-booking-core' )
+						);
+					}
+					$args['body'] = $encoded;
+				}
+			}
 
-	return array(
-		'status' => (int) wp_remote_retrieve_response_code( $response ),
-		'body'   => is_array( $decoded ) ? $decoded : array(),
-		'raw'    => $raw,
+			$response = wp_remote_request( $base . $path, $args );
+			if ( is_wp_error( $response ) ) {
+				hotel_booking_trace_error( $response->get_error_message() );
+				return $response;
+			}
+
+			$raw     = (string) wp_remote_retrieve_body( $response );
+			$decoded = json_decode( $raw, true );
+
+			return array(
+				'status' => (int) wp_remote_retrieve_response_code( $response ),
+				'body'   => is_array( $decoded ) ? $decoded : array(),
+				'raw'    => $raw,
+			);
+		},
+		array(
+			'http.request.method' => strtoupper( (string) $method ),
+			'url.path'            => (string) $path,
+		)
 	);
 }
 

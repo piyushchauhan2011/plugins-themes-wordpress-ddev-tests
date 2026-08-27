@@ -156,6 +156,14 @@ On a real host:
 
 See [DEBUG.md](DEBUG.md).
 
+## Tempo (not in this zip)
+
+Local DDEV runs Tempo and exports OpenTelemetry spans from Hotel Booking Core (`WP_OTEL_ENDPOINT`). The zip does **not** include that compose file. PHPUnit never starts Tempo.
+
+On a real host leave `WP_OTEL_ENDPOINT` unset unless you have a private collector. Do not copy the DDEV Tempo compose file onto the server.
+
+See [OBSERVABILITY.md](OBSERVABILITY.md).
+
 ## Database scale (not in this zip)
 
 The zip/SFTP flow above assumes **one MySQL**. Read replicas, `db.php` drop-ins, ProxySQL, and why WordPress core tables do not shard are documented in [SCALING.md](SCALING.md). Production OpenSearch and AMQP are host URLs as above, not DDEV services. Gettext **source** catalogs (`.pot` / `.po`) **are** inside those two folders. Compile `.mo` / `.l10n.php` / plugin editor `.json` with `ddev compile-i18n` before a zip if you need Spanish at runtime; see [I18N.md](I18N.md). Free Polylang is installed by local seed, not shipped in the zip. An inquiry `locale` column is not.

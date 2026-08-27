@@ -100,51 +100,56 @@ function hotel_booking_sanitize_inquiry_data( $input ) {
  * @return int|WP_Error Insert ID.
  */
 function hotel_booking_insert_inquiry( $input, $already_sanitized = false ) {
-	global $wpdb;
+	return hotel_booking_trace(
+		'hotel_booking_insert_inquiry',
+		static function () use ( $input, $already_sanitized ) {
+			global $wpdb;
 
-	$data = $already_sanitized ? $input : hotel_booking_sanitize_inquiry_data( $input );
-	if ( is_wp_error( $data ) ) {
-		return $data;
-	}
+			$data = $already_sanitized ? $input : hotel_booking_sanitize_inquiry_data( $input );
+			if ( is_wp_error( $data ) ) {
+				return $data;
+			}
 
-	$now = current_time( 'mysql' );
-	$row = array(
-		'guest_name'  => $data['guest_name'],
-		'guest_email' => $data['guest_email'],
-		'check_in'    => $data['check_in'],
-		'check_out'   => $data['check_out'],
-		'guests'      => $data['guests'],
-		'room_id'     => $data['room_id'],
-		'message'     => $data['message'],
-		'status'      => $data['status'],
-		'created_at'  => $now,
-		'updated_at'  => $now,
+			$now = current_time( 'mysql' );
+			$row = array(
+				'guest_name'  => $data['guest_name'],
+				'guest_email' => $data['guest_email'],
+				'check_in'    => $data['check_in'],
+				'check_out'   => $data['check_out'],
+				'guests'      => $data['guests'],
+				'room_id'     => $data['room_id'],
+				'message'     => $data['message'],
+				'status'      => $data['status'],
+				'created_at'  => $now,
+				'updated_at'  => $now,
+			);
+
+			$wpdb->query( 'START TRANSACTION' );
+
+			$inserted = $wpdb->insert(
+				hotel_booking_inquiries_table_name(),
+				$row,
+				array( '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s' )
+			);
+
+			if ( ! $inserted ) {
+				$wpdb->query( 'ROLLBACK' );
+				return new WP_Error( 'hotel_booking_insert_failed', __( 'Could not save the inquiry.', 'hotel-booking-core' ) );
+			}
+
+			$id      = (int) $wpdb->insert_id;
+			$started = hotel_booking_workflow_start_inquiry( $id, $data['status'] );
+			if ( is_wp_error( $started ) ) {
+				$wpdb->query( 'ROLLBACK' );
+				return $started;
+			}
+
+			$wpdb->query( 'COMMIT' );
+			do_action( 'hotel_booking_inquiry_created', $id );
+
+			return $id;
+		}
 	);
-
-	$wpdb->query( 'START TRANSACTION' );
-
-	$inserted = $wpdb->insert(
-		hotel_booking_inquiries_table_name(),
-		$row,
-		array( '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s' )
-	);
-
-	if ( ! $inserted ) {
-		$wpdb->query( 'ROLLBACK' );
-		return new WP_Error( 'hotel_booking_insert_failed', __( 'Could not save the inquiry.', 'hotel-booking-core' ) );
-	}
-
-	$id      = (int) $wpdb->insert_id;
-	$started = hotel_booking_workflow_start_inquiry( $id, $data['status'] );
-	if ( is_wp_error( $started ) ) {
-		$wpdb->query( 'ROLLBACK' );
-		return $started;
-	}
-
-	$wpdb->query( 'COMMIT' );
-	do_action( 'hotel_booking_inquiry_created', $id );
-
-	return $id;
 }
 
 /**

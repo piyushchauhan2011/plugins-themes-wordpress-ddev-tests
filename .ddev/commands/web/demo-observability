@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+## Description: Hit REST + write demo logs so Grafana has traces, metrics, and Loki lines
+## Usage: demo-observability
+## Example: ddev demo-observability
+
+set -euo pipefail
+
+BASE="${HOTEL_BOOKING_OBS_BASE:-http://web}"
+
+echo "Generating observability demo traffic…"
+
+for _ in 1 2 3; do
+	curl -sS "${BASE}/wp-json/hotel-booking/v1/rooms" >/dev/null
+	curl -sS "${BASE}/wp-json/hotel-booking/v1/rooms?q=gar" >/dev/null
+	curl -sS "${BASE}/wp-json/hotel-booking/v1/rooms/suggest?q=del" >/dev/null
+	curl -sS "${BASE}/wp-json/hotel-booking/v1/metrics" >/dev/null
+	curl -sS -o /dev/null -w "%{http_code}\n" "${BASE}/wp-json/hotel-booking/v1/rooms/999999" >/dev/null
+done
+
+wp eval 'hotel_booking_log( "demo observability traffic" ); hotel_booking_log( "demo: rooms REST + metrics scraped" ); trigger_error( "[hotel-booking] demo warning", E_USER_WARNING );'
+
+echo "Done. Grafana: ddev launch :3001 (metrics, logs, traces dashboards)."

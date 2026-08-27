@@ -7,6 +7,7 @@ PHP / WordPress  →  wp-content/debug.log
                  →  ddev logs (php-fpm / nginx stderr)
 Query Monitor    →  wp-admin bar (admin only)
 Promtail         →  Loki (:3100)  →  Grafana logs dashboard (:3001)
+REST / inquiry   →  OpenTelemetry OTLP → Tempo (:3200) → Grafana traces
 ```
 
 Metrics (inquiry counts) live in [OBSERVABILITY.md](OBSERVABILITY.md). This page is **how to see and fix failures**.
@@ -37,7 +38,7 @@ Set it back to `false` when you are done. Do not commit `wp-config.php`.
 
 ## What seed gives you
 
-`ddev seed-content` installs [Query Monitor](https://wordpress.org/plugins/query-monitor/) (gitignored, like Polylang). Promtail tails a Docker volume at `/var/log/hotel-booking/debug.log` (not the Mutagen copy of `wp-content/debug.log`). After start, `wp-content/debug.log` is a symlink to that file so `ddev exec tail` still works.
+`ddev seed-content` installs [Query Monitor](https://wordpress.org/plugins/query-monitor/) (gitignored, like Polylang) and runs `ddev demo-observability` (REST curls, `[hotel-booking]` log lines, a demo PHP warning) so Grafana is not empty. Promtail tails a Docker volume at `/var/log/hotel-booking/debug.log` (not the Mutagen copy of `wp-content/debug.log`). After start, `wp-content/debug.log` is a symlink to that file so `ddev exec tail` still works.
 
 Plugin lines are prefixed `[hotel-booking]` (`hotel_booking_log()` in [`inc/helpers.php`](../wp-content/plugins/hotel-booking-core/inc/helpers.php)). AMQP connect/publish failures already use that helper and then fall back in-request.
 
@@ -58,6 +59,20 @@ Use the **Hotel Booking logs** dashboard, or Explore with:
 | `{job="wordpress"} \|~ "(?i)fatal"` | Fatals |
 
 Loki is an API, not a dashboard. `ddev launch :3101` hits `/` and Loki returns **404** — that means the service is up. Health: `ddev launch :3101/ready` (should print `ready`). Read logs in Grafana, not here. PHPUnit never starts these containers.
+
+## Grafana Tempo (traces)
+
+Core REST (`/rooms`, `/metrics`), inquiry insert, and OpenSearch HTTP run inside named OpenTelemetry spans when `WP_OTEL_ENDPOINT` is set (`http://tempo:4318` on DDEV). There is no PHP OTel extension.
+
+`ddev describe` lists **tempo**. Grafana **Hotel Booking traces** lists traces in a table (click a Trace ID for the waterfall in Explore), or Explore Tempo with `{ resource.service.name="hotel-booking" }`. Tempo has no UI at `/` (`ddev launch :3201` is a 404); health is `ddev launch :3201/ready`.
+
+Refill dashboards without reseeding:
+
+```bash
+ddev demo-observability
+```
+
+PHPUnit never starts Tempo. The SDK may be in project `vendor/` from Composer; the exporter no-ops without `WP_OTEL_ENDPOINT`.
 
 ## Xdebug (breakpoints)
 

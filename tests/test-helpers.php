@@ -110,4 +110,17 @@ class Test_Hotel_Booking_Helpers extends WP_UnitTestCase {
 		$this->assertIsString( $written );
 		$this->assertStringContainsString( '[hotel-booking] amqp down', $written );
 	}
+
+	public function test_trace_runs_callback_when_otel_is_off() {
+		$this->assertNull( hotel_booking_tracer() );
+		$this->assertSame(
+			'ok',
+			hotel_booking_trace(
+				'test.span',
+				static function () {
+					return 'ok';
+				}
+			)
+		);
+	}
 }

@@ -51,6 +51,7 @@ services:
     depends_on:
       - prometheus
       - loki
+      - tempo
     x-ddev:
       describe-info: |
         User: admin
@@ -99,8 +100,34 @@ services:
     depends_on:
       - loki
 
+  tempo:
+    container_name: ddev-${DDEV_SITENAME}-tempo
+    image: grafana/tempo:2.7.2
+    expose:
+      - 3200
+      - 4317
+      - 4318
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTP_EXPOSE=3200:3200
+      - HTTPS_EXPOSE=3201:3200
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - ./tempo/tempo.yml:/etc/tempo.yml:ro
+      - tempo:/var/tempo
+      - ".:/mnt/ddev_config"
+    command:
+      - -config.file=/etc/tempo.yml
+    x-ddev:
+      describe-info: |
+        API only (no UI). Ready: ddev launch :3201/ready
+        Traces: ddev launch :3001
+
 volumes:
   prometheus:
   grafana:
   loki:
   php-logs:
+  tempo:

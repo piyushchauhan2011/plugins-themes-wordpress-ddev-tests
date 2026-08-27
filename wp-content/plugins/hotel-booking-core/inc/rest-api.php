@@ -139,9 +139,14 @@ function hotel_booking_rest_room_search_args( WP_REST_Request $request ) {
  * @return WP_REST_Response
  */
 function hotel_booking_rest_get_rooms( WP_REST_Request $request ) {
-	$rooms = hotel_booking_search_rooms( hotel_booking_rest_room_search_args( $request ) );
+	return hotel_booking_trace(
+		'hotel_booking_rest_get_rooms',
+		static function () use ( $request ) {
+			$rooms = hotel_booking_search_rooms( hotel_booking_rest_room_search_args( $request ) );
 
-	return rest_ensure_response( $rooms );
+			return rest_ensure_response( $rooms );
+		}
+	);
 }
 
 /**
@@ -151,10 +156,15 @@ function hotel_booking_rest_get_rooms( WP_REST_Request $request ) {
  * @return WP_REST_Response
  */
 function hotel_booking_rest_get_room_suggestions( WP_REST_Request $request ) {
-	$q    = (string) $request->get_param( 'q' );
-	$lang = (string) $request->get_param( 'lang' );
+	return hotel_booking_trace(
+		'hotel_booking_rest_get_room_suggestions',
+		static function () use ( $request ) {
+			$q    = (string) $request->get_param( 'q' );
+			$lang = (string) $request->get_param( 'lang' );
 
-	return rest_ensure_response( hotel_booking_suggest_rooms( $q, $lang ) );
+			return rest_ensure_response( hotel_booking_suggest_rooms( $q, $lang ) );
+		}
+	);
 }
 
 /**
@@ -164,17 +174,24 @@ function hotel_booking_rest_get_room_suggestions( WP_REST_Request $request ) {
  * @return WP_REST_Response|WP_Error
  */
 function hotel_booking_rest_get_room( WP_REST_Request $request ) {
-	$post = get_post( (int) $request['id'] );
+	return hotel_booking_trace(
+		'hotel_booking_rest_get_room',
+		static function () use ( $request ) {
+			$post = get_post( (int) $request['id'] );
 
-	if ( ! $post || 'hb_room' !== $post->post_type || 'publish' !== $post->post_status ) {
-		return new WP_Error(
-			'hotel_booking_room_not_found',
-			__( 'Room not found.', 'hotel-booking-core' ),
-			array( 'status' => 404 )
-		);
-	}
+			if ( ! $post || 'hb_room' !== $post->post_type || 'publish' !== $post->post_status ) {
+				hotel_booking_trace_error( 'Room not found' );
 
-	return rest_ensure_response( hotel_booking_prepare_room_for_rest( $post ) );
+				return new WP_Error(
+					'hotel_booking_room_not_found',
+					__( 'Room not found.', 'hotel-booking-core' ),
+					array( 'status' => 404 )
+				);
+			}
+
+			return rest_ensure_response( hotel_booking_prepare_room_for_rest( $post ) );
+		}
+	);
 }
 
 /**
@@ -235,10 +252,15 @@ function hotel_booking_prometheus_metrics() {
 function hotel_booking_rest_get_metrics( WP_REST_Request $request ) {
 	unset( $request );
 
-	$response = new WP_REST_Response( hotel_booking_prometheus_metrics() );
-	$response->header( 'Content-Type', 'text/plain; version=0.0.4; charset=utf-8' );
+	return hotel_booking_trace(
+		'hotel_booking_rest_get_metrics',
+		static function () {
+			$response = new WP_REST_Response( hotel_booking_prometheus_metrics() );
+			$response->header( 'Content-Type', 'text/plain; version=0.0.4; charset=utf-8' );
 
-	return $response;
+			return $response;
+		}
+	);
 }
 
 /**

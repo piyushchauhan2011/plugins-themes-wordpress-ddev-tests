@@ -33,6 +33,9 @@ if wp option get hotel_booking_seeded >/dev/null 2>&1 && [[ "${FORCE}" != "--for
 	else
 		echo "OpenSearch reindex skipped (cluster unreachable)."
 	fi
+	if [[ -f /mnt/ddev_config/commands/web/demo-observability ]]; then
+		bash /mnt/ddev_config/commands/web/demo-observability || echo "Observability demo traffic skipped."
+	fi
 	exit 0
 fi
 
@@ -192,3 +195,7 @@ echo "Staff login: /staff-login/ (#${LOGIN_ID})"
 echo "Rooms archive: /rooms/"
 echo "Primary navigation ID: ${NAV_ID}"
 echo "Users: admin/admin (wp-admin), desk/desk (hotel_manager), guest/guest (subscriber)"
+
+if [[ -f /mnt/ddev_config/commands/web/demo-observability ]]; then
+	bash /mnt/ddev_config/commands/web/demo-observability || echo "Observability demo traffic skipped."
+fi

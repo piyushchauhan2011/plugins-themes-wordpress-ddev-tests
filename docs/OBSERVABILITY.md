@@ -5,7 +5,9 @@ WordPress exposes inquiry counts as Prometheus text. DDEV scrapes that endpoint 
 ```
 WordPress  GET /wp-json/hotel-booking/v1/metrics  (text/plain)
         ← scrape every 15s ← Prometheus (:9090 / HTTPS :9091)
-                                    ← Grafana datasource + dashboard (:3000 / HTTPS :3001)
+REST / inquiry / OpenSearch
+        → OpenTelemetry OTLP HTTP (:4318) → Tempo (:3200 / HTTPS :3201)
+                                    ← Grafana datasource + dashboards (:3000 / HTTPS :3001)
 ```
 
 ## What runs locally
@@ -16,7 +18,8 @@ WordPress  GET /wp-json/hotel-booking/v1/metrics  (text/plain)
 | --- | --- | --- |
 | Metrics | `ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics` | Prometheus exposition text from [`inc/rest-api.php`](../wp-content/plugins/hotel-booking-core/inc/rest-api.php) |
 | Prometheus | `ddev launch :9091` | Scrape job `hotel-booking` → `web:80` + `/wp-json/hotel-booking/v1/metrics` |
-| Grafana | `ddev launch :3001` | Anonymous Viewer, or `admin` / `admin`. Provisioned **Hotel Booking** dashboard |
+| Grafana | `ddev launch :3001` | Anonymous Viewer, or `admin` / `admin`. Provisioned **Hotel Booking**, **logs**, and **traces** dashboards |
+| Tempo | `ddev launch :3201/ready` | OTLP from PHP (`WP_OTEL_ENDPOINT`). No UI at `/` — traces are in Grafana |
 
 nginx FastCGI already bypasses `/wp-json/`, so scrapes hit PHP.
 
@@ -33,10 +36,14 @@ The route uses `permission_callback` `__return_true` (same as rooms) so Promethe
 
 PHPUnit calls `rest_do_request( '/hotel-booking/v1/metrics' )` and asserts the text. It does not start a Prometheus container.
 
+## Traces (Tempo)
+
+Hotel Booking Core starts OpenTelemetry spans around REST rooms/metrics, inquiry insert, and OpenSearch requests ([`inc/tracing.php`](../wp-content/plugins/hotel-booking-core/inc/tracing.php)). The PHP SDK talks OTLP HTTP to Tempo. PHPUnit and GitHub Actions never start Tempo; without `WP_OTEL_ENDPOINT` the wrapper still runs the callback.
+
+After `ddev seed-content` (or `ddev demo-observability`) Grafana **Hotel Booking traces** lists matching traces in a table (the waterfall Traces view only renders one Trace ID). Click a Trace ID to open Explore. If the table is empty, widen the time picker past Last 5 minutes.
+
 ## Production (not in this zip)
 
-Run Prometheus and Grafana on the host (or a vendor). Point a scrape job at the WordPress metrics URL on the private network. Do not copy [`.ddev/docker-compose.observability.yaml`](../.ddev/docker-compose.observability.yaml) onto the server. Protect the endpoint before it is reachable from the public internet.
-
-This pass does not add nginx `stub_status`, `mysqld_exporter`, or OpenTelemetry.
+Run Prometheus, Grafana, and Tempo (or a vendor) on the host. Point a scrape job at the WordPress metrics URL on the private network. Set `WP_OTEL_ENDPOINT` only on a private collector. Do not copy [`.ddev/docker-compose.observability.yaml`](../.ddev/docker-compose.observability.yaml) onto the server. Protect the metrics endpoint before it is reachable from the public internet.
 
 PHP errors, `wp-content/debug.log`, Query Monitor, and Loki (same Grafana, different dashboard) are documented in [DEBUG.md](DEBUG.md).

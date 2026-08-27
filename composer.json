@@ -4,7 +4,11 @@
 	"license": "GPL-2.0-or-later",
 	"require": {
 		"php": ">=8.2",
+		"nyholm/psr7": "^1.8",
+		"open-telemetry/exporter-otlp": "^1.4",
+		"open-telemetry/sdk": "^1.15",
 		"php-amqplib/php-amqplib": "^3.7",
+		"symfony/http-client": "^7.4",
 		"symfony/workflow": "^7.3"
 	},
 	"require-dev": {
@@ -29,7 +33,9 @@
 	"config": {
 		"sort-packages": true,
 		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"php-http/discovery": true,
+			"tbachert/spi": true
 		}
 	}
 }

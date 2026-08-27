@@ -19,12 +19,12 @@ nodejs_version: "24"
 corepack_enable: true
 hooks:
     pre-start:
-        - exec-host: mkdir -p wp-content && touch wp-content/debug.log
+        - exec-host: mkdir -p wp-content && touch wp-content/debug.log || true
     post-start:
         - exec: mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test; GRANT ALL PRIVILEGES ON wordpress_test.* TO 'db'@'%'; FLUSH PRIVILEGES;"
           service: db
         - exec: |
-            if [ ! -d vendor/php-amqplib ] || [ ! -d vendor/symfony/workflow ]; then
+            if [ ! -d vendor/php-amqplib ] || [ ! -d vendor/symfony/workflow ] || [ ! -d vendor/open-telemetry/sdk ]; then
               composer install --no-interaction
             fi
         - exec: |
@@ -41,6 +41,7 @@ hooks:
               wp config set WP_AMQP_PASS rabbitmq --type=constant --quiet
               wp config set WP_AMQP_VHOST '/' --type=constant --quiet
               wp config set DISABLE_WP_CRON true --raw --type=constant --quiet
+              wp config set WP_OTEL_ENDPOINT http://tempo:4318 --type=constant --quiet
               wp config set WP_DEBUG_LOG /var/log/hotel-booking/debug.log --type=constant --quiet
               wp config set WP_DEBUG_DISPLAY false --raw --type=constant --quiet
               sudo mkdir -p /var/log/hotel-booking

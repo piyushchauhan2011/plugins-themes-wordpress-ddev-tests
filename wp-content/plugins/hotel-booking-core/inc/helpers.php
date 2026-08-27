@@ -32,8 +32,10 @@ function hotel_booking_format_price( $amount ) {
  * @return void
  */
 function hotel_booking_log( $message ) {
+	$trace  = function_exists( 'hotel_booking_current_trace_id' ) ? hotel_booking_current_trace_id() : '';
+	$prefix = '' !== $trace ? '[hotel-booking][trace=' . $trace . '] ' : '[hotel-booking] ';
 	// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- local/ops log; not displayed.
-	error_log( '[hotel-booking] ' . $message );
+	error_log( $prefix . $message );
 }
 
 /**
