@@ -3,6 +3,8 @@ includes:
 
 parameters:
 	level: 5
+	parallel:
+		maximumNumberOfProcesses: 2
 	paths:
 		- wp-content/plugins/hotel-booking-core
 		- wp-content/themes/hotel-booking

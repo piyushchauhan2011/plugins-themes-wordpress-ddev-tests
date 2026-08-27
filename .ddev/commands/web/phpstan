@@ -13,4 +13,4 @@ if [[ ! -x vendor/bin/phpstan ]]; then
 	composer install
 fi
 
-./vendor/bin/phpstan analyse --memory-limit=1G "$@"
+./vendor/bin/phpstan analyse --memory-limit=2G "$@"

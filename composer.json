@@ -20,7 +20,7 @@
 		"test": "phpunit",
 		"phpcs": "phpcs",
 		"phpcs:fix": "phpcbf",
-		"phpstan": "phpstan analyse --memory-limit=1G",
+		"phpstan": "phpstan analyse --memory-limit=2G",
 		"analyse": [
 			"@phpcs",
 			"@phpstan"
