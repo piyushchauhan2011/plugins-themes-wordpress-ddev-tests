@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking/rooms-grid",
+	"title": "Rooms grid",
+	"category": "hotel-booking",
+	"icon": "grid-view",
+	"description": "Published rooms with a guest-capacity filter (Interactivity API).",
+	"textdomain": "hotel-booking-core",
+	"attributes": {
+		"guests": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"interactivity": true
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:./render.php"
+}

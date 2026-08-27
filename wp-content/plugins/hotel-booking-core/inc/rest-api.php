@@ -10,29 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Shape a room post for the custom REST namespace.
- *
- * @param WP_Post $post Room post.
- * @return array<string, mixed>
- */
-function hotel_booking_prepare_room_for_rest( WP_Post $post ) {
-	$meta = hotel_booking_get_room_meta( $post->ID );
-
-	return array(
-		'id'              => (int) $post->ID,
-		'title'           => $post->post_title,
-		'slug'            => $post->post_name,
-		'excerpt'         => wp_strip_all_tags( (string) $post->post_excerpt ),
-		'permalink'       => get_permalink( $post ),
-		'price'           => $meta['price'],
-		'price_formatted' => hotel_booking_format_price( $meta['price'] ),
-		'guests'          => $meta['guests'],
-		'beds'            => $meta['beds'],
-		'size'            => $meta['size'],
-	);
-}
-
-/**
  * Register /hotel-booking/v1/rooms routes.
  */
 function hotel_booking_register_rest_routes() {

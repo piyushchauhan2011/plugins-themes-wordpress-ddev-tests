@@ -1,0 +1,12 @@
+{
+	"name": "hotel-booking-core",
+	"private": true,
+	"description": "Gutenberg blocks for Hotel Booking Core",
+	"scripts": {
+		"build": "wp-scripts build --webpack-copy-php --blocks-manifest --experimental-modules",
+		"start": "wp-scripts start --webpack-copy-php --blocks-manifest --experimental-modules"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.13.0"
+	}
+}

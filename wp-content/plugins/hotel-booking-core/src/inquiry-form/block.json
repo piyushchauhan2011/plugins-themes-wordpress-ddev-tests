@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking/inquiry-form",
+	"title": "Inquiry form",
+	"category": "hotel-booking",
+	"icon": "email-alt",
+	"description": "Public booking inquiry form (same POST as the shortcode).",
+	"textdomain": "hotel-booking-core",
+	"supports": {
+		"html": false,
+		"align": [ "wide" ],
+		"interactivity": true
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:./render.php"
+}

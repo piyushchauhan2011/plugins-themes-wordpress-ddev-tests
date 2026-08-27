@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking/room-card",
+	"title": "Room card",
+	"category": "hotel-booking",
+	"icon": "admin-home",
+	"description": "A single room with image, price, and guest count.",
+	"textdomain": "hotel-booking-core",
+	"attributes": {
+		"roomId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide" ]
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

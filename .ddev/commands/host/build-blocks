@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+## Description: Build Hotel Booking Core Gutenberg blocks (@wordpress/scripts)
+## Usage: build-blocks [npm-args...]
+## Example: ddev build-blocks
+## Example: ddev build-blocks -- --watch
+
+set -euo pipefail
+
+PLUGIN_DIR="${DDEV_APPROOT}/wp-content/plugins/hotel-booking-core"
+cd "${PLUGIN_DIR}"
+
+if [[ ! -d node_modules/@wordpress/scripts ]]; then
+	npm install
+fi
+
+npm run build -- "$@"

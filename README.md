@@ -13,7 +13,7 @@ A DDEV WordPress site with a custom **block theme**, a companion **plugin** for 
 | Piece | Where |
 | --- | --- |
 | Block theme files (`theme.json`, HTML templates, patterns) | `wp-content/themes/hotel-booking/` |
-| Plugin-territory PHP (CPT, custom table, REST, shortcodes, wp-admin) | `wp-content/plugins/hotel-booking-core/` |
+| Plugin-territory PHP (CPT, custom table, REST, shortcodes, wp-admin, **blocks**) | `wp-content/plugins/hotel-booking-core/` |
 | Demo hotel content | `ddev seed-content` |
 | Theme review content + Theme Check | `ddev import-theme-unit-test` |
 | PHPUnit + `WP_UnitTestCase` | `ddev phpunit` (lives **outside** the theme) |
@@ -184,6 +184,27 @@ ddev import-theme-unit-test
 
 Then open **Appearance → Theme Check** and browse archives, singles, comments, and search. Check the **theme** folder only; plugin-territory code is in Hotel Booking Core.
 
+## Custom blocks
+
+Hotel Booking Core registers six Gutenberg blocks (category **Hotel Booking** in the inserter). Drop them onto any page:
+
+- Booking CTA, Room card, Rooms grid (guest filter via the Interactivity API + REST)
+- Inquiry form, Inquiry list (same POST/admin-post as the shortcodes)
+- Amenities accordion (Interactivity API)
+
+Source is `wp-content/plugins/hotel-booking-core/src/`. Compiled files in `build/` are gitignored — compile after clone or after editing block JS/CSS:
+
+```bash
+ddev build-blocks
+```
+
+Demo composition (Home stays on FSE patterns): https://hotel-booking.ddev.site/stay/
+
+```bash
+ddev phpunit --filter Test_Hotel_Booking_Blocks
+ddev e2e e2e/stay.spec.ts
+```
+
 ## Static analysis and security
 
 PHPCS uses WordPress Extra (escaping, nonces, prepared SQL) plus PHPCompatibility for PHP 8.2+. PHPStan runs at level 5 with WordPress stubs. Plugin Check is the WordPress.org PCP tool. Audits cover Composer and npm (`--audit-level=high`).
@@ -205,7 +226,8 @@ CI runs the same suite on push and pull request.
 - [Style variations](https://developer.wordpress.org/themes/global-settings-and-styles/style-variations/)
 - [Theme Unit Test](https://codex.wordpress.org/Theme_Unit_Test)
 - [Plugin / theme unit tests](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) and `WP_UnitTestCase` factories (`go_to()`, `the_content()`)
-- [Playwright](https://playwright.dev/docs/intro)
+- [Interactivity API](https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/) (`data-wp-interactive`, `store`)
+- [Block editor handbook](https://developer.wordpress.org/block-editor/) (`block.json`, `register_block_type`)
 - [Settings API](https://developer.wordpress.org/plugins/settings/settings-api/) (`register_setting`, `add_menu_page`)
 - [REST API Handbook](https://developer.wordpress.org/rest-api/) (`register_rest_route`, `rest_do_request`)
 
@@ -220,6 +242,7 @@ CI runs the same suite on push and pull request.
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
 | `ddev setup-tests` | Composer + WordPress PHPUnit library |
 | `ddev phpunit` | Run `WP_UnitTestCase` tests |
+| `ddev build-blocks` | Compile plugin Gutenberg blocks (`@wordpress/scripts`) |
 | `ddev phpcs` | WordPress Extra + PHPCompatibility on theme and plugin |
 | `ddev phpstan` | PHPStan level 5 with WordPress stubs |
 | `ddev plugin-check` | WordPress Plugin Check on hotel-booking-core |

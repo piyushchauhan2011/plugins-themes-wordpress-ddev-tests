@@ -16,7 +16,7 @@ ddev seed-content --force   # rebuild rooms and pages
 What it creates:
 
 - Static front page (`Home`) that uses `templates/front-page.html`
-- Pages: About, Amenities, Contact, Booking, Desk
+- Pages: About, Amenities, Contact, Booking, Desk, Stay (Gutenberg blocks demo)
 - Five `hb_room` posts (Deluxe King, Garden Suite, Family Room, Penthouse, Courtyard Twin)
 - Users: `desk` / `desk` (editor), `guest` / `guest` (subscriber); `admin` / `admin` from install
 - About six sample rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`)

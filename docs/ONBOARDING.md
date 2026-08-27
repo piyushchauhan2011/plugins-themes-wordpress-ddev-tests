@@ -24,6 +24,7 @@ cd hotel-booking
 ddev start
 ddev wp plugin activate hotel-booking-core
 ddev wp theme activate hotel-booking
+ddev build-blocks
 ddev seed-content
 ddev launch
 ```
@@ -36,6 +37,7 @@ ddev wp core download
 ddev wp core install --url='$DDEV_PRIMARY_URL' --title='Hotel Booking' --admin_user=admin --admin_password=admin --admin_email=admin@hotel-booking.ddev.site --skip-email
 ddev wp plugin activate hotel-booking-core
 ddev wp theme activate hotel-booking
+ddev build-blocks
 ddev seed-content
 ```
 
@@ -54,10 +56,13 @@ Rebuild demo data: `ddev seed-content --force`.
 
 1. https://hotel-booking.ddev.site/ — landing patterns, fluid headings
 2. https://hotel-booking.ddev.site/rooms/ — archive grid; open **Courtyard Twin**
-3. https://hotel-booking.ddev.site/booking/ — guest select stops at 6; submit if you want another row
-4. https://hotel-booking.ddev.site/desk/ — logged out: staff-only note. Log in as `desk` / `desk`: named guests in the table
-5. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking — same inquiries
-6. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking-settings — The Oak House (`admin` only)
+3. https://hotel-booking.ddev.site/stay/ — custom blocks; click **4+** on the rooms grid (Interactivity + REST)
+4. https://hotel-booking.ddev.site/booking/ — guest stepper; submit if you want another row
+5. https://hotel-booking.ddev.site/desk/ — logged out: staff-only note. Log in as `desk` / `desk`: named guests in the table
+6. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking — same inquiries
+7. https://hotel-booking.ddev.site/wp-admin/admin.php?page=hotel-booking-settings — The Oak House (`admin` only)
+
+In the editor: Pages → Stay, or add a block and pick the **Hotel Booking** category.
 
 Log in as `guest` / `guest` and hit `/desk/` again: still closed (no `edit_posts`).
 
@@ -81,6 +86,9 @@ ddev plugin-check
 ddev composer audit
 ddev npm-audit
 
+# Rebuild Gutenberg blocks after editing src/
+ddev build-blocks
+
 # Optional browser e2e (needs npm + Chromium on the host)
 npm install
 npx playwright install chromium
@@ -92,7 +100,7 @@ ddev e2e
 | Path | Role |
 | --- | --- |
 | `wp-content/themes/hotel-booking/` | Block theme: templates, patterns, `theme.json`, booking/desk PHP views |
-| `wp-content/plugins/hotel-booking-core/` | CPT, custom table, REST, shortcodes, wp-admin |
+| `wp-content/plugins/hotel-booking-core/` | CPT, custom table, REST, shortcodes, wp-admin, Gutenberg blocks |
 | `tests/` | `WP_UnitTestCase` (project root, not in the theme) |
 | `e2e/` | Playwright specs |
 | `content/` | Seed script and content notes |

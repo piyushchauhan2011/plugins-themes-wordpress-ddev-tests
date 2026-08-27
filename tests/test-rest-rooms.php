@@ -86,6 +86,9 @@ class Test_Hotel_Booking_Rest_Rooms extends WP_UnitTestCase {
 		$this->assertSame( 'Opens onto the garden.', $data[0]['excerpt'] );
 		$this->assertNotEmpty( $data[0]['permalink'] );
 		$this->assertNotEmpty( $data[0]['slug'] );
+		$this->assertArrayHasKey( 'featured_image', $data[0] );
+		$this->assertArrayHasKey( 'has_image', $data[0] );
+		$this->assertFalse( $data[0]['has_image'] );
 	}
 
 	public function test_list_rooms_filters_by_minimum_guests() {

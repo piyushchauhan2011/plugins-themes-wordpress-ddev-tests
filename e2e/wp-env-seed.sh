@@ -29,6 +29,7 @@ create_page() {
 HOME_ID="$(create_page "Home" "home" "")"
 create_page "Booking" "booking" "<!-- wp:shortcode -->[hotel_inquiry_form]<!-- /wp:shortcode -->" >/dev/null
 create_page "Desk" "desk" "<!-- wp:shortcode -->[hotel_inquiry_list]<!-- /wp:shortcode -->" >/dev/null
+create_page "Stay" "stay" "<!-- wp:hotel-booking/rooms-grid {\"guests\":0} /-->" >/dev/null
 
 wp option update show_on_front page
 wp option update page_on_front "${HOME_ID}"
@@ -42,9 +43,19 @@ wp post meta update "${ROOM_ID}" hb_guests 2 >/dev/null
 wp post meta update "${ROOM_ID}" hb_beds 1 >/dev/null
 wp post meta update "${ROOM_ID}" hb_size 32 >/dev/null
 
+FAMILY_ID="$(wp post list --post_type=hb_room --name=family-room --field=ID --format=ids 2>/dev/null | tail -n 1 | tr -d '[:space:]')"
+if [[ -z "${FAMILY_ID}" || ! "${FAMILY_ID}" =~ ^[0-9]+$ ]]; then
+	FAMILY_ID="$(wp post create --post_type=hb_room --post_title="Family Room" --post_name=family-room --post_excerpt="Two rooms sharing a sitting area." --post_status=publish --porcelain 2>/dev/null | tail -n 1 | tr -d '[:space:]')"
+fi
+wp post meta update "${FAMILY_ID}" hb_price 420 >/dev/null
+wp post meta update "${FAMILY_ID}" hb_guests 4 >/dev/null
+wp post meta update "${FAMILY_ID}" hb_beds 3 >/dev/null
+wp post meta update "${FAMILY_ID}" hb_size 56 >/dev/null
+
 NAV_CONTENT=""
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Home\",\"url\":\"/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Rooms\",\"url\":\"/rooms/\",\"kind\":\"custom\"} /-->"
+NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Stay\",\"url\":\"/stay/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Book\",\"url\":\"/booking/\",\"kind\":\"custom\"} /-->"
 NAV_CONTENT+="<!-- wp:navigation-link {\"label\":\"Desk\",\"url\":\"/desk/\",\"kind\":\"custom\"} /-->"
 

@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking/amenities",
+	"title": "Amenities",
+	"category": "hotel-booking",
+	"icon": "list-view",
+	"description": "Accordion list of hotel amenities (Interactivity API).",
+	"textdomain": "hotel-booking-core",
+	"attributes": {
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"title": "Breakfast",
+					"text": "Served until ten in the dining room."
+				},
+				{
+					"title": "Garden",
+					"text": "A quiet courtyard for late light."
+				},
+				{
+					"title": "Desk",
+					"text": "Someone at the desk from seven until late."
+				}
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide" ],
+		"interactivity": true
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:./render.php"
+}

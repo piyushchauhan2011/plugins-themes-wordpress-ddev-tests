@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Hotel Booking Core
  * Plugin URI: https://hotel-booking.ddev.site
- * Description: Rooms, custom inquiries table, REST API, and shortcodes for the Hotel Booking theme.
+ * Description: Rooms, custom inquiries table, REST API, Gutenberg blocks, and shortcodes for the Hotel Booking theme.
  * Version: 1.0.0
  * Requires at least: 6.7
  * Requires PHP: 8.2
@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'HOTEL_BOOKING_CORE_VERSION', '1.0.0' );
 define( 'HOTEL_BOOKING_CORE_PATH', plugin_dir_path( __FILE__ ) );
+define( 'HOTEL_BOOKING_CORE_URL', plugin_dir_url( __FILE__ ) );
 
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/helpers.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/database.php';
@@ -29,6 +30,7 @@ require_once HOTEL_BOOKING_CORE_PATH . 'inc/shortcodes.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/rest-api.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/inquiry-form.php';
 require_once HOTEL_BOOKING_CORE_PATH . 'inc/admin.php';
+require_once HOTEL_BOOKING_CORE_PATH . 'inc/blocks.php';
 
 register_activation_hook( __FILE__, 'hotel_booking_install_inquiries_table' );
 

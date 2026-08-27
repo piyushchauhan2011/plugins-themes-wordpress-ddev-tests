@@ -12,3 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! defined( 'HOTEL_BOOKING_CORE_PATH' ) ) {
 	define( 'HOTEL_BOOKING_CORE_PATH', 'wp-content/plugins/hotel-booking-core/' );
 }
+
+if ( ! defined( 'HOTEL_BOOKING_CORE_URL' ) ) {
+	define( 'HOTEL_BOOKING_CORE_URL', 'wp-content/plugins/hotel-booking-core/' );
+}

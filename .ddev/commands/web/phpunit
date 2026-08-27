@@ -21,4 +21,10 @@ if [[ ! -x vendor/bin/phpunit ]]; then
 	composer install
 fi
 
+PLUGIN_DIR="${PROJECT_DIR}/wp-content/plugins/hotel-booking-core"
+if [[ ! -f "${PLUGIN_DIR}/build/blocks-manifest.php" ]]; then
+	echo "Gutenberg block build is missing. Compiling (ddev build-blocks)…"
+	( cd "${PLUGIN_DIR}" && npm install && npm run build )
+fi
+
 ./vendor/bin/phpunit "$@"

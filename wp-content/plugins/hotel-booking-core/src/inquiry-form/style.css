@@ -1,0 +1,17 @@
+.hb-guest-stepper {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.hb-guest-stepper select {
+	flex: 1;
+}
+
+.hb-guest-stepper__btn {
+	width: 2.5rem;
+	height: 2.5rem;
+	border: 1px solid var(--wp--preset--color--espresso, #2c2118);
+	background: var(--wp--preset--color--linen, #fffbf5);
+	cursor: pointer;
+}

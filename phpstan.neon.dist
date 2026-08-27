@@ -8,5 +8,7 @@ parameters:
 		- wp-content/themes/hotel-booking
 	excludePaths:
 		- wp-content/themes/hotel-booking/assets/images/generate-placeholders.php
+		- wp-content/plugins/hotel-booking-core/node_modules
+		- wp-content/plugins/hotel-booking-core/build
 	bootstrapFiles:
 		- phpstan-bootstrap.php

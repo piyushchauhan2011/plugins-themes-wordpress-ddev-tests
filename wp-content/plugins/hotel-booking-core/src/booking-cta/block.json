@@ -1,0 +1,32 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hotel-booking/booking-cta",
+	"title": "Booking CTA",
+	"category": "hotel-booking",
+	"icon": "megaphone",
+	"description": "Heading and a button that links to the booking page.",
+	"keywords": [ "hotel", "cta", "book" ],
+	"textdomain": "hotel-booking-core",
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "A quiet night, well kept."
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Book a room"
+		},
+		"url": {
+			"type": "string",
+			"default": "/booking/"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
