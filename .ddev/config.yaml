@@ -11,7 +11,7 @@ database:
     version: "11.8"
 use_dns_when_possible: true
 composer_version: "2"
-webimage_extra_packages: [subversion]
+webimage_extra_packages: [subversion, "php${DDEV_PHP_VERSION}-redis"]
 web_environment:
     - WP_TESTS_DIR=/var/www/html/.wp-tests/wordpress-tests-lib
     - WP_CORE_DIR=/var/www/html/.wp-tests/wordpress
@@ -21,6 +21,13 @@ hooks:
     post-start:
         - exec: mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test; GRANT ALL PRIVILEGES ON wordpress_test.* TO 'db'@'%'; FLUSH PRIVILEGES;"
           service: db
+        - exec: |
+            if [ -f wp-config.php ]; then
+              wp config set WP_REDIS_CLIENT phpredis --type=constant --quiet
+              wp config set WP_REDIS_HOST redis --type=constant --quiet
+              wp config set WP_REDIS_PORT 6379 --raw --type=constant --quiet
+              wp config set WP_REDIS_PREFIX 'hotel-booking:' --type=constant --quiet
+            fi
 
 # Key features of DDEV's config.yaml:
 

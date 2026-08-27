@@ -26,6 +26,7 @@
 /wp-content/themes/hotel-booking/languages/*.mo
 /wp-content/themes/hotel-booking/languages/*.l10n.php
 /wp-content/mu-plugins/
+/wp-content/object-cache.php
 
 # Core language packs from `wp language core install` (not theme/plugin catalogs)
 /wp-content/languages/

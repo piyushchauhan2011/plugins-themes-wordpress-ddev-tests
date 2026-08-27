@@ -13,6 +13,13 @@ IMG_DIR="${THEME_DIR}/assets/images"
 wp plugin activate hotel-booking-core >/dev/null
 wp theme activate hotel-booking >/dev/null
 
+if wp plugin is-installed redis-cache >/dev/null 2>&1; then
+	wp plugin activate redis-cache >/dev/null
+else
+	wp plugin install redis-cache --activate >/dev/null
+fi
+wp redis enable >/dev/null
+
 if wp option get hotel_booking_seeded >/dev/null 2>&1 && [[ "${FORCE}" != "--force" ]]; then
 	echo "Hotel demo content already exists. Re-run with: ddev seed-content --force"
 	exit 0

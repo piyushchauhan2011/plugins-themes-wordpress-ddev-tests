@@ -22,6 +22,7 @@ What it creates:
 - Users: `desk` / `desk` (editor), `guest` / `guest` (subscriber); `admin` / `admin` from install
 - About six sample rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`) — guest text is not translated
 - Settings: hotel name The Oak House, desk email, max guests 6
+- Redis Object Cache plugin (not committed) and `wp-content/object-cache.php` drop-in, talking to the DDEV `redis` service
 - A Primary `wp_navigation` menu for the block header
 - Pretty permalinks (`/%postname%/`)
 

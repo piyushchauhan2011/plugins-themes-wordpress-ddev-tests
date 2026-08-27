@@ -43,6 +43,8 @@ ddev seed-content
 
 Rebuild demo data: `ddev seed-content --force`.
 
+Object cache: `ddev describe` lists **redis**. After seed, `ddev redis-cli ping` should print `PONG` and `ddev wp redis status` should show Connected. Flush with `ddev redis-flush`.
+
 ## What seed gives you
 
 - Home (static front page), About, Amenities, Contact, Booking, Desk
@@ -50,6 +52,7 @@ Rebuild demo data: `ddev seed-content --force`.
 - Spanish copies at `/es/` (King Deluxe, …) via Polylang; header **English / Español** switches URL and content
 - Booking form guest dropdown **1–6** (`max_guests` in settings)
 - Settings: hotel name **The Oak House**, desk email `desk@hotel-booking.ddev.site`
+- Redis object cache (plugin via seed; drop-in gitignored)
 - About six rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`)
 - Primary navigation
 
@@ -87,6 +90,10 @@ ddev typecheck
 ddev plugin-check
 ddev composer audit
 ddev npm-audit
+
+# Object cache (after ddev start / seed)
+ddev redis-cli ping
+ddev wp redis status
 
 # Rebuild plugin and theme blocks/CSS after clone, or leave watchers running while you edit
 ddev build-blocks

@@ -25,7 +25,7 @@ Block themes use `templates/*.html` instead of the classic PHP template hierarch
 
 ## Start
 
-Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Primary/replica routing and sharding (docs only, not deployed): [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
+Requires [DDEV](https://ddev.com/) and Docker. Full joiner steps (fresh clone, users, URLs): [docs/ONBOARDING.md](docs/ONBOARDING.md). Shipping the theme and plugin: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Snapshots and recovery: [docs/BACKUP.md](docs/BACKUP.md). Redis object cache on DDEV; replicas/sharding still docs-only: [docs/SCALING.md](docs/SCALING.md). Cron, queues, and search (docs only, not deployed): [docs/JOBS.md](docs/JOBS.md). Theme/plugin gettext plus Polylang room/page copies (plugin not committed): [docs/I18N.md](docs/I18N.md).
 
 ```bash
 ddev start
@@ -281,7 +281,7 @@ CI runs the same suite on push and pull request.
 | Command | Purpose |
 | --- | --- |
 | `ddev start` / `ddev launch` | Run the site |
-| `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings |
+| `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings, Redis Object Cache |
 | `ddev snapshot` / `ddev snapshot restore` | Named DB (+ files) snapshot; see [BACKUP.md](docs/BACKUP.md) |
 | `ddev export-db` / `ddev import-db` | SQL-only dump and restore |
 | `ddev import-theme-unit-test` | Official theme-review XML + Theme Check |
@@ -298,4 +298,5 @@ CI runs the same suite on push and pull request.
 | `ddev compile-i18n` | Compile `.po` to `.mo`, `.l10n.php`, and plugin editor JSON |
 | `ddev npm-audit` | npm audit (high and critical) |
 | `ddev e2e` | Playwright against the DDEV site |
+| `ddev redis-cli` / `ddev redis-flush` | Redis CLI and flush object cache |
 | `ddev wp …` | Any WP-CLI command |

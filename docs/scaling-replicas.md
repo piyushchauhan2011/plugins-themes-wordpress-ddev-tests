@@ -2,7 +2,7 @@
 
 Read replicas scale **SELECT** volume. They do not scale writes. WordPress write amplification (`wp_options`, autoloaded rows, post meta, transients) often saturates the primary before inquiries do. Pair replicas with an **object cache**.
 
-None of this is running on DDEV. Local recovery remains [BACKUP.md](BACKUP.md) against the single MariaDB.
+Replicas are **not** running on DDEV. Local object cache is: [SCALING.md](SCALING.md). Local recovery remains [BACKUP.md](BACKUP.md) against the single MariaDB.
 
 ## Replication model
 
