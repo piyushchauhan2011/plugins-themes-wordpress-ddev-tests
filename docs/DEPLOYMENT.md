@@ -7,7 +7,7 @@ Ship these two folders:
 - [`wp-content/themes/hotel-booking/`](../wp-content/themes/hotel-booking/)
 - [`wp-content/plugins/hotel-booking-core/`](../wp-content/plugins/hotel-booking-core/)
 
-Do **not** deploy `.ddev/`, `tests/`, `e2e/`, `content/`, or `wp-config.php`. Do not reuse local accounts (`admin` / `admin`, `desk` / `desk`) on a real host. Do not put a Capacitor `ios/` or `android/` tree in this zip ([CAPACITOR.md](CAPACITOR.md) is docs-only).
+Do **not** deploy `.ddev/`, `tests/`, `e2e/`, `content/`, or `wp-config.php`. Do not reuse local accounts (`admin` / `admin`, `desk` / `desk`) on a real host. Do not put a Capacitor `ios/` or `android/` tree in this zip ([CAPACITOR.md](CAPACITOR.md) is docs-only). Extra `hotel-booking-*` plugins join the zip only after the [PLUGINS.md](PLUGINS.md) checklist; today the zip is still theme + Core.
 
 Plugin and theme `build/` folders are gitignored. Before a zip, compile both the same way local DDEV does:
 

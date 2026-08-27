@@ -151,6 +151,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [I18N.md](I18N.md) — gettext (theme/plugin chrome, `es_ES`) vs editorial content and inquiry rows
 - [AUTH.md](AUTH.md) — front-end `/staff-login/`, `hotel_manager` role, desk policies (not wp-admin)
 - [CAPACITOR.md](CAPACITOR.md) — Capacitor iOS/Android shell (documentation only; no native app in this repo)
+- [PLUGINS.md](PLUGINS.md) — sibling team plugins, pre-deploy checks, shared `theme.json`, reversible uninstall (documentation only)
 
 ## Next
 
