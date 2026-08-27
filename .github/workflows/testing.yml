@@ -42,6 +42,9 @@ jobs:
         working-directory: wp-content/plugins/hotel-booking-core
         run: npm ci && npm run build
 
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
       - name: Install WordPress test suite
         env:
           WP_TESTS_DIR: /tmp/wordpress-tests-lib
