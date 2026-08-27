@@ -11,7 +11,7 @@ A DDEV WordPress site with a custom **block theme**, a companion **plugin** for 
 | Piece | Where |
 | --- | --- |
 | Block theme files (`theme.json`, HTML templates, patterns) | `wp-content/themes/hotel-booking/` |
-| Plugin-territory PHP (CPT, meta, shortcode) | `wp-content/plugins/hotel-booking-core/` |
+| Plugin-territory PHP (CPT, meta, shortcode, REST API) | `wp-content/plugins/hotel-booking-core/` |
 | Demo hotel content | `ddev seed-content` |
 | Theme review content + Theme Check | `ddev import-theme-unit-test` |
 | PHPUnit + `WP_UnitTestCase` | `ddev phpunit` (lives **outside** the theme) |
@@ -87,8 +87,22 @@ Tests cover:
 - `hotel_booking_format_price()`
 - `$this->factory()->post->create()` plus meta and `WP_Query`
 - `[hotel_room_meta]` shortcode
+- `GET /wp-json/hotel-booking/v1/rooms` REST catalog
 - Block patterns / pattern category
 - `set_up()` / `tear_down()` calling `parent::`
+
+## Rooms API
+
+Custom namespace (not the generic `/wp/v2/hb_room` post payload):
+
+```bash
+curl -s https://hotel-booking.ddev.site/wp-json/hotel-booking/v1/rooms
+curl -s https://hotel-booking.ddev.site/wp-json/hotel-booking/v1/rooms?guests=4
+curl -s https://hotel-booking.ddev.site/wp-json/hotel-booking/v1/rooms/10
+ddev phpunit --filter Test_Hotel_Booking_Rest_Rooms
+```
+
+Each room includes `id`, `title`, `slug`, `excerpt`, `permalink`, `price`, `price_formatted`, `guests`, `beds`, and `size`. Only published rooms are returned.
 
 ## Content
 
@@ -114,6 +128,7 @@ Then open **Appearance → Theme Check** and browse archives, singles, comments,
 - [Block themes](https://developer.wordpress.org/themes/block-themes/) vs [classic template hierarchy](https://developer.wordpress.org/themes/templates/template-hierarchy/)
 - [Theme Unit Test](https://codex.wordpress.org/Theme_Unit_Test)
 - [Plugin / theme unit tests](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) and `WP_UnitTestCase` factories
+- [REST API Handbook](https://developer.wordpress.org/rest-api/) (`register_rest_route`, `rest_do_request`)
 
 ## Commands
 
