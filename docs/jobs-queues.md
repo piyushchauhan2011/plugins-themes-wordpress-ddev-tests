@@ -24,7 +24,8 @@ Pattern:
 If publish fails (broker down, library missing, `WP_AMQP_HOST` unset), the plugin runs the same mail/index function in the request. No transactional outbox.
 
 ```bash
-ddev wp hotel-booking worker   # blocking consume (DDEV already runs this as a daemon)
+ddev start --profiles=queue    # RabbitMQ is optional; default start skips it
+ddev wp hotel-booking worker   # blocking consume (DDEV daemon runs this when rabbitmq resolves)
 ddev launch :15673             # RabbitMQ management (rabbitmq / rabbitmq)
 ddev launch :8026              # Mailpit
 ```
@@ -64,7 +65,7 @@ Sketch (not loaded): [`snippets/rabbitmq-publish.php.example`](snippets/rabbitmq
 
 ### Connection and credentials
 
-Web and workers use `WP_AMQP_HOST`, `WP_AMQP_PORT`, `WP_AMQP_USER`, `WP_AMQP_PASS`, `WP_AMQP_VHOST` from the environment / `wp-config.php`, not git. DDEV values: host `rabbitmq`, port `5672`, user/pass `rabbitmq`, vhost `/`. Production: a private AMQP URL — do not copy the DDEV compose file. See [DEPLOYMENT.md](DEPLOYMENT.md).
+Web and workers use `WP_AMQP_HOST`, `WP_AMQP_PORT`, `WP_AMQP_USER`, `WP_AMQP_PASS`, `WP_AMQP_VHOST` from the environment / `wp-config.php`, not git. DDEV values: host `rabbitmq`, port `5672`, user/pass `rabbitmq`, vhost `/`. The plugin skips AMQP when that hostname does not resolve (no `queue` profile). Production: a private AMQP URL — do not copy the DDEV compose file. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Failure modes
 

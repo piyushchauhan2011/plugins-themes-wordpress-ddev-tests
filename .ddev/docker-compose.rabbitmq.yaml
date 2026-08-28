@@ -1,9 +1,12 @@
-#ddev-generated
+# Customized from ddev/ddev-rabbitmq: queue profile (not started on ddev start).
+# Re-apply profiles after `ddev add-on get`.
 services:
   rabbitmq:
     container_name: ddev-${DDEV_SITENAME}-rabbitmq
     hostname: ${DDEV_SITENAME}-rabbitmq
     image: ${RABBITMQ_DOCKER_IMAGE:-rabbitmq:4-management}-${DDEV_SITENAME}-built
+    profiles:
+      - queue
     build:
       dockerfile_inline: |
         ARG RABBITMQ_DOCKER_IMAGE="scratch"

@@ -38,13 +38,13 @@ Set it back to `false` when you are done. Do not commit `wp-config.php`.
 
 ## What seed gives you
 
-`ddev seed-content` installs [Query Monitor](https://wordpress.org/plugins/query-monitor/) (gitignored, like Polylang) and runs `ddev demo-observability` (REST curls, `[hotel-booking]` log lines, a demo PHP warning) so Grafana is not empty. Promtail tails a Docker volume at `/var/log/hotel-booking/debug.log` (not the Mutagen copy of `wp-content/debug.log`). After start, `wp-content/debug.log` is a symlink to that file so `ddev exec tail` still works.
+`ddev seed-content` installs [Query Monitor](https://wordpress.org/plugins/query-monitor/) (gitignored, like Polylang) and runs `ddev demo-observability` (REST curls, `[hotel-booking]` log lines, a demo PHP warning). With the `observability` profile, that fills Grafana; without it, the file log still gets the demo lines. Promtail tails a Docker volume at `/var/log/hotel-booking/debug.log` (not the Mutagen copy of `wp-content/debug.log`) when that profile is on. After start, `wp-content/debug.log` is a symlink to that file so `ddev exec tail` still works.
 
 Plugin lines are prefixed `[hotel-booking]` (`hotel_booking_log()` in [`inc/helpers.php`](../wp-content/plugins/hotel-booking-core/inc/helpers.php)). AMQP connect/publish failures already use that helper and then fall back in-request.
 
 ## Grafana Loki
 
-`ddev describe` lists **loki** (and **promtail**). Open Grafana:
+Loki and Promtail are part of the **`observability`** profile (`ddev start --profiles=observability`). `ddev describe` then lists **loki** (and **promtail**). Open Grafana:
 
 ```bash
 ddev launch :3001
@@ -62,9 +62,9 @@ Loki is an API, not a dashboard. `ddev launch :3101` hits `/` and Loki returns *
 
 ## Grafana Tempo (traces)
 
-Core REST (`/rooms`, `/metrics`), inquiry insert, and OpenSearch HTTP run inside named OpenTelemetry spans when `WP_OTEL_ENDPOINT` is set (`http://tempo:4318` on DDEV). There is no PHP OTel extension.
+Core REST (`/rooms`, `/metrics`), inquiry insert, and OpenSearch HTTP run inside named OpenTelemetry spans when `WP_OTEL_ENDPOINT` is set (`http://tempo:4318` on DDEV) **and** `tempo` resolves. There is no PHP OTel extension.
 
-`ddev describe` lists **tempo**. Grafana **Hotel Booking traces** lists traces in a table (click a Trace ID for the waterfall in Explore), or Explore Tempo with `{ resource.service.name="hotel-booking" }`. Tempo has no UI at `/` (`ddev launch :3201` is a 404); health is `ddev launch :3201/ready`.
+With the `observability` profile, `ddev describe` lists **tempo**. Grafana **Hotel Booking traces** lists traces in a table (click a Trace ID for the waterfall in Explore), or Explore Tempo with `{ resource.service.name="hotel-booking" }`. Tempo has no UI at `/` (`ddev launch :3201` is a 404); health is `ddev launch :3201/ready`.
 
 Refill dashboards without reseeding:
 
@@ -102,10 +102,10 @@ Fatals in Hotel Booking Core show a file under `wp-content/plugins/hotel-booking
 | Symptom | Likely cause | What to do |
 | --- | --- | --- |
 | White screen, `debug.log` has a stack in Core or the theme | PHP fatal | Fix the line; `ddev logs` if the file is empty |
-| Desk email delayed, log has `[hotel-booking] AMQP … failed` | RabbitMQ down | Mail still sends in-request; start the project (`ddev start`) |
-| Search falls back to `WP_Query`, rooms still list | OpenSearch down | `ddev exec curl -s http://opensearch:9200/_cluster/health`; `ddev wp hotel-booking reindex` |
+| Desk email delayed, log has `[hotel-booking] AMQP … failed` | RabbitMQ down | Mail still sends in-request; `ddev start --profiles=queue` |
+| Search falls back to `WP_Query`, rooms still list | OpenSearch down or `search` profile off | `ddev start --profiles=search`; `ddev exec curl -s http://opensearch:9200/_cluster/health`; `ddev wp hotel-booking reindex` |
 | Query Monitor HTTP panel shows 7xx/timeouts to `opensearch` | Same | Optional cluster; not a theme bug |
-| Metrics empty in Grafana | Prometheus scrape | [OBSERVABILITY.md](OBSERVABILITY.md); `ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics` |
+| Metrics empty in Grafana | Observability profile off, or Prometheus scrape | `ddev start --profiles=observability`; [OBSERVABILITY.md](OBSERVABILITY.md); `ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics` |
 
 ## Production (not in this zip)
 

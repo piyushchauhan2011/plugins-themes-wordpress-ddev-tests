@@ -45,6 +45,8 @@ DDEV `post-start` writes that constant. A **web_extra_daemons** loop ticks inste
 while true; do wp cron event run --due-now --quiet; sleep 60; done
 ```
 
+A second daemon consumes RabbitMQ only when the `queue` profile is up (`getent hosts rabbitmq`). Without it, desk mail and indexing run in-request.
+
 On a real host, a **system** crontab (or systemd timer) does the same. Sketches: [`snippets/system-cron.example`](snippets/system-cron.example).
 
 ```

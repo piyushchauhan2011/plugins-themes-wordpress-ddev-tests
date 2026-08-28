@@ -6,10 +6,17 @@ Room search on DDEV uses **OpenSearch**. Inquiries stay in MariaDB (`SELECT` / `
 
 ## What runs locally
 
+OpenSearch is the **`search`** Compose profile. Default `ddev start` does not run it; `/search/` still lists rooms via `WP_Query`.
+
+```bash
+ddev start --profiles=search
+ddev start-profiles search
+```
+
 - Add-on [`ddev/ddev-opensearch`](https://github.com/ddev/ddev-opensearch), image tag **2.x** in [`.ddev/.env.opensearch`](../.ddev/.env.opensearch)
 - Cluster `http://opensearch:9200` on the Docker network (security plugin off)
 - Dashboards: `ddev launch :5602` — inspect index `hotel-booking-rooms`
-- `WP_OPENSEARCH_HOST` / `WP_OPENSEARCH_PORT` from DDEV `post-start` (same idea as Redis)
+- `WP_OPENSEARCH_HOST` / `WP_OPENSEARCH_PORT` from DDEV `post-start` (same idea as Redis). The plugin treats the cluster as off when `opensearch` does not resolve
 - Plugin HTTP via `wp_remote_request` in [`inc/opensearch.php`](../wp-content/plugins/hotel-booking-core/inc/opensearch.php) — no Composer client
 
 ```bash

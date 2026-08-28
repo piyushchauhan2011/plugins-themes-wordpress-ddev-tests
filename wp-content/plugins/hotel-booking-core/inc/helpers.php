@@ -39,6 +39,41 @@ function hotel_booking_log( $message ) {
 }
 
 /**
+ * Whether a Docker/service hostname resolves (optional DDEV profiles).
+ *
+ * IPs are treated as up (the caller still times out on connect). Unresolvable
+ * names are not cached so `ddev start --profiles=…` on a running project works.
+ *
+ * @param string $host Hostname or IP.
+ * @return bool
+ */
+function hotel_booking_service_host_up( $host ) {
+	static $cache = array();
+
+	$host = trim( $host );
+	if ( '' === $host ) {
+		return false;
+	}
+
+	if ( isset( $cache[ $host ] ) ) {
+		return $cache[ $host ];
+	}
+
+	if ( false !== filter_var( $host, FILTER_VALIDATE_IP ) ) {
+		$cache[ $host ] = true;
+		return true;
+	}
+
+	$resolved = gethostbyname( $host );
+	$up       = '' !== $resolved && $resolved !== $host;
+	if ( $up ) {
+		$cache[ $host ] = true;
+	}
+
+	return $up;
+}
+
+/**
  * Map a list, preserving PHPStan's TIn → TOut (PHP has no runtime generics).
  *
  * @template TIn

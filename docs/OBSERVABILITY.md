@@ -12,7 +12,14 @@ REST / inquiry / OpenSearch
 
 ## What runs locally
 
-`ddev describe` lists **prometheus** and **grafana**. They are extra Docker services, like OpenSearch and RabbitMQ.
+Prometheus, Grafana, Loki, Promtail, and Tempo are the **`observability`** Compose profile. Default `ddev start` does not run them. Metrics still exist as `GET /wp-json/hotel-booking/v1/metrics`.
+
+```bash
+ddev start --profiles=observability
+ddev start-profiles observability
+```
+
+`ddev describe` then lists **prometheus** and **grafana**. They are extra Docker services, like OpenSearch (`search`) and RabbitMQ (`queue`).
 
 | Service | Open | Notes |
 | --- | --- | --- |
@@ -38,7 +45,7 @@ PHPUnit calls `rest_do_request( '/hotel-booking/v1/metrics' )` and asserts the t
 
 ## Traces (Tempo)
 
-Hotel Booking Core starts OpenTelemetry spans around REST rooms/metrics, inquiry insert, and OpenSearch requests ([`inc/tracing.php`](../wp-content/plugins/hotel-booking-core/inc/tracing.php)). The PHP SDK talks OTLP HTTP to Tempo. PHPUnit and GitHub Actions never start Tempo; without `WP_OTEL_ENDPOINT` the wrapper still runs the callback.
+Hotel Booking Core starts OpenTelemetry spans around REST rooms/metrics, inquiry insert, and OpenSearch requests ([`inc/tracing.php`](../wp-content/plugins/hotel-booking-core/inc/tracing.php)). The PHP SDK talks OTLP HTTP to Tempo. PHPUnit and GitHub Actions never start Tempo; without `WP_OTEL_ENDPOINT`, or when `tempo` does not resolve, the wrapper still runs the callback.
 
 After `ddev seed-content` (or `ddev demo-observability`) Grafana **Hotel Booking traces** lists matching traces in a table (the waterfall Traces view only renders one Trace ID). Click a Trace ID to open Explore. If the table is empty, widen the time picker past Last 5 minutes.
 
