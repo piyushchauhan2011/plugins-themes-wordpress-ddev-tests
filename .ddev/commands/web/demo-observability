@@ -19,4 +19,9 @@ done
 
 wp eval 'hotel_booking_log( "demo observability traffic" ); hotel_booking_log( "demo: rooms REST + metrics scraped" ); trigger_error( "[hotel-booking] demo warning", E_USER_WARNING );'
 
-echo "Done. Grafana: ddev launch :3001 (metrics, logs, traces dashboards)."
+if getent hosts grafana >/dev/null 2>&1 || getent hosts tempo >/dev/null 2>&1; then
+	echo "Done. Grafana: ddev launch :3001 (metrics, logs, traces dashboards)."
+else
+	echo "Done. File log: ddev exec tail wp-content/debug.log"
+	echo "Observability profile is off. Start it with: ddev start --profiles=observability"
+fi

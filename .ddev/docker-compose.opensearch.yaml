@@ -1,8 +1,11 @@
-#ddev-generated
+# Customized from ddev/ddev-opensearch: search profile (not started on ddev start).
+# Re-apply profiles and do not restore web.depends_on after `ddev add-on get`.
 services:
   opensearch:
     container_name: ddev-${DDEV_SITENAME}-opensearch
     image: opensearchproject/opensearch:${OPENSEARCH_TAG:-latest}-${DDEV_SITENAME}-built
+    profiles:
+      - search
     build:
       dockerfile_inline: |
         ARG OPENSEARCH_TAG="latest"
@@ -41,6 +44,8 @@ services:
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:${OPENSEARCH_DASHBOARDS_TAG:-latest}
     container_name: 'ddev-${DDEV_SITENAME}-opensearch-dashboards'
+    profiles:
+      - search
     environment:
       - VIRTUAL_HOST=$DDEV_HOSTNAME
       - OPENSEARCH_HOSTS=http://ddev-${DDEV_PROJECT}-opensearch:9200
@@ -52,10 +57,6 @@ services:
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: $DDEV_APPROOT
-    depends_on:
-      - opensearch
-
-  web:
     depends_on:
       - opensearch
 

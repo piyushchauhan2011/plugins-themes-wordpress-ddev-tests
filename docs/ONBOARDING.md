@@ -43,19 +43,38 @@ ddev seed-content
 
 Rebuild demo data: `ddev seed-content --force`.
 
+## Optional services (profiles)
+
+`ddev start` runs **web**, **MariaDB**, **redis**, and **Mailpit**. OpenSearch, RabbitMQ, and the Grafana stack stay off until you pass Compose profiles. Search still lists rooms via `WP_Query`; desk mail still sends in-request.
+
+| Profile | Start | Services |
+| --- | --- | --- |
+| `search` | `ddev start --profiles=search` | OpenSearch + Dashboards |
+| `queue` | `ddev start --profiles=queue` | RabbitMQ |
+| `observability` | `ddev start --profiles=observability` | Prometheus, Grafana, Loki, Promtail, Tempo |
+
+```bash
+ddev start --profiles=search,queue,observability
+ddev start --profiles='*'
+ddev start-profiles search
+ddev start-profiles all
+```
+
+You can add a profile to an already running project with the same `ddev start --profiles=…` command. `ddev restart` has no `--profiles` flag; pass them again on the next `ddev start`.
+
 Object cache: `ddev describe` lists **redis**. After seed, `ddev redis-cli ping` should print `PONG` and `ddev wp redis status` should show Connected. Flush with `ddev redis-flush`.
 
 Page cache: anonymous Home is nginx FastCGI. `curl -sI https://hotel-booking.ddev.site/` twice should show `X-Cache: MISS` then `HIT`. `/wp-json/` and logged-in requests should show `BYPASS`. Flush with `ddev nginx-cache-flush`.
 
-Room search: `ddev describe` lists **opensearch**. After seed, `ddev exec curl -s http://opensearch:9200/_cluster/health` should show `green` or `yellow`. Rebuild the index with `ddev wp hotel-booking reindex`. Dashboards: `ddev launch :5602`. The Search page is `/search/` (Spanish `/es/buscar/`).
+Room search: with the `search` profile, `ddev describe` lists **opensearch**. After seed, `ddev exec curl -s http://opensearch:9200/_cluster/health` should show `green` or `yellow`. Rebuild the index with `ddev wp hotel-booking reindex`. Dashboards: `ddev launch :5602`. Without the profile, `/search/` (Spanish `/es/buscar/`) still works through MySQL.
 
-Jobs: `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (user `rabbitmq` / `rabbitmq`). Desk mail lands in Mailpit (`ddev launch :8026`). After seed, Priya Shah is a pending inquiry with `wait_until` in the past so `ddev wp hotel-booking remind-stale` (workflow tick) has a due timer. Daily digest: `ddev wp hotel-booking digest`. Desk status uses Contact / Close / Reopen, not a free-form status list. WP-Cron is disabled for visitors; a web daemon ticks `wp cron event run --due-now`.
+Jobs: with the `queue` profile, `ddev describe` lists **rabbitmq**. Management UI `ddev launch :15673` (user `rabbitmq` / `rabbitmq`). Desk mail lands in Mailpit (`ddev launch :8026`) either way. After seed, Priya Shah is a pending inquiry with `wait_until` in the past so `ddev wp hotel-booking remind-stale` (workflow tick) has a due timer. Daily digest: `ddev wp hotel-booking digest`. Desk status uses Contact / Close / Reopen, not a free-form status list. WP-Cron is disabled for visitors; a web daemon ticks `wp cron event run --due-now`.
 
-Observability: `ddev describe` lists **prometheus** and **grafana**. Metrics: `ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics`. Grafana `ddev launch :3001` (anonymous or `admin` / `admin`); Prometheus `ddev launch :9091`. PHPUnit never starts those containers. See [OBSERVABILITY.md](OBSERVABILITY.md).
+Observability: with the `observability` profile, `ddev describe` lists **prometheus** and **grafana**. Metrics: `ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics` (that route does not need Grafana). Grafana `ddev launch :3001` (anonymous or `admin` / `admin`); Prometheus `ddev launch :9091`. PHPUnit never starts those containers. See [OBSERVABILITY.md](OBSERVABILITY.md).
 
-PHP errors: `ddev describe` lists **loki**. File log: `ddev exec tail -n 80 wp-content/debug.log`. Container stderr: `ddev logs`. After seed, Query Monitor is in the wp-admin bar as `admin`. Grafana **Hotel Booking logs** dashboard (`ddev launch :3001`). Loki has no UI; `ddev launch :3101/ready` should print `ready`. See [DEBUG.md](DEBUG.md).
+PHP errors: file log `ddev exec tail -n 80 wp-content/debug.log`. Container stderr: `ddev logs`. After seed, Query Monitor is in the wp-admin bar as `admin`. With the `observability` profile, Grafana **Hotel Booking logs** (`ddev launch :3001`) and Loki (`ddev launch :3101/ready`). See [DEBUG.md](DEBUG.md).
 
-Traces: `ddev describe` lists **tempo**. Grafana **Hotel Booking traces** dashboard. Tempo has no UI; `ddev launch :3201/ready`. Seed (and `ddev demo-observability`) curls `/rooms` and `/metrics` so the dashboards are not empty.
+Traces: with the `observability` profile, `ddev describe` lists **tempo**. Grafana **Hotel Booking traces**. Tempo has no UI; `ddev launch :3201/ready`. Seed (and `ddev demo-observability`) curls `/rooms` and `/metrics` so the dashboards are not empty.
 
 ## What seed gives you
 
@@ -66,12 +85,12 @@ Traces: `ddev describe` lists **tempo**. Grafana **Hotel Booking traces** dashbo
 - Settings: hotel name **The Oak House**, desk email `desk@hotel-booking.ddev.site`
 - Redis object cache (plugin via seed; drop-in gitignored)
 - nginx FastCGI page cache (anonymous HTML; not a WordPress plugin)
-- OpenSearch rooms index (`hotel-booking-rooms`; plugin HTTP client, not a WordPress plugin)
-- RabbitMQ (`hotel-booking` topic exchange) plus WP-Cron daily stale-pending and desk digest
-- Prometheus + Grafana (inquiry counts; not in PHPUnit or the theme/plugin zip)
+- OpenSearch rooms index when the `search` profile is on (`hotel-booking-rooms`; otherwise `WP_Query`)
+- RabbitMQ when the `queue` profile is on (`hotel-booking` topic exchange); otherwise desk mail and index run in-request. WP-Cron daily stale-pending and desk digest always
+- Prometheus + Grafana when the `observability` profile is on (inquiry counts; not in PHPUnit or the theme/plugin zip)
 - Query Monitor (wp-admin bar as `admin`; not in the zip)
-- Loki + Promtail (tails `wp-content/debug.log`; not in PHPUnit or the zip)
-- Tempo traces (OTLP from Core REST / inquiry / OpenSearch; not in PHPUnit or the zip)
+- Loki + Promtail when the `observability` profile is on (tails `wp-content/debug.log`; file log always works)
+- Tempo traces when the `observability` profile is on (OTLP from Core REST / inquiry / OpenSearch)
 - About six rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`); Priya Shah is backdated ~50 hours for the reminder job
 - Primary navigation
 
@@ -120,7 +139,8 @@ ddev wp redis status
 curl -sI https://hotel-booking.ddev.site/ | grep -i x-cache
 ddev nginx-cache-flush
 
-# Room search, jobs, Mailpit
+# Room search, jobs, Mailpit (search / queue profiles)
+# ddev start --profiles=search,queue
 ddev wp hotel-booking reindex
 ddev wp hotel-booking workflow tick
 ddev wp hotel-booking remind-stale
@@ -128,7 +148,8 @@ ddev wp hotel-booking digest
 ddev rabbitmq launch
 # Mailpit: ddev launch :8026
 
-# Prometheus + Grafana (inquiry counts)
+# Prometheus + Grafana (observability profile)
+# ddev start --profiles=observability
 ddev exec curl -s http://web/wp-json/hotel-booking/v1/metrics
 # Grafana: ddev launch :3001
 # Prometheus: ddev launch :9091

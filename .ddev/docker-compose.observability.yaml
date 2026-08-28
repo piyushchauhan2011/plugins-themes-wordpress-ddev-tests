@@ -1,7 +1,11 @@
+# Prometheus, Grafana, Loki, Promtail, Tempo: observability profile (ddev start --profiles=observability).
+# The web php-logs volume stays always-on so debug.log works without Grafana.
 services:
   prometheus:
     container_name: ddev-${DDEV_SITENAME}-prometheus
     image: prom/prometheus:v2.55.1
+    profiles:
+      - observability
     expose:
       - 9090
     environment:
@@ -28,6 +32,8 @@ services:
   grafana:
     container_name: ddev-${DDEV_SITENAME}-grafana
     image: grafana/grafana:11.5.2
+    profiles:
+      - observability
     expose:
       - 3000
     environment:
@@ -65,6 +71,8 @@ services:
   loki:
     container_name: ddev-${DDEV_SITENAME}-loki
     image: grafana/loki:3.4.2
+    profiles:
+      - observability
     expose:
       - 3100
     environment:
@@ -88,6 +96,8 @@ services:
   promtail:
     container_name: ddev-${DDEV_SITENAME}-promtail
     image: grafana/promtail:3.4.2
+    profiles:
+      - observability
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: ${DDEV_APPROOT}
@@ -103,6 +113,8 @@ services:
   tempo:
     container_name: ddev-${DDEV_SITENAME}-tempo
     image: grafana/tempo:2.7.2
+    profiles:
+      - observability
     expose:
       - 3200
       - 4317

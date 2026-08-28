@@ -51,6 +51,16 @@ class Test_Hotel_Booking_Helpers extends WP_UnitTestCase {
 		$this->assertNull( $found );
 	}
 
+	public function test_service_host_up_accepts_loopback_ip() {
+		$this->assertTrue( hotel_booking_service_host_up( '127.0.0.1' ) );
+		$this->assertTrue( hotel_booking_service_host_up( '::1' ) );
+	}
+
+	public function test_service_host_up_rejects_empty_and_bogus_hostname() {
+		$this->assertFalse( hotel_booking_service_host_up( '' ) );
+		$this->assertFalse( hotel_booking_service_host_up( 'hb-no-such-host.invalid' ) );
+	}
+
 	public function test_jpeg_uploads_output_webp() {
 		$formats = apply_filters( 'image_editor_output_format', array() );
 		$this->assertSame( 'image/webp', $formats['image/jpeg'] );

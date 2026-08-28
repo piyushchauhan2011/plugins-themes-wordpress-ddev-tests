@@ -25,14 +25,23 @@ Search later  → OpenSearch, or WP_Query if the cluster is down
 
 ## DDEV
 
+RabbitMQ is the **`queue`** Compose profile. Default `ddev start` does not run it; desk mail and indexing then happen in-request. OpenSearch is the **`search`** profile ([jobs-search.md](jobs-search.md)).
+
+```bash
+ddev start --profiles=queue
+ddev start --profiles=search,queue
+ddev start-profiles queue
+```
+
 - Add-on [`ddev/ddev-rabbitmq`](https://github.com/ddev/ddev-rabbitmq), image `rabbitmq:4-management` in [`.ddev/.env.rabbitmq`](../.ddev/.env.rabbitmq)
 - Management UI: `ddev rabbitmq launch` or `ddev launch :15673` (user `rabbitmq` / `rabbitmq`)
 - Mailpit: `ddev launch :8026`
-- `WP_AMQP_*` and `DISABLE_WP_CRON` from `post-start` in [`.ddev/config.yaml`](../.ddev/config.yaml)
-- Daemons on the web container: `wp-cron-tick` (`wp cron event run --due-now` every 60s) and `hotel-booking-worker` (`wp hotel-booking worker`)
+- `WP_AMQP_*` and `DISABLE_WP_CRON` from `post-start` in [`.ddev/config.yaml`](../.ddev/config.yaml). The plugin skips AMQP when the `rabbitmq` hostname does not resolve
+- Daemons on the web container: `wp-cron-tick` (`wp cron event run --due-now` every 60s) and `hotel-booking-worker` (runs `wp hotel-booking worker` only when `rabbitmq` is on the Docker network)
 - Client libraries: project Composer `php-amqplib/php-amqplib` and `symfony/workflow` (not plugin packages). `ddev composer install` puts them in `vendor/`
 
 ```bash
+ddev start --profiles=queue
 ddev describe
 ddev wp hotel-booking workflow tick
 ddev wp hotel-booking remind-stale

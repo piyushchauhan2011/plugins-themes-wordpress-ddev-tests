@@ -61,7 +61,8 @@ function hotel_booking_tracer() {
 
 	$tracer   = null;
 	$endpoint = hotel_booking_otel_endpoint();
-	$enabled  = '' !== $endpoint && hotel_booking_otel_load_library();
+	$host     = is_string( $endpoint ) && '' !== $endpoint ? wp_parse_url( $endpoint, PHP_URL_HOST ) : '';
+	$enabled  = '' !== $endpoint && is_string( $host ) && '' !== $host && hotel_booking_service_host_up( $host ) && hotel_booking_otel_load_library();
 	$enabled  = (bool) apply_filters( 'hotel_booking_otel_enabled', $enabled );
 	if ( ! $enabled ) {
 		return null;

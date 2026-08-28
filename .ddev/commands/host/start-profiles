@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+## Description: Start optional DDEV Compose profiles (search, queue, observability)
+## Usage: start-profiles [search|queue|observability|all]...
+## Example: ddev start-profiles search
+## Example: ddev start-profiles queue observability
+## Example: ddev start-profiles all
+
+set -euo pipefail
+
+usage() {
+	echo "Usage: ddev start-profiles [search|queue|observability|all]..."
+	echo "  search         OpenSearch + Dashboards"
+	echo "  queue          RabbitMQ"
+	echo "  observability  Prometheus, Grafana, Loki, Promtail, Tempo"
+	echo "  all            Every optional profile"
+	echo
+	echo "Default ddev start only runs web, db, redis, and Mailpit."
+	echo "After ddev restart, pass profiles again (restart has no --profiles flag)."
+}
+
+if [[ $# -eq 0 ]]; then
+	usage
+	exit 1
+fi
+
+profiles=()
+for arg in "$@"; do
+	case "${arg}" in
+		search | queue | observability)
+			profiles+=("${arg}")
+			;;
+		all | '*')
+			ddev start --profiles='*'
+			exit 0
+			;;
+		-h | --help)
+			usage
+			exit 0
+			;;
+		*)
+			echo "Unknown profile: ${arg}" >&2
+			usage
+			exit 1
+			;;
+	esac
+done
+
+IFS=','; joined="${profiles[*]}"
+ddev start --profiles="${joined}"

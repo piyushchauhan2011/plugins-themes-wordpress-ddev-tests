@@ -2,6 +2,7 @@ name: hotel-booking
 type: wordpress
 docroot: .
 php_version: "8.2"
+ddev_version_constraint: ">= 1.24.8"
 webserver_type: nginx-fpm
 xdebug_enabled: false
 additional_hostnames: []
@@ -56,7 +57,7 @@ web_extra_daemons:
       command: "bash -c 'while true; do wp cron event run --due-now --quiet; sleep 60; done'"
       directory: /var/www/html
     - name: "hotel-booking-worker"
-      command: "bash -c 'while true; do wp hotel-booking worker; sleep 5; done'"
+      command: "bash -c 'while true; do if getent hosts rabbitmq >/dev/null 2>&1; then wp hotel-booking worker || true; fi; sleep 5; done'"
       directory: /var/www/html
 
 # Key features of DDEV's config.yaml:

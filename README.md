@@ -33,6 +33,8 @@ ddev seed-content
 ddev launch
 ```
 
+Optional stacks (OpenSearch, RabbitMQ, Grafana) are Compose profiles and stay off until you pass `--profiles`. See [docs/ONBOARDING.md](docs/ONBOARDING.md).
+
 ## Theme map
 
 ```
@@ -283,16 +285,20 @@ CI runs the same suite on push and pull request.
 
 | Command | Purpose |
 | --- | --- |
-| `ddev start` / `ddev launch` | Run the site |
-| `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings, Redis Object Cache, OpenSearch reindex |
-| `ddev wp hotel-booking reindex` | Rebuild the OpenSearch rooms index |
-| `ddev wp hotel-booking worker` | Consume RabbitMQ email and search queues (also a DDEV daemon) |
+| `ddev start` / `ddev launch` | Run the site (web, db, redis, Mailpit) |
+| `ddev start --profiles=search` | Add OpenSearch + Dashboards |
+| `ddev start --profiles=queue` | Add RabbitMQ |
+| `ddev start --profiles=observability` | Add Prometheus, Grafana, Loki, Promtail, Tempo |
+| `ddev start-profiles all` | Start every optional profile |
+| `ddev seed-content` | Hotel pages, rooms, users, inquiries, settings, Redis Object Cache; OpenSearch reindex if the `search` profile is up |
+| `ddev wp hotel-booking reindex` | Rebuild the OpenSearch rooms index (`search` profile) |
+| `ddev wp hotel-booking worker` | Consume RabbitMQ email and search queues (`queue` profile; also a DDEV daemon when RabbitMQ is up) |
 | `ddev wp hotel-booking remind-stale` / `digest` / `workflow tick` | Run inquiry jobs and due workflow timers now |
-| `ddev rabbitmq launch` | RabbitMQ management UI |
-| `ddev launch :9091` | Prometheus UI (scrapes `/wp-json/hotel-booking/v1/metrics`) |
-| `ddev launch :3001` | Grafana (anonymous Viewer, or `admin` / `admin`) |
-| `ddev launch :3101/ready` | Loki health check (no UI; logs are in Grafana) |
-| `ddev launch :3201/ready` | Tempo health check (no UI; traces are in Grafana) |
+| `ddev rabbitmq launch` | RabbitMQ management UI (`queue` profile) |
+| `ddev launch :9091` | Prometheus UI (`observability` profile; scrapes `/wp-json/hotel-booking/v1/metrics`) |
+| `ddev launch :3001` | Grafana (`observability` profile; anonymous Viewer, or `admin` / `admin`) |
+| `ddev launch :3101/ready` | Loki health check (`observability` profile; no UI; logs are in Grafana) |
+| `ddev launch :3201/ready` | Tempo health check (`observability` profile; no UI; traces are in Grafana) |
 | `ddev demo-observability` | Curl REST + demo log/warning so Grafana has data |
 | `ddev logs` | php-fpm / nginx stderr; file log is `wp-content/debug.log` ([DEBUG.md](docs/DEBUG.md)) |
 | `ddev xdebug on` / `off` | Step-through PHP debugger (off by default) |

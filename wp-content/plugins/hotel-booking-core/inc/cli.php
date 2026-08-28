@@ -22,7 +22,12 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
  */
 function hotel_booking_cli_reindex( $args = array(), $assoc_args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	if ( ! hotel_booking_opensearch_is_configured() ) {
-		WP_CLI::warning( __( 'WP_OPENSEARCH_HOST is not set; skip reindex.', 'hotel-booking-core' ) );
+		WP_CLI::warning(
+			__(
+				'WP_OPENSEARCH_HOST is not set or OpenSearch is not running; skip reindex. Start the search profile: ddev start --profiles=search',
+				'hotel-booking-core'
+			)
+		);
 		return;
 	}
 
@@ -49,7 +54,13 @@ function hotel_booking_cli_reindex( $args = array(), $assoc_args = array() ) { /
  */
 function hotel_booking_cli_worker( $args = array(), $assoc_args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	if ( ! hotel_booking_amqp_is_configured() ) {
-		WP_CLI::error( __( 'WP_AMQP_HOST is not set or php-amqplib is missing.', 'hotel-booking-core' ) );
+		WP_CLI::warning(
+			__(
+				'WP_AMQP_HOST is not set, php-amqplib is missing, or RabbitMQ is not running. Start the queue profile: ddev start --profiles=queue',
+				'hotel-booking-core'
+			)
+		);
+		return;
 	}
 
 	WP_CLI::log( __( 'Consuming hotel-booking.email and hotel-booking.search. Ctrl+C to stop.', 'hotel-booking-core' ) );

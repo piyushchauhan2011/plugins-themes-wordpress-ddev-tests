@@ -41,7 +41,7 @@ function hotel_booking_amqp_load_library() {
  */
 function hotel_booking_amqp_is_configured() {
 	$host    = hotel_booking_amqp_setting( 'WP_AMQP_HOST', '' );
-	$enabled = is_string( $host ) && '' !== $host && hotel_booking_amqp_load_library();
+	$enabled = is_string( $host ) && '' !== $host && hotel_booking_service_host_up( (string) $host ) && hotel_booking_amqp_load_library();
 
 	return (bool) apply_filters( 'hotel_booking_amqp_enabled', $enabled );
 }

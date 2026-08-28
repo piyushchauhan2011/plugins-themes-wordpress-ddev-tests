@@ -89,7 +89,7 @@ Do not copy the DDEV FastCGI files onto the server. Object cache (`ddev redis-fl
 
 ## OpenSearch (not in this zip)
 
-Local DDEV runs OpenSearch as a Docker service. The zip does **not** include that compose file. Room search falls back to `WP_Query` when the cluster is unset or down.
+Local DDEV can run OpenSearch as a Docker service (`ddev start --profiles=search`). The zip does **not** include that compose file. Room search falls back to `WP_Query` when the cluster is unset, down, or the hostname does not resolve.
 
 On a real host:
 
@@ -107,7 +107,7 @@ Do not copy the DDEV OpenSearch compose file onto the server.
 
 ## RabbitMQ and WP-Cron (not in this zip)
 
-Local DDEV runs RabbitMQ as a Docker service and ticks WP-Cron from a web daemon. The zip does **not** include that compose file or project `vendor/php-amqplib`. Desk email and OpenSearch still run **in-request** when `WP_AMQP_HOST` is unset.
+Local DDEV can run RabbitMQ as a Docker service (`ddev start --profiles=queue`) and ticks WP-Cron from a web daemon. The zip does **not** include that compose file or project `vendor/php-amqplib`. Desk email and OpenSearch still run **in-request** when `WP_AMQP_HOST` is unset or `rabbitmq` does not resolve.
 
 On a real host:
 
@@ -134,7 +134,7 @@ Do not copy the DDEV RabbitMQ compose file onto the server. Inquiry workflow tab
 
 ## Prometheus and Grafana (not in this zip)
 
-Local DDEV runs Prometheus and Grafana as Docker services and scrapes `GET /wp-json/hotel-booking/v1/metrics`. The zip does **not** include that compose file. PHPUnit never starts Prometheus.
+Local DDEV can run Prometheus and Grafana as Docker services (`ddev start --profiles=observability`) and scrapes `GET /wp-json/hotel-booking/v1/metrics`. The zip does **not** include that compose file. PHPUnit never starts Prometheus.
 
 On a real host:
 
@@ -146,7 +146,7 @@ See [OBSERVABILITY.md](OBSERVABILITY.md). PHP errors and `debug.log` are [DEBUG.
 
 ## Query Monitor and Loki (not in this zip)
 
-Local DDEV installs [Query Monitor](https://wordpress.org/plugins/query-monitor/) via seed and runs Loki/Promtail so `wp-content/debug.log` appears in Grafana. The zip does **not** include that plugin or compose file. PHPUnit never starts Loki.
+Local DDEV installs [Query Monitor](https://wordpress.org/plugins/query-monitor/) via seed and can run Loki/Promtail (`observability` profile) so `wp-content/debug.log` appears in Grafana. The zip does **not** include that plugin or compose file. PHPUnit never starts Loki.
 
 On a real host:
 
@@ -158,7 +158,7 @@ See [DEBUG.md](DEBUG.md).
 
 ## Tempo (not in this zip)
 
-Local DDEV runs Tempo and exports OpenTelemetry spans from Hotel Booking Core (`WP_OTEL_ENDPOINT`). The zip does **not** include that compose file. PHPUnit never starts Tempo.
+Local DDEV can run Tempo (`ddev start --profiles=observability`) and exports OpenTelemetry spans from Hotel Booking Core (`WP_OTEL_ENDPOINT`) when `tempo` resolves. The zip does **not** include that compose file. PHPUnit never starts Tempo.
 
 On a real host leave `WP_OTEL_ENDPOINT` unset unless you have a private collector. Do not copy the DDEV Tempo compose file onto the server.
 

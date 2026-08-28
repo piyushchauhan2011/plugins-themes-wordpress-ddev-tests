@@ -23,8 +23,8 @@ What it creates:
 - About six sample rows in `wp_hb_inquiries` (`pending`, `contacted`, `closed`) — guest text is not translated; Priya Shah is backdated ~50 hours with a due remind `wait_until`
 - Settings: hotel name The Oak House, desk email, max guests 6
 - Redis Object Cache plugin (not committed) and `wp-content/object-cache.php` drop-in, talking to the DDEV `redis` service
-- OpenSearch index `hotel-booking-rooms` (DDEV `opensearch` service; `wp hotel-booking reindex` after rooms and Polylang copies)
-- RabbitMQ topic `hotel-booking` (DDEV `rabbitmq` service; desk mail via Mailpit)
+- OpenSearch index `hotel-booking-rooms` when the `search` profile is on (`ddev start --profiles=search`; otherwise `WP_Query`)
+- RabbitMQ topic `hotel-booking` when the `queue` profile is on (`ddev start --profiles=queue`; otherwise desk mail in-request via Mailpit)
 - A Primary `wp_navigation` menu for the block header
 - Pretty permalinks (`/%postname%/`)
 
