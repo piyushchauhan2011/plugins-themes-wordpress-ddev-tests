@@ -50,7 +50,7 @@ function hotel_booking_log( $message ) {
 function hotel_booking_service_host_up( $host ) {
 	static $cache = array();
 
-	$host = is_string( $host ) ? trim( $host ) : '';
+	$host = trim( $host );
 	if ( '' === $host ) {
 		return false;
 	}
@@ -65,7 +65,7 @@ function hotel_booking_service_host_up( $host ) {
 	}
 
 	$resolved = gethostbyname( $host );
-	$up       = is_string( $resolved ) && '' !== $resolved && $resolved !== $host;
+	$up       = '' !== $resolved && $resolved !== $host;
 	if ( $up ) {
 		$cache[ $host ] = true;
 	}

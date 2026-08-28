@@ -24,10 +24,11 @@ function hotel_booking_opensearch_index_name() {
  * @return bool
  */
 function hotel_booking_opensearch_is_configured() {
-	$enabled = defined( 'WP_OPENSEARCH_HOST' ) && is_string( WP_OPENSEARCH_HOST ) && '' !== WP_OPENSEARCH_HOST;
-	if ( $enabled ) {
-		$enabled = hotel_booking_service_host_up( WP_OPENSEARCH_HOST );
+	$host = '';
+	if ( defined( 'WP_OPENSEARCH_HOST' ) && is_string( WP_OPENSEARCH_HOST ) ) {
+		$host = WP_OPENSEARCH_HOST;
 	}
+	$enabled = '' !== $host && hotel_booking_service_host_up( $host );
 
 	return (bool) apply_filters( 'hotel_booking_opensearch_enabled', $enabled );
 }
