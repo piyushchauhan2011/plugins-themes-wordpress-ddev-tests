@@ -200,6 +200,7 @@ Seed is demo data, not a backup. Before you experiment with `--force` or a copie
 - [AUTH.md](AUTH.md) — front-end `/staff-login/`, `hotel_manager` role, desk policies (not wp-admin)
 - [CAPACITOR.md](CAPACITOR.md) — Capacitor iOS/Android shell (documentation only; no native app in this repo)
 - [PLUGINS.md](PLUGINS.md) — sibling team plugins, pre-deploy checks, shared `theme.json`, reversible uninstall (documentation only)
+- [LEARNING.md](LEARNING.md) — WordPress CMS/plugin APIs this site does not teach (taxonomies, WP_List_Table, REST writes, …)
 
 ## Next
 
